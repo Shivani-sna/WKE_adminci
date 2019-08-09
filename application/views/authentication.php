@@ -1,3 +1,8 @@
+	<?php 
+
+		//echo get_cookie('email_cookie');
+		//echo get_cookie('password_cookie');
+	 ?>
 	<!-- Simple login form -->
 					<form action="<?php echo base_url('authentication/check_login'); ?>" id="loginform" method="POST">
 						<div class="panel panel-body login-form">
@@ -10,9 +15,9 @@
 								<div class="form-control-feedback">
 									<i class="icon-envelop text-muted"></i> 
 								</div>
-								<input type="text" class="form-control" placeholder="Email" name="email" id="email" value="<?php if (isset($get_cookie))
+								<input type="text" class="form-control" placeholder="Email" name="email" id="email" value="<?php if (get_cookie('email_cookie')!=null)
 								{
-									echo $get_cookie[0];
+									echo get_cookie('email_cookie');
 								}?>">
 								
 							</div>
@@ -21,16 +26,19 @@
 								<div class="form-control-feedback">
 									<i class="icon-lock2 text-muted"></i>
 								</div>
-								<input type="password" class="form-control" placeholder="Password" name="password" id="password" value="<?php if (isset($get_cookie))
+								<input type="password" class="form-control" placeholder="Password" name="password" id="password" value="<?php if (get_cookie('password_cookie')!= null)
 								{
-									echo $get_cookie[1];
+									echo get_cookie('password_cookie');
 								}?>">
 							</div>
 							<div class="form-group login-options">
 								<div class="row">
 									<div class="col-sm-6">
 										<label class="checkbox-inline">
-											<input type="checkbox" class="styled" name="remember" checked="checked">
+											<input type="checkbox" class="styled" name="remember" <?php if (get_cookie('email_cookie')!=null)
+											 {
+												echo "checked";
+											} ?>>
 											Remember
 										</label>
 									</div>

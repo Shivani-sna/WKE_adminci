@@ -43,7 +43,7 @@ class Myprofile extends MY_Controller
 	{
 		if (empty(check_session()))
 		{
-			$this->session->set_flashdata('error', 'Access denied');
+			$this->session->set_flashdata('error', 'Please Login');
 			redirect('authentication');
 		}
 
@@ -66,19 +66,17 @@ class Myprofile extends MY_Controller
 			);
 
 			$update = $this->users->update($id, $data);
-			$data   = array(
-				'description' => "MyProfile Updated",
-				'	user_id'    => $id
-			);
-			$insert_activity = $this->activity_log->insert($data);
+			
 
 			if ($update)
 			{
+				log_activity("MyProfile Updated", $id);
 				$this->session->set_flashdata('success', 'Profile Updated');
 				redirect('admin/myprofile/update');
 			}
 			else
 			{
+				log_activity("!Error Myprofile not update", $id);
 				$this->session->set_flashdata('error', 'Error Update');
 			}
 		}
@@ -91,7 +89,7 @@ class Myprofile extends MY_Controller
 	{
 		if (empty(check_session()))
 		{
-			$this->session->set_flashdata('error', 'Access denied');
+			$this->session->set_flashdata('error', 'Please Login');
 			redirect('authentication');
 		}
 
@@ -108,26 +106,25 @@ class Myprofile extends MY_Controller
 			);
 
 			$update = $this->users->update($id, $data);
-			$data   = array(
-				'description' => "MyPassword Changed",
-				'	user_id'    => $id
-			);
-			$insert_activity = $this->activity_log->insert($data);
+			
 
 			if ($update)
 			{
+				log_activity("MyPassword Changed", $id);
 				$this->session->set_flashdata('success', 'Password Changed');
 				redirect('admin/myprofile/update');
 			}
 			else
 			{
+				log_activity("!Error MyPassword Not Change", $id);
 				$this->session->set_flashdata('error', 'Password Not Change');
 				redirect('admin/myprofile/update');
 			}
 		}
 		else
 		{
-			$this->session->set_flashdata('error', 'Error ');
+			log_activity("!Error MyPassword Not Change", $id);
+			$this->session->set_flashdata('error', 'Plese Enter valid Password');
 		}
 	}
 }

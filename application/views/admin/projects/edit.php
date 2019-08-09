@@ -78,7 +78,7 @@
         				 
       				</div>
 					</form>
-				</div>
+				
 				<!-- /content area -->
 
 <script type="text/javascript">

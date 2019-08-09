@@ -19,7 +19,56 @@
 <!-- sweet alert -->
 	<link data-require="sweet-alert@*" data-semver="0.4.2" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css" />
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-  <!-- sweet alert -->
+  
+	<!-- Core JS files -->
+	<script type="text/javascript" src="<?php echo base_url('assets/js/plugins/loaders/pace.min.js'); ?>"></script>
+	<script type="text/javascript" src="<?php echo base_url('assets/js/core/libraries/jquery.min.js'); ?>"></script>
+	<script type="text/javascript" src="<?php echo base_url('assets/js/core/libraries/bootstrap.min.js'); ?>"></script>
+	<script type="text/javascript" src="<?php echo base_url('assets/js/plugins/loaders/blockui.min.js'); ?>"></script>
+	<!-- /core JS files -->
+
+	 <script type="text/javascript" src="<?php echo base_url('assets/js/plugins/forms/styling/switchery.min.js'); ?>"></script>
+	
+	<!-- Theme JS files -->
+
+	<script src="<?php echo base_url('assets/js/jquery.validate.min.js'); ?>"></script>
+	<!-- <script type="text/javascript" src="<?php //echo base_url('assets/js/pages/login.js'); ?>"></script> -->
+	<script type="text/javascript" src="<?php echo base_url('assets/js/plugins/tables/datatables/datatables.min.js'); ?>"></script>
+	<script type="text/javascript" src="<?php echo base_url('assets/js/plugins/forms/selects/select2.min.js'); ?>"></script>
+	<script type="text/javascript" src="<?php echo base_url('assets/js/core/app.js'); ?>"></script>
+	 <script type="text/javascript" src="<?php echo base_url('assets/js/pages/datatables_advanced.js'); ?>"></script>  
+	<!-- /theme JS files -->
+	 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+
+	 <!-- date picker -->
+	 	<script type="text/javascript" src="<?php echo base_url('assets/js/plugins/ui/moment/moment.min.js')?>"></script>
+	 <script type="text/javascript" src="<?php echo base_url('assets/js/plugins/pickers/daterangepicker.js'); ?>"></script>
+	<script type="text/javascript" src="<?php echo base_url('assets/js/plugins/pickers/anytime.min.js'); ?>"></script>
+	<script type="text/javascript" src="<?php echo base_url('assets/js/plugins/pickers/pickadate/picker.js'); ?>"></script>
+	<script type="text/javascript" src="<?php echo base_url('assets/js/plugins/pickers/pickadate/picker.date.js'); ?>"></script>
+	<script type="text/javascript" src="<?php echo base_url('assets/js/plugins/pickers/pickadate/picker.time.js'); ?>"></script>
+	<script type="text/javascript" src="<?php echo base_url('assets/js/plugins/pickers/pickadate/legacy.js'); ?>"></script>
+
+	<script type="text/javascript" src="<?php echo base_url('assets/js/pages/picker_date.js'); ?>"></script>
+	 <!-- /date picker -->
+
+	 <!-- select box -->
+	 
+	<script type="text/javascript" src="<?php echo base_url('assets/js/core/libraries/jquery_ui/interactions.min.js'); ?>"></script>
+	 <script type="text/javascript" src="<?php echo base_url('assets/js/plugins/forms/selects/select2.min.js'); ?>"></script>
+	 <script type="text/javascript" src="<?php echo base_url('assets/js/pages/form_select2.js'); ?>"></script>
+	 <!-- select box -->
+			 <script type="text/javascript">
+	 	/*Jquery for checkbox switch */
+$(function() {   
+   var switches = Array.prototype.slice.call(document.querySelectorAll('.switch'));
+    switches.forEach(function(html) {
+        var switchery = new Switchery(html, {color: '#4CAF50'});
+    });
+    });
+/*End of Jquery for checkbox switch */
+	 </script>
+<!-- sweet alert -->
 	<style type="text/css">
 	.error
 	{
@@ -76,36 +125,6 @@
 
 </style>
 
-
-	<!-- Core JS files -->
-	<script type="text/javascript" src="<?php echo base_url('assets/js/plugins/loaders/pace.min.js'); ?>"></script>
-	<script type="text/javascript" src="<?php echo base_url('assets/js/core/libraries/jquery.min.js'); ?>"></script>
-	<script type="text/javascript" src="<?php echo base_url('assets/js/core/libraries/bootstrap.min.js'); ?>"></script>
-	<script type="text/javascript" src="<?php echo base_url('assets/js/plugins/loaders/blockui.min.js'); ?>"></script>
-	<!-- /core JS files -->
-	 <script type="text/javascript">
-	 	/*Jquery for checkbox switch */
-$(function() {   
-   var switches = Array.prototype.slice.call(document.querySelectorAll('.switch'));
-    switches.forEach(function(html) {
-        var switchery = new Switchery(html, {color: '#4CAF50'});
-    });
-    });
-/*End of Jquery for checkbox switch */
-	 </script>
-	 <script type="text/javascript" src="<?php echo base_url('assets/js/plugins/forms/styling/switchery.min.js'); ?>"></script>
-	
-	<!-- Theme JS files -->
-
-	<script src="<?php echo base_url('assets/js/jquery.validate.min.js'); ?>"></script>
-	<!-- <script type="text/javascript" src="<?php //echo base_url('assets/js/pages/login.js'); ?>"></script> -->
-	<script type="text/javascript" src="<?php echo base_url('assets/js/plugins/tables/datatables/datatables.min.js'); ?>"></script>
-	<script type="text/javascript" src="<?php echo base_url('assets/js/plugins/forms/selects/select2.min.js'); ?>"></script>
-	<script type="text/javascript" src="<?php echo base_url('assets/js/core/app.js'); ?>"></script>
-	 <script type="text/javascript" src="<?php echo base_url('assets/js/pages/datatables_advanced.js'); ?>"></script>  
-	<!-- /theme JS files -->
-	 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
-		
 
 </head>
 
@@ -211,8 +230,15 @@ $(function() {
 									{
 										echo 'class="active"';
 									}
-								 ?>><a href="<?php echo base_url('admin/projects'); ?>"><i class="icon-users4"></i><span>
+								 ?>><a href="<?php echo base_url('admin/projects'); ?>"><i class="icon-menu3"></i><span>
 								Projects</span></a></li>
+								<li <?php 
+									if ($this->uri->segment(2)=='tasks') 
+									{
+										echo 'class="active"';
+									}
+								 ?>><a href="<?php echo base_url('admin/tasks'); ?>"><i class="icon-menu6"></i><span>
+								Tasks</span></a></li>
 
 															<!-- /main -->
 							</ul>

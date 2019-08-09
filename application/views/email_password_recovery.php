@@ -7,7 +7,7 @@
 	<style type="text/css">
 		
 		body{
-			background-image: url("<?php echo base_url('assets/images/backgrounds/restaurant1.jpg');?>");
+			
 			 background-repeat: no-repeat;
 			 background-size: cover;
 		}
@@ -43,7 +43,7 @@
 			<h3>Password Recovery Mail</h3>
 			<h2>WKE</h2>
 			<!-- <p>For Password Recovery</p> -->
-			<a href="">Click Here</a>
+			<a href="<?php echo base_url('authentication/reset_password/').$key; ?>">Click Here</a>
 		</div>
 	</center>
 </body>
