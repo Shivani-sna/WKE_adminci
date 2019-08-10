@@ -63,9 +63,8 @@
                   <td><?php  echo time_stamp($project['created']); ?></td>                  
 									
 					
-									<td class="text-center">
-
-                       <a href="<?php echo site_url('admin/projects/update/').$project['id']; ?>" id="<?php echo $project['id']; ?>" class="text-info">
+									<td>
+ <a href="<?php echo site_url('admin/projects/update/').$project['id']; ?>" id="<?php echo $project['id']; ?>" class="text-info">
                           <i class="icon-pencil7"></i></a>
 												<a href="" class="text-danger delete" id="<?php echo $project['id']; ?>"><i class=" icon-trash"></i></a>
 									</td>

@@ -233,12 +233,12 @@ $(function() {
 								 ?>><a href="<?php echo base_url('admin/projects'); ?>"><i class="icon-menu3"></i><span>
 								Projects</span></a></li>
 								<li <?php 
-									if ($this->uri->segment(2)=='tasks') 
+									if ($this->uri->segment(2)=='categories') 
 									{
 										echo 'class="active"';
 									}
-								 ?>><a href="<?php echo base_url('admin/tasks'); ?>"><i class="icon-menu6"></i><span>
-								Tasks</span></a></li>
+								 ?>><a href="<?php echo base_url('admin/categories'); ?>"><i class="icon-menu6"></i><span>
+								Categories</span></a></li>
 
 															<!-- /main -->
 							</ul>

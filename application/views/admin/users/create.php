@@ -73,6 +73,12 @@
 													<label>Password:</label>
 													<!-- <div class="col-md-12"> -->
 													<input type="password" class="form-control" placeholder="Password" id="password" name="password" >
+													
+												</div>
+												<div class="form-group">
+													<small class="req text-danger">* </small>
+													<label>Confirm Password:</label>
+													<input type="password" id="confirm_password" class="form-control" placeholder="Password">
 													<a class="btn toggle">
 														<span>
 														<!-- <label>
@@ -85,11 +91,6 @@
 
 													</a>
 													Show Password
-												</div>
-												<div class="form-group">
-													<small class="req text-danger">* </small>
-													<label>Confirm Password:</label>
-													<input type="password" id="confirm_password" class="form-control" placeholder="Password">
 												</div>
 												
 											</div>
@@ -108,7 +109,7 @@
         				 
       				</div>
 					</form>
-				</div>
+				
 				<!-- /content area -->
 
 <script type="text/javascript">
@@ -187,7 +188,7 @@ $('.toggle').on('click',function(e){
 e.preventDefault();
 // alert(
 // 	'yes');
-var x = document.getElementById("password");
+var x = document.getElementById("confirm_password");
   if (x.type === "password") {
     x.type = "text";
   } else {

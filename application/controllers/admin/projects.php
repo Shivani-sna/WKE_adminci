@@ -21,7 +21,7 @@ class Projects extends MY_Controller
 	{
 		if (empty(check_session()))
 		{
-			$this->session->set_flashdata('error', 'Access denied');
+			$this->session->set_flashdata('error', 'Please Login ');
 			redirect('authentication');
 		}
 
@@ -34,7 +34,7 @@ class Projects extends MY_Controller
 	{
 		if (empty(check_session()))
 		{
-			$this->session->set_flashdata('error', 'Access denied');
+			$this->session->set_flashdata('error', 'Please Login');
 			redirect('authentication');
 		}
 
@@ -71,7 +71,7 @@ class Projects extends MY_Controller
 	{
 		if (empty(check_session()))
 		{
-			$this->session->set_flashdata('error', 'Access denied');
+			$this->session->set_flashdata('error', 'Please Login');
 			redirect('authentication');
 		}
 
@@ -104,15 +104,6 @@ class Projects extends MY_Controller
 				}
 			}
 		}
-	}
-
-	public function update_status()
-	{
-		$session_id = check_session()['id'];
-		$project_id = $this->input->post('project_id');
-		$data       = array('is_active' => $this->input->post('is_active'));
-		$update     = $this->projects->update($project_id, $data);
-		log_activity("Project Status Updated [ID:$project_id] ", $session_id);
 	}
 
 	public function delete()

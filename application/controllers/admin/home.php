@@ -15,7 +15,7 @@ class Home extends MY_Controller
 	{
 		if (empty(check_session()))
 		{
-			$this->session->set_flashdata('error', 'Access denied');
+			$this->session->set_flashdata('error', 'Please Login');
 			redirect('authentication');
 		}
 		else
