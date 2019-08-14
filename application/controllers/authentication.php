@@ -10,95 +10,90 @@ class Authentication extends MY_Controller
 	}
 
 	/**
-	 * [index for Display about us]
+	 * [index for redirect authentication page]
 	 */
 	public function index()
 	{
-		//print_r(list_allcontrollers());
-
-		
-			$data['content'] = $this->load->view('authentication', '', TRUE);
-			$this->load->view('index', $data);
-		// if(check_islogin())
-		// {
-		// 	redirect('admin/home');
-		// }
+		$data['content'] = $this->load->view('authentication', '', TRUE);
+		$this->load->view('index', $data);
 	}
 
+/**
+ * [check login for login credentials]
+ */
 	public function check_login()
 	{
-		
-			if ($this->input->post())
+		if ($this->input->post())
+		{
+			$remember = $this->input->post('remember');
+
+			$email    = $this->input->post('email');
+			$password = $this->input->post('password');
+
+			if (isset($remember))
 			{
-				$remember = $this->input->post('remember');
+				set_cookie('email_cookie', $email, '3600');
+				set_cookie('password_cookie', $password, '3600');
+			}
+			else
+			{
+				delete_cookie('email_cookie');
+				delete_cookie('password_cookie');
+			}
 
-				$email    = $this->input->post('email');
-				$password = $this->input->post('password');
+			$where = array(
+				'email'     => $email,
+				'password'  => md5($password),
+				'is_active' => 1
+			);
+			$result = $this->users->get_by($where);
 
-				if (isset($remember))
-				{
-					set_cookie('email_cookie', $email, '3600');
-					set_cookie('password_cookie', $password, '3600');
-				}
-				else
-				{
-					delete_cookie('email_cookie');
-					delete_cookie('password_cookie');
-				}
-
-				$where = array(
-					'email'     => $email,
-					'password'  => md5($password),
-					'is_active' => 1
+			if ($result)
+			{
+				$firstname = $result['firstname'];
+				$lastname  = $result['lastname'];
+				$email     = $result['email'];
+				log_activity("Login User : [$firstname $lastname,$email]", $result['id']);
+				$data = array(
+					'last_ip'    => $this->input->ip_address(), //User Ip address
+					'last_login' => current_timestamp()
 				);
-				$result = $this->users->get_by($where);
+				$update = $this->users->update($result['id'], $data);
 
-				if ($result)
+				if ($update)
 				{
-					$firstname = $result['firstname'];
-					$lastname  = $result['lastname'];
-					$email     = $result['email'];
-					log_activity("Login User : [$firstname $lastname,$email]", $result['id']);
-					$data = array(
-						'last_ip'    => $this->input->ip_address(), //User Ip address
-						'last_login' => current_timestamp()
-					);
-					$update = $this->users->update($result['id'], $data);
-
-					if ($update)
-					{
-						$this->session->set_userdata('user', $result);
-						redirect('admin/home');
-					}
-				}
-				else
-				{
-					$where = array('email' => $email);
-					$user  = $this->users->get_by($where);
-
-					if ($user)
-					{
-						$this->session->set_flashdata('error', 'Please Enter Valid Password.');
-						$firstname = $user['firstname'];
-						$lastname  = $user['lastname'];
-						$email     = $user['email'];
-						log_activity("Failed Login User: [$firstname $lastname,$email]", $user['id']);
-					}
-					else
-					{
-						$this->session->set_flashdata('error', 'Please Enter Valid Email.');
-						$ip = $this->input->ip_address();
-						log_activity("Failed Login User Unknown Access [IP : $ip]", null);
-					}
-
-					redirect('authentication');
+					$this->session->set_userdata('user', $result);
+					redirect('admin/home');
 				}
 			}
-		
-			//redirect('home');
-		
+			else
+			{
+				$where = array('email' => $email);
+				$user  = $this->users->get_by($where);
+
+				if ($user)
+				{
+					$this->session->set_flashdata('error', 'Please Enter Valid Password.');
+					$firstname = $user['firstname'];
+					$lastname  = $user['lastname'];
+					$email     = $user['email'];
+					log_activity("Failed Login User: [$firstname $lastname,$email]", $user['id']);
+				}
+				else
+				{
+					$this->session->set_flashdata('error', 'Please Enter Valid Email.');
+					$ip = $this->input->ip_address();
+					log_activity("Failed Login User Unknown Access [IP : $ip]", null);
+				}
+
+				redirect('authentication');
+			}
+		}
 	}
 
+/**
+ * [password_recovery for forgot password]
+ */
 	public function password_recovery()
 	{
 		if (empty(check_islogin()))
@@ -118,25 +113,19 @@ class Authentication extends MY_Controller
 					$email     = $result['email'];
 					$key       = array('remember_token' => remember_token());
 
-// print_r($key);
-					// die();
 					log_activity("Forgot Password request user: [$firstname $lastname,$email]", $result['id']);
 					$update = $this->users->update($result['id'], $key);
 
 					if ($update)
 					{
+						//send Mail form here
 						redirect('authentication/reset_password');
 					}
-
-//redirect('authentication/reset_password',$data);
-
-//$this->reset_password($data);
-					//redirect($this->load->view('email_password_recovery',$data));
 				}
 				else
 				{
 					$ip = $this->input->ip_address();
-					log_activity("Failed forgot Password request Unknown Access [IP : $ip]", null);
+					log_activity("Failed forgot Password request Unknown Access [IP : $ip]", NULL);
 					$this->session->set_flashdata('error', 'Please Enter Valid Email.');
 					redirect('authentication/password_recovery');
 				}
@@ -149,7 +138,7 @@ class Authentication extends MY_Controller
 	}
 
 	/**
-	 * @param $key
+	 * [reset_password for sending mail after url redirect]
 	 */
 	public function reset_password($key)
 	{
@@ -158,20 +147,7 @@ class Authentication extends MY_Controller
 			redirect('admin/home');
 		}
 
-		$data['user'] = $this->users->get_by(array('remember_token' => $key));
-
-// if ($data['user'] == null)
-
-// {
-
-// 	//$this->session->set_flashdata('error', 'Invalid Forgot Password Request');
-
-// 	//redirect('authentication/password_recovery');
-
-// }
-
-// else
-		// {
+		$data['user']    = $this->users->get_by(array('remember_token' => $key));
 		$data['content'] = $this->load->view('reset_password', $data, TRUE);
 		$this->load->view('index', $data);
 		$id = $data['user']['id'];
@@ -199,10 +175,11 @@ class Authentication extends MY_Controller
 				$this->session->set_flashdata('error', 'Error in Password change');
 			}
 		}
-
-		// }
 	}
 
+/**
+ * [logout destroy session]
+ */
 	public function logout()
 	{
 		$session   = check_islogin();

@@ -21,7 +21,7 @@ class Users extends MY_Controller
 	}
 
 	/**
-	 * []
+	 * [index for view Users]
 	 */
 	public function index()
 	{
@@ -31,13 +31,15 @@ class Users extends MY_Controller
 			'capabilities' => 'view'
 
 		);
-
 		$data['users']   = $this->users->get_all();
 		$data['roles']   = $this->roles->get_all();
 		$data['content'] = $this->load->view('admin/users/index', $data, TRUE);
 		$this->load->view('admin/index', $data);
 	}
 
+/**
+ * [add for insert users]
+ */
 	public function add()
 	{
 		if ($this->input->post())
@@ -88,6 +90,7 @@ class Users extends MY_Controller
 	}
 
 	/**
+	 *[update user by user id]
 	 * @param $id
 	 */
 	public function edit($id)
@@ -105,29 +108,27 @@ class Users extends MY_Controller
 				$role         = $this->input->post('role');
 				$data['user'] = $this->users->get($id);
 
-				if ($this->input->post('newpassword')==NULL)
+				if ($this->input->post('newpassword') == NULL)
 				{
 					$data = array(
-					'firstname' => $this->input->post('firstname'),
-					'lastname'  => $this->input->post('lastname'),
-					'email'     => $this->input->post('email'),
-					'mobile_no' => $this->input->post('mobile_no'),
-					'role'      => $role
-				);
+						'firstname' => $this->input->post('firstname'),
+						'lastname'  => $this->input->post('lastname'),
+						'email'     => $this->input->post('email'),
+						'mobile_no' => $this->input->post('mobile_no'),
+						'role'      => $role
+					);
 				}
 				else
 				{
 					$data = array(
-					'firstname' => $this->input->post('firstname'),
-					'lastname'  => $this->input->post('lastname'),
-					'email'     => $this->input->post('email'),
-					'mobile_no' => $this->input->post('mobile_no'),
-					'password'  => md5($this->input->post('newpassword')),
-					'role'      => $role
-				);
+						'firstname' => $this->input->post('firstname'),
+						'lastname'  => $this->input->post('lastname'),
+						'email'     => $this->input->post('email'),
+						'mobile_no' => $this->input->post('mobile_no'),
+						'password'  => md5($this->input->post('newpassword')),
+						'role'      => $role
+					);
 				}
-
-				
 
 				$update     = $this->users->update($id, $data);
 				$session_id = check_islogin()['id'];
@@ -151,7 +152,7 @@ class Users extends MY_Controller
 								('user_id'     => $id,
 								'features'     => $key,
 								'capabilities' => $value);
-							
+
 							$permission_insert = $this->user_permissions->insert($data);
 						}
 					}
@@ -182,6 +183,9 @@ class Users extends MY_Controller
 		}
 	}
 
+/**
+ * [update_status for update users is_active]
+ */
 	public function update_status()
 	{
 		$session_id = check_islogin()['id'];
@@ -191,6 +195,9 @@ class Users extends MY_Controller
 		log_activity("User Status Updated [ID:$user_id] ", $session_id);
 	}
 
+/**
+ * [delete for delete user by id]
+ */
 	public function delete()
 	{
 		if (empty(has_permissions(check_islogin()['id'])))
@@ -206,6 +213,9 @@ class Users extends MY_Controller
 		log_activity("User Deleted [ID:$user_id] ", $session_id);
 	}
 
+/**
+ * [delete_selected for delete multiple users by their ids]
+ */
 	public function delete_selected()
 	{
 		$session_id = check_islogin()['id'];

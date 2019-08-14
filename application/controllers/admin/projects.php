@@ -18,6 +18,9 @@ class Projects extends MY_Controller
 		$this->load->model('project_model', 'projects');
 	}
 
+/**
+ * [index for view projects]
+ */
 	public function index()
 	{
 		if (!has_permissions('projects', 'view'))
@@ -25,18 +28,21 @@ class Projects extends MY_Controller
 			access_denied('projects', 'view');
 		}
 
-
 		$data['projects'] = $this->projects->get_all();
 		$data['content']  = $this->load->view('admin/projects/index', $data, TRUE);
 		$this->load->view('admin/index', $data);
 	}
 
+/**
+ * [add for insert projects]
+ */
 	public function add()
 	{
 		if (!has_permissions('projects', 'create'))
 		{
 			access_denied('projects', 'create');
 		}
+
 		if ($this->input->post())
 		{
 			$data = array
@@ -63,6 +69,7 @@ class Projects extends MY_Controller
 	}
 
 	/**
+	 *[update project by project id]
 	 * @param $id
 	 */
 	public function edit($id)
@@ -71,6 +78,7 @@ class Projects extends MY_Controller
 		{
 			access_denied('projects', 'edit');
 		}
+
 		if ($id)
 		{
 			$data['project'] = $this->projects->get($id);
@@ -103,12 +111,16 @@ class Projects extends MY_Controller
 		}
 	}
 
+/**
+ * [delete for delete project by id]
+ */
 	public function delete()
 	{
 		if (!has_permissions('projects', 'delete'))
 		{
 			access_denied('projects', 'delete');
 		}
+
 		$session_id = check_islogin()['id'];
 		$project_id = $this->input->post('project_id');
 		$result     = $this->projects->delete($project_id);
@@ -116,6 +128,9 @@ class Projects extends MY_Controller
 		log_activity("Project Deleted [ID:$project_id] ", $session_id);
 	}
 
+/**
+ * [delete_selected for delete multiple projects by their ids]
+ */
 	public function delete_selected()
 	{
 		$session_id = check_islogin()['id'];

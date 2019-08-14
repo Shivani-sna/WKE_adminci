@@ -21,18 +21,7 @@ class Myprofile extends MY_Controller
 	}
 
 	/**
-	 * [index Display reastaurants and their counting]
-	 */
-	public function index()
-	{
-		$id              = check_islogin()['id'];
-		$data['user']    = $this->users->get($id);
-		$data['content'] = $this->load->view('admin/profile/index', $data, TRUE);
-		$this->load->view('admin/index', $data);
-	}
-
-	/**
-	 * [index Display reastaurants and their counting]
+	 * [edit  for update profile details by session_id]
 	 */
 	public function edit()
 	{
@@ -71,9 +60,9 @@ class Myprofile extends MY_Controller
 	}
 
 	/**
-	 * []
+	 * [edit password for change password]
 	 */
-	public function update_password()
+	public function edit_password()
 	{
 		$id = check_islogin()['id'];
 

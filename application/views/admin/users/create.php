@@ -125,7 +125,7 @@
 								
 												</div>
 												<div>
-													<a href="<?php echo base_url('admin/roles/insert'); ?>" class="btn-xs btn-primary">Add New Role</a>
+													<!-- <a href="<?php //echo base_url('admin/roles/insert'); ?>" class="btn-xs btn-primary">Add New Role</a> -->
 												</div>
 												
 												

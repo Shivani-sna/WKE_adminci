@@ -10,7 +10,7 @@ class Home extends MY_Controller
 	}
 
 	/**
-	 * [index Display reastaurants and their counting]
+	 * [index for Dashboard view]
 	 */
 	public function index()
 	{

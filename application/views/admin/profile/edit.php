@@ -57,7 +57,7 @@
 							
 						</div>
 						<div class="col-md-5">
-							<form action="<?php echo base_url('admin/myprofile/update_password/') ?>" id="mypasswordform" method="POST">
+							<form action="<?php echo base_url('admin/myprofile/edit_password/') ?>" id="mypasswordform" method="POST">
 								<div class="panel panel-flat">
 									<div class="panel-heading">
 										<div class="row">
