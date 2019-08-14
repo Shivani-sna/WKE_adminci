@@ -27,7 +27,7 @@
 					<div class="row">
 						
 						<div class="col-md-8 col-md-offset-2">
-							<form action="<?php echo base_url('admin/users/insert'); ?>" id="profileform" method="POST">
+							<form action="<?php echo base_url('admin/users/add'); ?>" id="profileform" method="POST">
 								<div class="panel panel-flat">
 									<div class="panel-heading">
 										<div class="row">
@@ -162,7 +162,7 @@ $(function () {
         	},
         	mobile_no: {
                     required: true,
-                    // digit: true
+                     // digit: true
                 },
 
             email: {

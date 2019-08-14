@@ -38,7 +38,7 @@
 	<script type="text/javascript" src="<?php echo base_url('assets/js/plugins/tables/datatables/datatables.min.js'); ?>"></script>
 	<script type="text/javascript" src="<?php echo base_url('assets/js/plugins/forms/selects/select2.min.js'); ?>"></script>
 	<script type="text/javascript" src="<?php echo base_url('assets/js/core/app.js'); ?>"></script>
-	 <script type="text/javascript" src="<?php echo base_url('assets/js/pages/datatables_advanced.js'); ?>"></script>  
+	<!--  <script type="text/javascript" src="<?php //echo base_url('assets/js/pages/datatables_basic.js'); ?>"></script>    -->
 	<!-- /theme JS files -->
 	 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 
@@ -157,7 +157,7 @@ $(function() {
 
 					<ul class="dropdown-menu dropdown-menu-right">
 						
-						<li><a href="<?php echo base_url('admin/myprofile/update'); ?>" data-popup="tooltip" data-placement="left" data-original-title="Edit Profile" > Edit profile</a></li>
+						<li><a href="<?php echo base_url('admin/myprofile/edit'); ?>" data-popup="tooltip" data-placement="left" data-original-title="Edit Profile" > Edit profile</a></li>
 						<li><a href="<?php echo base_url('authentication/logout'); ?>"data-popup="tooltip" data-placement="left" data-original-title="Logout"> Logout</a></li>
 					</ul>
 				</li>

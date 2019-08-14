@@ -32,7 +32,7 @@
 					<div class="row">
 						
 						<div class="col-md-8 col-md-offset-2">
-							<form action="<?php echo base_url('admin/users/update/').$user['id']; ?>" id="profileform" method="POST">
+							<form action="<?php echo base_url('admin/users/edit/').$user['id']; ?>" id="profileform" method="POST">
 								<div class="panel panel-flat">
 									<div class="panel-heading">
 										<div class="row">
@@ -68,8 +68,8 @@
 												</div>
 												<div class="form-group">
 													<small class="req text-danger">* </small>
-													<label>Password:</label>
-													<input type="password" class="form-control" placeholder="Password" id="password" name="password" value="<?php echo $user['password']; ?>" >
+													<label>Change Password:</label>
+													<input type="password" class="form-control" placeholder="New Password" id="password" name="newpassword" value="" >
 													<a class="btn toggle">
 														<span>
 														<!-- <label>
@@ -104,23 +104,7 @@
 													<div class="form-group">
 													<small class="req text-danger">* </small>
 													<label>Select Role</label>
-													<?php 
-													$role_name='';
-													if ($user['role']==1) 
-													{
-														$role_name='Admin';
-													}
-													elseif ($user['role']==2) 
-													{
-														$role_name='Super Admin';
-													}
-													elseif($user['role']==3) 
-													{
-														$role_name='User';
-													}
 												
-
-											 ?>
 
 										<select class="select" name="role" id="role">
 											<!-- <option>Select Role</option> -->
@@ -133,8 +117,8 @@
 										
 											
 												
-		<option value="<?php echo $role['name']; ?>" name="role"
-			<?php if($role_name==$role['name'])
+		<option value="<?php echo $role['id']; ?>" name="role"
+			<?php if($user['role']==$role['id'])
 			{
 				echo  "selected";
 			} 
@@ -156,9 +140,9 @@
 
 								
 												</div>
-												<div>
-													<a href="<?php echo base_url('admin/roles/insert'); ?>" class="btn-xs btn-primary">Add New Role</a>
-												</div>
+												<!-- <div>
+													<a href="<?php// echo base_url('admin/roles/insert'); ?>" class="btn-xs btn-primary">Add New Role</a>
+												</div> -->
 											</div>
 										</div>
 									</div>

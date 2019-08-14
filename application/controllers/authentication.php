@@ -16,21 +16,18 @@ class Authentication extends MY_Controller
 	{
 		//print_r(list_allcontrollers());
 
-		if (empty(check_session()))
-		{
+		
 			$data['content'] = $this->load->view('authentication', '', TRUE);
 			$this->load->view('index', $data);
-		}
-		else
-		{
-			redirect('admin/home');
-		}
+		// if(check_islogin())
+		// {
+		// 	redirect('admin/home');
+		// }
 	}
 
 	public function check_login()
 	{
-		if (empty(check_session()))
-		{
+		
 			if ($this->input->post())
 			{
 				$remember = $this->input->post('remember');
@@ -97,16 +94,14 @@ class Authentication extends MY_Controller
 					redirect('authentication');
 				}
 			}
-		}
-		else
-		{
-			redirect('home');
-		}
+		
+			//redirect('home');
+		
 	}
 
 	public function password_recovery()
 	{
-		if (empty(check_session()))
+		if (empty(check_islogin()))
 		{
 			$data['content'] = $this->load->view('password_recovery', '', TRUE);
 			$this->load->view('index', $data);
@@ -158,7 +153,7 @@ class Authentication extends MY_Controller
 	 */
 	public function reset_password($key)
 	{
-		if (!empty(check_session()))
+		if (!empty(check_islogin()))
 		{
 			redirect('admin/home');
 		}
@@ -210,7 +205,7 @@ class Authentication extends MY_Controller
 
 	public function logout()
 	{
-		$session   = check_session();
+		$session   = check_islogin();
 		$firstname = $session['firstname'];
 		$lastname  = $session['lastname'];
 		$email     = $session['email'];

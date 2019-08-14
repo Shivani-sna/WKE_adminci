@@ -10,40 +10,41 @@ function current_timestamp()
 /**
  * @param $id
  */
-function has_permissions($id)
+function has_permissions($features, $capabilities)
 {
 	$CI = &get_instance();
 	$CI->load->model('user_permission_model', 'user_permissions');
-	$features     = $CI->router->fetch_class();
-	$capabilities = $CI->router->fetch_method();
-
-	if ($capabilities == 'index')
-	{
-		$capabilities = "view";
-	}
-	elseif ($capabilities == 'update')
-	{
-		$capabilities = "edit";
-	}
-	elseif ($capabilities == 'insert')
-	{
-		$capabilities = "create";
-	}
-	elseif ($capabilities == 'delete')
-	{
-		$capabilities = "delete";
-	}
-
 	$data = array(
-		'user_id'      => $id,
+		'user_id'      => check_islogin()['id'],
 		'features'     => $features,
 		'capabilities' => $capabilities
 
 	);
 
-	$permissions=$CI->user_permissions->get_many_by($data);
-	
+	$permissions = $CI->user_permissions->get_many_by($data);
+
 	return $permissions;
+}
+
+/**
+ * @param $id
+ */
+function access_denied($features, $capabilities)
+{
+	$CI = &get_instance();
+	$CI->session->set_flashdata('error', 'You have Not Access ');
+	log_activity("Try to Access page don't have Permissions in $features ['Method' : $capabilities] ",check_islogin()['id']);
+
+	if (!empty($_SERVER['HTTP_REFERER']))
+	{
+		redirect($_SERVER['HTTP_REFERER']);
+	}
+	else
+	{
+		check_islogin();
+	}
+
+	//return TRUE;
 }
 
 /**
@@ -70,15 +71,6 @@ function list_controllers()
 	return $controllers;
 }
 
-/**
- * @return mixed
- */
-function get_dataclass()
-{
-	$ci = &get_instance();
-
-	return $ci->router->fetch_class();
-}
 
 /**
  * [_setflashdata for get notification to set session]
@@ -86,12 +78,22 @@ function get_dataclass()
  * @param  [type] $msg  [for define msges]
  * @return [type]       [description]
  */
-function check_session()
+function check_islogin()
 {
 	$CI   = &get_instance();
 	$user = $CI->session->userdata('user');
 
-	return $user;
+	if ($user == NULL)
+	{
+		$CI->session->set_flashdata('error', 'Please Login');
+		redirect('authentication');
+	}
+	else
+	{
+		return $user;
+	}
+
+	// return $user;
 }
 
 /**
@@ -99,54 +101,40 @@ function check_session()
  */
 function get_users_permissions($data = [])
 {
-	$permissions_array = array();
-
-// $all_permissions_array = [
-
-// 	'view_own'
-
-// 	'view'
-
-// 	'create'
-
-// 	'edit'
-
-// 	'delete'
-	// ];
-
-	$view_permissions_array = [
-		'view',
-		'create',
-		'edit',
-		'delete'
+	$all_permissions_array = [
+		'view'   => 'View',
+		'create' => 'Create',
+		'edit'   => 'Edit',
+		'delete' => 'Delete'
 	];
 
 	$permissions = [
 
 		'users'      => [
 			'name'         => 'users',
-			'capabilities' => [
-				'view' => $view_permissions_array
-			]
+			'capabilities' => $all_permissions_array
+
 		],
 
 		'projects'   => [
 			'name'         => 'projects',
-			'capabilities' => [
-				'view' => $view_permissions_array
-			]
+			'capabilities' => $all_permissions_array
+
 		],
 		'categories' => [
 			'name'         => 'categories',
-			'capabilities' => [
-				'view' => $view_permissions_array
-			]
+			'capabilities' => $all_permissions_array
+
+		],
+		'roles'   => [
+			'name'         => 'roles',
+			'capabilities' => $all_permissions_array
+
 		]
 
 	];
-	$permissions_array = $permissions;
 
-	return $permissions_array;
+	return $permissions;
 }
 
 /**

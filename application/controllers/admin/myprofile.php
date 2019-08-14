@@ -15,6 +15,7 @@ class Myprofile extends MY_Controller
 	public function __construct()
 	{
 		parent::__construct();
+		check_islogin();
 		$this->load->model('user_model', 'users');
 		$this->load->model('activity_log_model', 'activity_log');
 	}
@@ -24,13 +25,7 @@ class Myprofile extends MY_Controller
 	 */
 	public function index()
 	{
-		if (empty(check_session()))
-		{
-			$this->session->set_flashdata('error', 'Access denied');
-			redirect('authentication');
-		}
-
-		$id              = check_session()['id'];
+		$id              = check_islogin()['id'];
 		$data['user']    = $this->users->get($id);
 		$data['content'] = $this->load->view('admin/profile/index', $data, TRUE);
 		$this->load->view('admin/index', $data);
@@ -39,15 +34,9 @@ class Myprofile extends MY_Controller
 	/**
 	 * [index Display reastaurants and their counting]
 	 */
-	public function update()
+	public function edit()
 	{
-		if (empty(check_session()))
-		{
-			$this->session->set_flashdata('error', 'Please Login');
-			redirect('authentication');
-		}
-
-		$id = check_session()['id'];
+		$id = check_islogin()['id'];
 
 		if ($id)
 		{
@@ -66,7 +55,6 @@ class Myprofile extends MY_Controller
 			);
 
 			$update = $this->users->update($id, $data);
-			
 
 			if ($update)
 			{
@@ -83,17 +71,11 @@ class Myprofile extends MY_Controller
 	}
 
 	/**
-	 * [index Display reastaurants and their counting]
+	 * []
 	 */
 	public function update_password()
 	{
-		if (empty(check_session()))
-		{
-			$this->session->set_flashdata('error', 'Please Login');
-			redirect('authentication');
-		}
-
-		$id = check_session()['id'];
+		$id = check_islogin()['id'];
 
 		$data['user'] = $this->users->get($id);
 
@@ -106,7 +88,6 @@ class Myprofile extends MY_Controller
 			);
 
 			$update = $this->users->update($id, $data);
-			
 
 			if ($update)
 			{

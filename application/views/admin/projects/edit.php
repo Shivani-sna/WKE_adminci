@@ -31,7 +31,7 @@
 					<div class="row">
 						
 						<div class="col-md-8 col-md-offset-2">
-							<form action="<?php echo base_url('admin/projects/update/').$project['id']; ?>" id="projectform" method="POST">
+							<form action="<?php echo base_url('admin/projects/edit/').$project['id']; ?>" id="projectform" method="POST">
 								<div class="panel panel-flat">
 									<div class="panel-heading">
 										<div class="row">

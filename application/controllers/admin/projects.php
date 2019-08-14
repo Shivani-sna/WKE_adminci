@@ -14,44 +14,29 @@ class Projects extends MY_Controller
 	public function __construct()
 	{
 		parent::__construct();
+		check_islogin();
 		$this->load->model('project_model', 'projects');
 	}
 
 	public function index()
 	{
-		if (empty(check_session()))
+		if (!has_permissions('projects', 'view'))
 		{
-			$this->session->set_flashdata('error', 'Please Login ');
-			redirect('authentication');
+			access_denied('projects', 'view');
 		}
-		if (empty(has_permissions(check_session()['id'])))
-		 {
-			$this->session->set_flashdata('error', 'You have Not access');
-			redirect('admin/home');
-		}
+
 
 		$data['projects'] = $this->projects->get_all();
 		$data['content']  = $this->load->view('admin/projects/index', $data, TRUE);
 		$this->load->view('admin/index', $data);
 	}
 
-	public function insert()
+	public function add()
 	{
-		if (empty(check_session()))
+		if (!has_permissions('projects', 'create'))
 		{
-			$this->session->set_flashdata('error', 'Please Login');
-			redirect('authentication');
+			access_denied('projects', 'create');
 		}
-		if (empty(has_permissions(check_session()['id'])))
-		 {
-			$this->session->set_flashdata('error', 'You have Not access');
-			redirect('admin/home');
-		}
-
-		$data['content'] = $this->load->view('admin/projects/create', '', TRUE);
-		$this->load->view('admin/index', $data);
-		$id = check_session()['id'];
-
 		if ($this->input->post())
 		{
 			$data = array
@@ -61,10 +46,8 @@ class Projects extends MY_Controller
 				'created'     => current_timestamp()
 			);
 			$insert = $this->projects->insert($data);
-
+			$id     = check_islogin()['id'];
 			log_activity("Project Added [ID:$insert] ", $id);
-
-//log activity for Project insert
 
 			if ($insert)
 			{
@@ -72,31 +55,25 @@ class Projects extends MY_Controller
 				redirect('admin/projects');
 			}
 		}
+		else
+		{
+			$data['content'] = $this->load->view('admin/projects/create', '', TRUE);
+			$this->load->view('admin/index', $data);
+		}
 	}
 
 	/**
 	 * @param $id
 	 */
-	public function update($id)
+	public function edit($id)
 	{
-		if (empty(check_session()))
+		if (!has_permissions('projects', 'edit'))
 		{
-			$this->session->set_flashdata('error', 'Please Login');
-			redirect('authentication');
+			access_denied('projects', 'edit');
 		}
-		if (empty(has_permissions(check_session()['id'])))
-		 {
-			$this->session->set_flashdata('error', 'You have Not access');
-			redirect('admin/home');
-		}
-
 		if ($id)
 		{
 			$data['project'] = $this->projects->get($id);
-
-			$data['content'] = $this->load->view('admin/projects/edit', $data, TRUE);
-
-			$this->load->view('admin/index', $data);
 
 			if ($this->input->post())
 			{
@@ -108,7 +85,7 @@ class Projects extends MY_Controller
 				);
 
 				$update     = $this->projects->update($id, $data);
-				$session_id = check_session()['id'];
+				$session_id = check_islogin()['id'];
 				log_activity("Project Updated [ID:$id] ", $session_id);
 
 				if ($update)
@@ -118,17 +95,21 @@ class Projects extends MY_Controller
 					redirect('admin/projects');
 				}
 			}
+			else
+			{
+				$data['content'] = $this->load->view('admin/projects/edit', $data, TRUE);
+				$this->load->view('admin/index', $data);
+			}
 		}
 	}
 
 	public function delete()
 	{
-		if (empty(has_permissions(check_session()['id'])))
-		 {
-			$this->session->set_flashdata('error', 'You have Not access');
-			redirect('admin/home');
+		if (!has_permissions('projects', 'delete'))
+		{
+			access_denied('projects', 'delete');
 		}
-		$session_id = check_session()['id'];
+		$session_id = check_islogin()['id'];
 		$project_id = $this->input->post('project_id');
 		$result     = $this->projects->delete($project_id);
 
@@ -137,7 +118,7 @@ class Projects extends MY_Controller
 
 	public function delete_selected()
 	{
-		$session_id = check_session()['id'];
+		$session_id = check_islogin()['id'];
 		$where      = $this->input->post('ids');
 		$ids        = implode(",", $where);
 		$delete_all = $this->projects->delete_many($where);

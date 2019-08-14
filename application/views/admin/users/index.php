@@ -1,5 +1,5 @@
 		<?php 
-			$session=$this->session->userdata('user');
+			$session=check_islogin();
 
       ?>
 		 <style type="text/css">
@@ -34,13 +34,13 @@
 					<!-- Page length options -->
 					<div class="panel panel-flat">
 						<div class="panel-heading">
-								<a href="<?php echo base_url('admin/users/insert'); ?>" class="btn btn-primary">Add New</a>
+								<a href="<?php echo base_url('admin/users/add'); ?>" class="btn btn-primary">Add New</a>
 							<a href="" class="btn btn-danger" id="delete_all">Delete Selected</a>
 
 						<div class="panel-body">
 						</div>
 
-						<table class="table datatable-show-all">
+						<table class="table datatable-show-all" id="example">
 							<thead>
 								<tr>
 									<th><input type="checkbox" name="delete_id" id="select_all"></th>
@@ -67,23 +67,17 @@
 									 ?> 	<input type="checkbox" class="checkbox"  name="delete"  id="<?php if ($user['id']!=$session['id']){ echo $user['id'];} ?>" <?php echo $disabled; ?>></td>
 									<td><?php echo $user['firstname'].'&nbsp;'.$user['lastname']; ?></td>
 									<td><?php echo $user['email']; ?></td>
-									<td><?php if ($user['role']==1)
-									 			{
-													echo "Admin";
-												}
-												else if($user['role']==2)
-												{
-													echo "Super Admin";
-												}
-												else if ($user['role']==3)
-												 {
-													echo "User";
-												}
-												else
-												{
-
-												}
-									 ?></td>
+									<td><?php 
+                        foreach ($roles as $key => $role)
+                        {
+                          if ($role['id']==$user['role'])
+                           {
+                            echo $role['name'];
+                          }
+                        }
+                  ?>
+                    
+                  </td>
 									<td><?php if ($user['last_login']!="Never")
                    {
                    echo time_stamp($user['last_login']);
@@ -106,7 +100,7 @@
 									}  ?> <?php echo $readonly; ?>></td>
 									<td class="text-center">
 
-                       <a href="<?php echo site_url('admin/users/update/').$user['id']; ?>" id="<?php echo $user['id']; ?>" class="text-info">
+                       <a href="<?php echo site_url('admin/users/edit/').$user['id']; ?>" id="<?php echo $user['id']; ?>" class="text-info">
                           <i class="icon-pencil7"></i></a>
 												<a href="" class="text-danger delete" id="<?php echo $user['id']; ?>"><i class=" icon-trash"></i></a>
 									</td>
@@ -132,6 +126,78 @@
 $( document ).ready(function() 
 {
 	
+    $('#example').DataTable();
+
+$(function() {
+
+
+    // Table setup
+    // ------------------------------
+
+    // Setting datatable defaults
+    $.extend( $.fn.dataTable.defaults, {
+        autoWidth: false,
+        columnDefs: [{ 
+            orderable: false,
+            width: '100px',
+            targets: [ 5 ]
+        }],
+        dom: '<"datatable-header"fl><"datatable-scroll"t><"datatable-footer"ip>',
+        language: {
+            search: '<span>Filter:</span> _INPUT_',
+            lengthMenu: '<span>Show:</span> _MENU_',
+            paginate: { 'first': 'First', 'last': 'Last', 'next': '&rarr;', 'previous': '&larr;' }
+        },
+        drawCallback: function () {
+            $(this).find('tbody tr').slice(-3).find('.dropdown, .btn-group').addClass('dropup');
+        },
+        preDrawCallback: function() {
+            $(this).find('tbody tr').slice(-3).find('.dropdown, .btn-group').removeClass('dropup');
+        }
+    });
+
+
+    // Basic datatable
+    $('.datatable-basic').DataTable();
+
+
+    // Alternative pagination
+    $('.datatable-pagination').DataTable({
+        pagingType: "simple",
+        language: {
+            paginate: {'next': 'Next &rarr;', 'previous': '&larr; Prev'}
+        }
+    });
+
+
+    // Datatable with saving state
+    $('.datatable-save-state').DataTable({
+        stateSave: true
+    });
+
+
+    // Scrollable datatable
+    $('.datatable-scroll-y').DataTable({
+        autoWidth: true,
+        scrollY: 300
+    });
+
+
+
+    // External table additions
+    // ------------------------------
+
+    // Add placeholder to the datatable filter option
+    $('.dataTables_filter input[type=search]').attr('placeholder','Type to filter...');
+
+
+    // Enable Select2 select for the length option
+    $('.dataTables_length select').select2({
+        minimumResultsForSearch: Infinity,
+        width: 'auto'
+    });
+    
+});
 /*Update User Status Jquery for checkbox switch */
 	$(".switch").change(function()
 	 {

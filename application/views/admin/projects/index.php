@@ -1,5 +1,5 @@
 		<?php 
-			$session=check_session();
+			$session=check_islogin();
       ?>
 		 <style type="text/css">
 		 	.checkbox
@@ -33,13 +33,13 @@
 					<!-- Page length options -->
 					<div class="panel panel-flat">
 						<div class="panel-heading">
-								<a href="<?php echo base_url('admin/projects/insert'); ?>" class="btn btn-primary">Add New</a>
+								<a href="<?php echo base_url('admin/projects/add'); ?>" class="btn btn-primary">Add New</a>
 							<a href="" class="btn btn-danger" id="delete_all">Delete Selected</a>
 
 						<div class="panel-body">
 						</div>
 
-						<table class="table datatable-show-all">
+						<table class="table datatable-show-all" id="example">
 							<thead>
 								<tr>
 									<th><input type="checkbox" name="delete_id" id="select_all"></th>
@@ -49,7 +49,7 @@
 									<th>Created</th>
                   
 									<th class="text-center">Actions</th>
-                  <th></th>
+                  
 								</tr>
 							</thead>
 							<tbody>
@@ -63,12 +63,12 @@
 									<td><?php echo $project['name']; ?></td>
 									<td><?php  echo $project['details']; ?></td>
                   <td><?php  echo time_stamp($project['created']); ?></td>      
-                    <td></td>
+                    
             
 									
 					
-									<td>
- <a href="<?php echo site_url('admin/projects/update/').$project['id']; ?>" id="<?php echo $project['id']; ?>" class="text-info">
+									<td class="text-center">
+ <a href="<?php echo site_url('admin/projects/edit/').$project['id']; ?>" id="<?php echo $project['id']; ?>" class="text-info">
                           <i class="icon-pencil7"></i></a>
 												<a href="" class="text-danger delete" id="<?php echo $project['id']; ?>"><i class=" icon-trash"></i></a>
 									</td>
@@ -95,6 +95,78 @@ $( document ).ready(function()
 {
 
 
+    $('#example').DataTable();
+
+$(function() {
+
+
+    // Table setup
+    // ------------------------------
+
+    // Setting datatable defaults
+    $.extend( $.fn.dataTable.defaults, {
+        autoWidth: false,
+        columnDefs: [{ 
+            orderable: false,
+            width: '100px',
+            targets: [ 5 ]
+        }],
+        dom: '<"datatable-header"fl><"datatable-scroll"t><"datatable-footer"ip>',
+        language: {
+            search: '<span>Filter:</span> _INPUT_',
+            lengthMenu: '<span>Show:</span> _MENU_',
+            paginate: { 'first': 'First', 'last': 'Last', 'next': '&rarr;', 'previous': '&larr;' }
+        },
+        drawCallback: function () {
+            $(this).find('tbody tr').slice(-3).find('.dropdown, .btn-group').addClass('dropup');
+        },
+        preDrawCallback: function() {
+            $(this).find('tbody tr').slice(-3).find('.dropdown, .btn-group').removeClass('dropup');
+        }
+    });
+
+
+    // Basic datatable
+    $('.datatable-basic').DataTable();
+
+
+    // Alternative pagination
+    $('.datatable-pagination').DataTable({
+        pagingType: "simple",
+        language: {
+            paginate: {'next': 'Next &rarr;', 'previous': '&larr; Prev'}
+        }
+    });
+
+
+    // Datatable with saving state
+    $('.datatable-save-state').DataTable({
+        stateSave: true
+    });
+
+
+    // Scrollable datatable
+    $('.datatable-scroll-y').DataTable({
+        autoWidth: true,
+        scrollY: 300
+    });
+
+
+
+    // External table additions
+    // ------------------------------
+
+    // Add placeholder to the datatable filter option
+    $('.dataTables_filter input[type=search]').attr('placeholder','Type to filter...');
+
+
+    // Enable Select2 select for the length option
+    $('.dataTables_length select').select2({
+        minimumResultsForSearch: Infinity,
+        width: 'auto'
+    });
+    
+});
 /* simple delete on sigle value */
 	$(".delete").click(function(e) 
 	{ 

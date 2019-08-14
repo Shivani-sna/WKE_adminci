@@ -9,7 +9,7 @@
 					<div class="row">
 						
 						<div class="col-md-7">
-							<form action="<?php echo base_url('admin/myprofile/update/') ?>" id="myprofileform" method="POST">
+							<form action="<?php echo base_url('admin/myprofile/edit/') ?>" id="myprofileform" method="POST">
 								<div class="panel panel-flat">
 									<div class="panel-heading">
 										<div class="row">
