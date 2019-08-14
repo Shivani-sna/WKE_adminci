@@ -40,10 +40,7 @@ $(function() {
 
     //Datatable 'length' options
     $('.datatable-show-all').DataTable({
-  "columnDefs": [ {
-          "targets": [0,5,6],
-          "orderable": false,
-    }],      
+    
         lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]]
    });
 

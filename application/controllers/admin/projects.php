@@ -24,6 +24,11 @@ class Projects extends MY_Controller
 			$this->session->set_flashdata('error', 'Please Login ');
 			redirect('authentication');
 		}
+		if (empty(has_permissions(check_session()['id'])))
+		 {
+			$this->session->set_flashdata('error', 'You have Not access');
+			redirect('admin/home');
+		}
 
 		$data['projects'] = $this->projects->get_all();
 		$data['content']  = $this->load->view('admin/projects/index', $data, TRUE);
@@ -36,6 +41,11 @@ class Projects extends MY_Controller
 		{
 			$this->session->set_flashdata('error', 'Please Login');
 			redirect('authentication');
+		}
+		if (empty(has_permissions(check_session()['id'])))
+		 {
+			$this->session->set_flashdata('error', 'You have Not access');
+			redirect('admin/home');
 		}
 
 		$data['content'] = $this->load->view('admin/projects/create', '', TRUE);
@@ -74,6 +84,11 @@ class Projects extends MY_Controller
 			$this->session->set_flashdata('error', 'Please Login');
 			redirect('authentication');
 		}
+		if (empty(has_permissions(check_session()['id'])))
+		 {
+			$this->session->set_flashdata('error', 'You have Not access');
+			redirect('admin/home');
+		}
 
 		if ($id)
 		{
@@ -108,6 +123,11 @@ class Projects extends MY_Controller
 
 	public function delete()
 	{
+		if (empty(has_permissions(check_session()['id'])))
+		 {
+			$this->session->set_flashdata('error', 'You have Not access');
+			redirect('admin/home');
+		}
 		$session_id = check_session()['id'];
 		$project_id = $this->input->post('project_id');
 		$result     = $this->projects->delete($project_id);

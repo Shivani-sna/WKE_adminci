@@ -14,6 +14,8 @@ class Authentication extends MY_Controller
 	 */
 	public function index()
 	{
+		//print_r(list_allcontrollers());
+
 		if (empty(check_session()))
 		{
 			$data['content'] = $this->load->view('authentication', '', TRUE);

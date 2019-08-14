@@ -101,6 +101,64 @@
 														echo "checked";
 												} ?>  <?php  echo $readonly; ?>>
 											</div>
+													<div class="form-group">
+													<small class="req text-danger">* </small>
+													<label>Select Role</label>
+													<?php 
+													$role_name='';
+													if ($user['role']==1) 
+													{
+														$role_name='Admin';
+													}
+													elseif ($user['role']==2) 
+													{
+														$role_name='Super Admin';
+													}
+													elseif($user['role']==3) 
+													{
+														$role_name='User';
+													}
+												
+
+											 ?>
+
+										<select class="select" name="role" id="role">
+											<!-- <option>Select Role</option> -->
+											
+													<?php 
+															foreach ($roles as $key => $role)
+															 {
+															 	?>
+																<div class="form-group">
+										
+											
+												
+		<option value="<?php echo $role['name']; ?>" name="role"
+			<?php if($role_name==$role['name'])
+			{
+				echo  "selected";
+			} 
+			else
+			{
+				echo '';
+			} ?>><?php echo $role['name'] ?>
+			
+		</option>
+												
+														<?php
+
+														}
+
+													 ?>
+
+											
+													 </select>
+
+								
+												</div>
+												<div>
+													<a href="<?php echo base_url('admin/roles/insert'); ?>" class="btn-xs btn-primary">Add New Role</a>
+												</div>
 											</div>
 										</div>
 									</div>

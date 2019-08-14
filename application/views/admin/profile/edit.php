@@ -234,6 +234,22 @@ $("#repeat_password").change(function(event) {
 	 }
 	
 });
+$("#newpassword").change(function(event) {
+	event.preventDefault();
+	var newpassword = $('#newpassword').val();
+	var repeat_password = $('#repeat_password').val();
+
+	if (newpassword==repeat_password)
+	 {
+	 	 $(".valid").html("<strong style='color:green'>Repeat Password Match</strong>");
+	 	
+	 }
+	 else
+	 {
+	 	 $(".valid").html("<strong style='color:red'>Repeat Password Not Match</strong>");
+	 }
+	
+});
 $('.toggle').on('click',function(e){
 e.preventDefault();
 // alert(

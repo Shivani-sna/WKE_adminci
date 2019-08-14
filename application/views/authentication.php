@@ -1,5 +1,5 @@
 	<?php 
-
+	//echo md5(123456);
 		//echo get_cookie('email_cookie');
 		//echo get_cookie('password_cookie');
 	 ?>

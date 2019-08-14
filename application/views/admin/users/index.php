@@ -1,5 +1,6 @@
 		<?php 
 			$session=$this->session->userdata('user');
+
       ?>
 		 <style type="text/css">
 		 	.checkbox

@@ -47,7 +47,9 @@
 									<th>Project Name</th>
                   <th>Details</th>
 									<th>Created</th>
+                  
 									<th class="text-center">Actions</th>
+                  <th></th>
 								</tr>
 							</thead>
 							<tbody>
@@ -57,10 +59,12 @@
 									<tr>
 									<td>
                   	<input type="checkbox" class="checkbox"  name="delete"  id="<?php  echo $project['id']; ?>"></td>
-									<td><?php echo $project['project_id']; ?></td>
+                  									<td><?php echo $project['project_id']; ?></td>
 									<td><?php echo $project['name']; ?></td>
 									<td><?php  echo $project['details']; ?></td>
-                  <td><?php  echo time_stamp($project['created']); ?></td>                  
+                  <td><?php  echo time_stamp($project['created']); ?></td>      
+                    <td></td>
+            
 									
 					
 									<td>

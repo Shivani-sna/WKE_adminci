@@ -14,6 +14,7 @@
 	<link href="<?php echo base_url('assets/css/components.css'); ?>" rel="stylesheet" type="text/css">
 	<link href="<?php echo base_url('assets/css/colors.css'); ?>" rel="stylesheet" type="text/css">
 	  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+
 	<!-- /global stylesheets -->
 
 <!-- sweet alert -->
@@ -22,6 +23,7 @@
   
 	<!-- Core JS files -->
 	<script type="text/javascript" src="<?php echo base_url('assets/js/plugins/loaders/pace.min.js'); ?>"></script>
+	
 	<script type="text/javascript" src="<?php echo base_url('assets/js/core/libraries/jquery.min.js'); ?>"></script>
 	<script type="text/javascript" src="<?php echo base_url('assets/js/core/libraries/bootstrap.min.js'); ?>"></script>
 	<script type="text/javascript" src="<?php echo base_url('assets/js/plugins/loaders/blockui.min.js'); ?>"></script>
@@ -239,6 +241,13 @@ $(function() {
 									}
 								 ?>><a href="<?php echo base_url('admin/categories'); ?>"><i class="icon-menu6"></i><span>
 								Categories</span></a></li>
+								<li <?php 
+									if ($this->uri->segment(2)=='roles') 
+									{
+										echo 'class="active"';
+									}
+								 ?>><a href="<?php echo base_url('admin/roles'); ?>"><i class="icon-menu6"></i><span>
+								Roles</span></a></li>
 
 															<!-- /main -->
 							</ul>

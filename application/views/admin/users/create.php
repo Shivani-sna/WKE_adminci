@@ -91,7 +91,43 @@
 
 													</a>
 													Show Password
+												</br>
+												<span id="message"></span>
+
 												</div>
+
+												<div class="form-group">
+													<small class="req text-danger">* </small>
+													<label>Select Role</label>
+
+										<select class="select" name="role" id="role">
+											<!-- <option>Select Role</option> -->
+													<?php 
+															foreach ($roles as $key => $role)
+															 {
+															 	?>
+																<div class="form-group">
+										
+											
+												
+											
+												<option value="<?php echo $role['id']; ?>" name="role"><?php echo $role['name'] ?></option>
+												
+														<?php
+
+														}
+
+													 ?>
+
+											
+													 </select>
+
+								
+												</div>
+												<div>
+													<a href="<?php echo base_url('admin/roles/insert'); ?>" class="btn-xs btn-primary">Add New Role</a>
+												</div>
+												
 												
 											</div>
 										</div>
@@ -135,6 +171,9 @@ $(function () {
                 },
             password: {
                 required: true
+            },
+             role: {
+                required: true
             }
         },
         messages: {
@@ -161,6 +200,9 @@ $(function () {
             password:{
                  required:"Please Enter Password"
             },
+             role:{
+                 required:"Please Select Role"
+            },
 
         }
         
@@ -168,22 +210,28 @@ $(function () {
     });
 </script>
 <script type="text/javascript">  
-$('#password, #confirm_password').on('keyup', function () {
-  if ($('#password').val() == $('#confirm_password').val()) {
-    $('#message').html('Password match').css({'font-weight': 'bold','color':'green'});
+$(' #confirm_password').on('change', function () {
+  if ($('#password').val() != $('#confirm_password').val()) {
+  	$('#message').html('Confirm Passsword Not Match').css({'font-weight': 'bold','color':'red'});
+   return false;
   } else 
-    $('#message').html('Password not Matching').css({'font-weight': 'bold','color':'red'});
+  {
+  	 $('#message').html('Password match').css({'font-weight': 'bold','color':'green'});
+  }
+    
 });
 
-// function myFunction(e) {
-// 	e.preventDefault();
-//   var x = document.getElementById("password");
-//   if (x.type === "password") {
-//     x.type = "text";
-//   } else {
-//     x.type = "password";
-//   }
-// }
+$('#password').on('change', function () {
+  if ($('#password').val() != $('#confirm_password').val()) 
+  {
+  	$('#message').html('Confirm Passsword Not Match').css({'font-weight': 'bold','color':'red'});
+   return false;
+  } else 
+  {
+  	 $('#message').html('Password match').css({'font-weight': 'bold','color':'green'});
+  }
+    
+});
 $('.toggle').on('click',function(e){
 e.preventDefault();
 // alert(
