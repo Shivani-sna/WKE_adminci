@@ -96,44 +96,50 @@ class Authentication extends MY_Controller
  */
 	public function password_recovery()
 	{
-		if (empty(check_islogin()))
+		$data['content'] = $this->load->view('password_recovery', '', TRUE);
+		$this->load->view('index', $data);
+
+		if ($this->input->post('email'))
 		{
-			$data['content'] = $this->load->view('password_recovery', '', TRUE);
-			$this->load->view('index', $data);
+			$result = $this->users->get_by('email', $this->input->post('email'));
 
-			if ($this->input->post('email'))
+			if ($result)
 			{
-				$result = $this->users->get_by('email', $this->input->post('email'));
+				$this->session->set_flashdata('success', 'Your Reset Password Link has send');
+				$firstname = $result['firstname'];
+				$lastname  = $result['lastname'];
+				$email     = $result['email'];
+				$key       = array('remember_token' => remember_token());
 
-				if ($result)
+				log_activity("Forgot Password request user: [$firstname $lastname,$email]", $result['id']);
+				$update = $this->users->update($result['id'], $key);
+
+				if ($update)
 				{
-					$this->session->set_flashdata('success', 'Your Reset Password Link has send');
-					$firstname = $result['firstname'];
-					$lastname  = $result['lastname'];
-					$email     = $result['email'];
-					$key       = array('remember_token' => remember_token());
-
-					log_activity("Forgot Password request user: [$firstname $lastname,$email]", $result['id']);
-					$update = $this->users->update($result['id'], $key);
-
-					if ($update)
-					{
+					/*
 						//send Mail form here
-						redirect('authentication/reset_password');
-					}
-				}
-				else
-				{
-					$ip = $this->input->ip_address();
-					log_activity("Failed forgot Password request Unknown Access [IP : $ip]", NULL);
-					$this->session->set_flashdata('error', 'Please Enter Valid Email.');
-					redirect('authentication/password_recovery');
+
+						$email             = $email;
+
+						$data['firstname'] = $firstname;
+
+						$data['lastname']  = $lastname;
+
+						$subject           = "Password Recovery for WKE";
+
+						$htmlContent       = $this->load->view('email_password_recovery', $data, TRUE);
+						send_mail($email, $subject, $htmlContent);
+					*/
+					redirect('authentication/reset_password');
 				}
 			}
-		}
-		else
-		{
-			redirect('admin/home');
+			else
+			{
+				$ip = $this->input->ip_address();
+				log_activity("Failed forgot Password request Unknown Access [IP : $ip]", NULL);
+				$this->session->set_flashdata('error', 'Please Enter Valid Email.');
+				redirect('authentication/password_recovery');
+			}
 		}
 	}
 
@@ -142,18 +148,26 @@ class Authentication extends MY_Controller
 	 */
 	public function reset_password($key)
 	{
-		if (!empty(check_islogin()))
+		if ($key == NULL)
 		{
-			redirect('admin/home');
+			$this->session->set_flashdata('error', 'your reset password link expire');
+			redirect('authentication');
 		}
 
-		$data['user']    = $this->users->get_by(array('remember_token' => $key));
+		$data['user'] = $this->users->get_by(array('remember_token' => $key));
+
 		$data['content'] = $this->load->view('reset_password', $data, TRUE);
 		$this->load->view('index', $data);
 		$id = $data['user']['id'];
 
-		if ($this->input->post() != null)
+		if ($id == null)
 		{
+			$this->session->set_flashdata('error', 'Your key Expired');
+			redirect('authentication');
+		}
+		else
+		{
+			print_r('yes');
 			$data = array(
 				'password'             => md5($this->input->post('password')),
 				'last_password_change' => current_timestamp(),

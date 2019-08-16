@@ -10,14 +10,14 @@ function current_timestamp()
 /**
  * @param $id
  */
-function has_permissions($features, $capabilities)
+function has_permissions($feature, $capability)
 {
 	$CI = &get_instance();
 	$CI->load->model('user_permission_model', 'user_permissions');
 	$data = array(
 		'user_id'      => check_islogin()['id'],
-		'features'     => $features,
-		'capabilities' => $capabilities
+		'features'     => $feature,
+		'capabilities' => $capability
 
 	);
 
@@ -29,11 +29,11 @@ function has_permissions($features, $capabilities)
 /**
  * @param $id
  */
-function access_denied($features, $capabilities)
+function access_denied($feature, $capability)
 {
 	$CI = &get_instance();
 	$CI->session->set_flashdata('error', 'You have Not Access ');
-	log_activity("Try to Access page don't have Permissions in $features ['Method' : $capabilities] ",check_islogin()['id']);
+	log_activity("Try to Access page don't have Permissions in $feature ['Method' : $capability] ", check_islogin()['id']);
 
 	if (!empty($_SERVER['HTTP_REFERER']))
 	{
@@ -43,8 +43,6 @@ function access_denied($features, $capabilities)
 	{
 		check_islogin();
 	}
-
-	//return TRUE;
 }
 
 /**
@@ -71,7 +69,6 @@ function list_controllers()
 	return $controllers;
 }
 
-
 /**
  * [_setflashdata for get notification to set session]
  * @param  [type] $name [for define session name]
@@ -97,6 +94,7 @@ function check_islogin()
 }
 
 /**
+ * Permissions Array
  * @param array $data
  */
 function get_users_permissions($data = [])
@@ -126,7 +124,7 @@ function get_users_permissions($data = [])
 			'capabilities' => $all_permissions_array
 
 		],
-		'roles'   => [
+		'roles'      => [
 			'name'         => 'roles',
 			'capabilities' => $all_permissions_array
 
