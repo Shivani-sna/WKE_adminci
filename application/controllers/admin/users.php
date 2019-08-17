@@ -78,7 +78,7 @@ class Users extends MY_Controller
 
 			if ($insert)
 			{
-				$this->session->set_flashdata('success', 'You have Added User Successfully');
+				$this->session->set_flashdata('success',_l('added_successfully_msg', _l('user')));
 				redirect('admin/users');
 			}
 		}
@@ -99,7 +99,7 @@ class Users extends MY_Controller
 		if (empty(has_permissions('users', 'edit')))
 		{
 			$this->session->set_flashdata('error', 'You have Not access');
-			redirect('admin/home');
+			redirect('admin/dashboard');
 		}
 
 		if ($id)
@@ -192,7 +192,18 @@ class Users extends MY_Controller
 		$session_id = get_loggedin_user_id();
 		$user_id    = $this->input->post('user_id');
 		$data       = array('is_active' => $this->input->post('is_active'));
+		// print_r($data);
+		// die();
 		$update     = $this->users->update($user_id, $data);
+		if ($update) 
+		{
+			if ($this->input->post('is_active')==1) 
+			{
+				echo "Active";
+			}
+			
+
+		}
 		log_activity("User Status Updated [ID:$user_id] ", $session_id);
 	}
 

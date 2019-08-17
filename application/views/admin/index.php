@@ -140,7 +140,7 @@ $(function() {
 </head>
 
 <body>
-	<?php $session =is_user_logged_in(); ?>
+	<?php $session =$this->session->userdata('user'); ?>
 	<!-- Main navbar -->
 	<div class="navbar navbar-inverse">
 		<div class="navbar-header">
@@ -229,34 +229,79 @@ $(function() {
 									}
 								 ?>><a href="<?php echo base_url('admin/dashboard'); ?>"><i class="icon-home4"></i> <span>Dashboard</span></a></li>
 								
-								<li <?php 
+								
+								 <?php 
+										if (has_permissions('users', 'view'))
+										{
+									?>
+									<li <?php 
 									if ($this->uri->segment(2)=='users') 
 									{
 										echo 'class="active"';
 									}
-								 ?>><a href="<?php echo base_url('admin/users'); ?>"><i class="icon-users4"></i><span>
-								Users</span></a></li>
-								<li <?php 
+								 ?>>
+								 <a href="<?php echo base_url('admin/users'); ?>">
+								 	<i class="icon-users4"></i>
+								 	<span>Users</span>
+								 </a>
+								</li>
+											
+										<?php 
+										}
+										?>
+								
+								 <?php 
+										if (has_permissions('projects', 'view'))
+										{
+									?>
+										<li <?php 
 									if ($this->uri->segment(2)=='projects') 
 									{
 										echo 'class="active"';
 									}
-								 ?>><a href="<?php echo base_url('admin/projects'); ?>"><i class="icon-menu3"></i><span>
+								 ?>>
+								 <a href="<?php echo base_url('admin/projects'); ?>"><i class="icon-menu3"></i><span>
 								Projects</span></a></li>
-								<li <?php 
+											
+										<?php 
+										}
+										?>
+									 <?php 
+										if (has_permissions('categories', 'view'))
+										{
+									?>
+									<li <?php 
 									if ($this->uri->segment(2)=='categories') 
 									{
 										echo 'class="active"';
 									}
 								 ?>><a href="<?php echo base_url('admin/categories'); ?>"><i class="icon-menu6"></i><span>
 								Categories</span></a></li>
-								<li <?php 
+											
+										<?php 
+										}
+										?>
+										 <?php 
+										if (has_permissions('roles', 'view'))
+										{
+									?>
+									<li <?php 
 									if ($this->uri->segment(2)=='roles') 
 									{
 										echo 'class="active"';
 									}
-								 ?>><a href="<?php echo base_url('admin/roles'); ?>"><i class="icon-menu6"></i><span>
-								Roles</span></a></li>
+								 ?>>
+								 <a href="<?php echo base_url('admin/roles'); ?>">
+								 	<i class="icon-menu6"></i>
+								 	<span>Roles</span>
+								 </a>
+								</li>
+											
+										<?php 
+										}
+										?>
+								
+								
 
 															<!-- /main -->
 							</ul>

@@ -37,7 +37,7 @@
 									<div class="panel-heading">
 										<div class="row">
 											<div class="col-md-10">
-												<h5 class="panel-title">Role</h5>
+												<h5 class="panel-title"><strong>Role</strong></h5>
 											</div>
 										</div>
 									</div>

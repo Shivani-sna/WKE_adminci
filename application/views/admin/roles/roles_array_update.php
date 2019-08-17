@@ -9,8 +9,8 @@
 	
 	<table class="table table-bordered">
 <tr>
-	<td>Features</td>
-	<td>Capabilities</td>
+	<th>Features</th>
+	<th>Capabilities</th>
 </tr>
 <?php
 
@@ -18,7 +18,7 @@
 	
 		?>
 	<tr>
-		<td><?php echo ucfirst($permission['name']); ?></td>
+		<th><?php echo ucfirst($permission['name']); ?></th>
 		<td>
 			<div>
 			<?php 

@@ -9,7 +9,7 @@
 					<div class="breadcrumb-line">
 						<ul class="breadcrumb">
 							
-							<li><a href="<?php echo base_url('admin/dashboard'); ?>"><i class="icon-home2 position-left"></i>Dashboard <?php //echo _l('added_successfully_msg', _l('user')); ?> </a></li>
+							<li><a href="<?php echo base_url('admin/dashboard'); ?>"><i class="icon-home2 position-left"></i>Dashboard <?php //echo _l('added_successfully_msg', _l('role')); ?> </a></li>
 						</ul>
 					</div>
 				</div>

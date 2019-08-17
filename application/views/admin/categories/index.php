@@ -196,7 +196,14 @@ $(function() {
                 })
                 .done(function(msg){
                    
-               toastr.success("Status Updated");
+              if (msg=='Active')
+                    {
+                      toastr.success("<?php echo _l('activation_msg', _l('category')); ?>");
+                    }
+                    else
+                    {
+                        toastr.success("<?php echo _l('deactivation_msg', _l('category')); ?>");
+                    }
           response = (msg == '0') ? true : false;
           return response;
         }).fail(function(data){

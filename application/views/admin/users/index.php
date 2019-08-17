@@ -243,9 +243,17 @@ $(function() {
               			    is_active:check
               			 },
               	})
-              	.done(function(msg){
-              		 
-               toastr.success("Status Updated");
+              	.done(function(msg)
+                {
+              		 if (msg=='Active')
+                    {
+                      toastr.success("<?php echo _l('activation_msg', _l('user')); ?>");
+                    }
+                    else
+                    {
+                        toastr.success("<?php echo _l('deactivation_msg', _l('user')); ?>");
+                    }
+               
           response = (msg == '0') ? true : false;
           return response;
         }).fail(function(data){

@@ -37,7 +37,7 @@ function access_denied($feature, $capability)
 // $user = session username
 	// $msg = $user. " tried to access $feature $capability page without permission"
 
-	log_activity("Try to Access page don't have Permissions in $feature ['Method' : $capability] ", check_islogin()['id']);
+	log_activity("Try to Access page don't have Permissions in $feature ['Method' : $capability] ", get_loggedin_user_id());
 
 	if (!empty($_SERVER['HTTP_REFERER']))
 	{
@@ -45,7 +45,7 @@ function access_denied($feature, $capability)
 	}
 	else
 	{
-		check_islogin();
+		is_user_logged_in();
 	}
 }
 
@@ -81,15 +81,35 @@ function list_controllers()
  */
 function is_user_logged_in()
 {
-	$CI   = &get_instance();
-	return $CI->session->userdata('user');
-	 
+	$CI = &get_instance();
+
+
+	// if ($CI->session->userdata('user'))
+	// {
+	// 	 return $CI->session->userdata('user');
+	// 	// redirect('admin\dashboard');
+	// }
+
+	if (!$CI->session->userdata('user'))
+	{
+		$CI->session->set_userdata('redirect_url',current_url());
+		redirect ('authentication');
+	}
+	
+		
+	
+
+	
 }
 
+/**
+ * @return mixed
+ */
 function get_loggedin_user_id()
 {
 	$CI   = &get_instance();
 	$user = $CI->session->userdata('user');
+
 	return $user['user_id'];
 }
 

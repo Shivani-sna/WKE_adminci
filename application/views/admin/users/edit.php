@@ -37,7 +37,7 @@
 									<div class="panel-heading">
 										<div class="row">
 											<div class="col-md-10">
-												<h5 class="panel-title">Profile</h5>
+												<h5 class="panel-title"><strong>User</strong></h5>
 											</div>
 										</div>
 									</div>
@@ -255,7 +255,14 @@ $( document ).ready(function()
               			 },
               			  success:function(data)
                {
-               	swal('','Status Updated', "success");swal('','Status Updated', "success");
+               	if (data=='Active')
+                    {
+                      toastr.success("<?php echo _l('activation_msg', _l('user')); ?>");
+                    }
+                    else
+                    {
+                        toastr.success("<?php echo _l('deactivation_msg', _l('user')); ?>");
+                    }
                }
               	})
 	 });

@@ -75,7 +75,14 @@ class Authentication extends MY_Controller
 
 //print_r($this->session->get_userdata('user[user_id]'));
 					// die();
-					redirect('admin/dashboard');
+					if ($redirect_url=$this->session->userdata('redirect_url')) 
+					{
+						redirect($redirect_url);
+					}
+					else
+					{
+						redirect('admin/dashboard');
+					}
 				}
 			}
 			else
@@ -127,22 +134,26 @@ class Authentication extends MY_Controller
 
 				if ($update)
 				{
-					/*
-						//send Mail form here
+/*
+//send Mail form here
 
-						$email             = $email;
+$email             = $email;
 
-						$data['firstname'] = $firstname;
+$data['firstname'] = $firstname;
 
-						$data['lastname']  = $lastname;
+$data['lastname']  = $lastname;
 
-						$subject           = "Password Recovery for WKE";
+$subject           = "Password Recovery for WKE";
 
-						$htmlContent       = $this->load->view('email_password_recovery', $data, TRUE);
-						send_mail($email, $subject, $htmlContent);
-					*/
+$htmlContent       = $this->load->view('email_password_recovery', $data, TRUE);
+send_mail($email, $subject, $htmlContent);
+ */
 
-					$this->load->view('email_password_recovery', $key, TRUE);
+//$data['key'] = $key;
+
+//print_r($data);
+
+					redirect('authentication/email_view/'.$key['auth_token']);
 				}
 			}
 			else
@@ -152,7 +163,7 @@ class Authentication extends MY_Controller
 
 				$this->session->set_flashdata('error', 'Please Enter Valid Email.');
 
-				redirect('authentication/password_recovery');
+				redirect('authentication/forgot_password');
 			}
 		}
 		else
@@ -162,42 +173,48 @@ class Authentication extends MY_Controller
 		}
 	}
 
+/**
+ * @param $key
+ */
+	public function email_view()
+	{
+		$data['key']  = $this->uri->segment(3);
+		$data['user'] = $this->users->get_by(array('auth_token' => $this->uri->segment(3)));
+
+// print_r($data);
+		// die();
+		$this->load->view('email_password_recovery', $data);
+	}
+
 // public function
 
 	/**
 	 * [reset_password for sending mail after url redirect]
 	 */
-	public function reset_password($key)
+	public function reset_password($key = '')
 	{
-		/*if ($key == NULL)
-			{
-				$this->session->set_flashdata('error', 'your reset password link expire');
-				redirect('authentication');
-		*/
+// print_r($key);
 
-		$data['user'] = $this->users->get_by(array('auth_token' => $key));
-
-		$data['content'] = $this->load->view('reset_password', $data, TRUE);
-		$this->load->view('index', $data);
-		$id = $data['user']['id'];
-
-		print_r($this->input->post());
-		die();
-
-		if ($this->input->post() == NULL)
+// die();
+		if ($key == NULL)
 		{
-			$this->session->set_flashdata('error', 'Your key Expired');
-			//redirect('authentication');
+			$this->session->set_flashdata('error', 'your reset password link expire');
+			redirect('authentication');
 		}
-		else
+
+		if ($this->input->post('password'))
 		{
-			$data = array(
+			$password_data = array(
 				'password'             => md5($this->input->post('password')),
 				'last_password_change' => current_timestamp(),
 				'auth_token'           => null
 
 			);
-			$update = $this->users->update($id, $data);
+
+			$data['user'] = $this->users->get_by(array('auth_token' => $key));
+			$id           = $data['user']['id'];
+
+			$update = $this->users->update($id, $password_data);
 
 			if ($update)
 			{
@@ -212,6 +229,13 @@ class Authentication extends MY_Controller
 				$this->session->set_flashdata('error', 'Error in Password change');
 			}
 		}
+		else
+		{
+			$data['user']    = $this->users->get_by(array('auth_token' => $key));
+			$id              = $data['user']['id'];
+			$data['content'] = $this->load->view('reset_password', $data, TRUE);
+			$this->load->view('index', $data);
+		}
 	}
 
 /**
@@ -222,8 +246,9 @@ class Authentication extends MY_Controller
 		$session  = is_user_logged_in();
 		$username = $session['username'];
 		$email    = $session['email'];
-		log_activity("Logout User : [$username,$email]",get_loggedin_user_id());
+		log_activity("Logout User : [$username,$email]", get_loggedin_user_id());
 		$this->session->unset_userdata('user');
+		$this->session->unset_userdata('redirect_url');
 		redirect('authentication');
 	}
 }

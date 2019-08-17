@@ -57,7 +57,7 @@ class Projects extends MY_Controller
 
 			if ($insert)
 			{
-				$this->session->set_flashdata('success', 'You have Added Project Successfully');
+				$this->session->set_flashdata('success',_l('added_successfully_msg', _l('project')));
 				redirect('admin/projects');
 			}
 		}

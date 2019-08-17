@@ -32,7 +32,7 @@
 									<div class="panel-heading">
 										<div class="row">
 											<div class="col-md-10">
-												<h5 class="panel-title">Profile</h5>
+												<h5 class="panel-title"><strong>User</strong></h5>
 												<!-- <div class="heading-elements">
 													<ul class="icons-list">
 								                		<li><a data-action="collapse"></a></li>

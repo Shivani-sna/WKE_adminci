@@ -55,7 +55,7 @@ class Roles extends MY_Controller
 
 			if ($insert)
 			{
-				$this->session->set_flashdata('success', 'Role Added Successfully');
+				$this->session->set_flashdata('success',_l('added_successfully_msg', _l('role')));
 				redirect('admin/roles');
 			}
 		}
