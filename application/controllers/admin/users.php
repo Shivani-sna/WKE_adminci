@@ -14,7 +14,7 @@ class Users extends MY_Controller
 	public function __construct()
 	{
 		parent::__construct();
-		check_islogin();
+		is_user_logged_in();
 		$this->load->model('user_model', 'users');
 		$this->load->model('role_model', 'roles');
 		$this->load->model('user_permission_model', 'user_permissions');
@@ -26,11 +26,12 @@ class Users extends MY_Controller
 	public function index()
 	{
 		$data = array(
-			'user_id'      => check_islogin()['id'],
+			'user_id'      => get_loggedin_user_id(),
 			'features'     => 'users',
 			'capabilities' => 'view'
 
 		);
+		$this->users->order_by('id', 'DESC');
 		$data['users']   = $this->users->get_all();
 		$data['roles']   = $this->roles->get_all();
 		$data['content'] = $this->load->view('admin/users/index', $data, TRUE);
@@ -55,7 +56,7 @@ class Users extends MY_Controller
 				'is_deleted' => 0
 			);
 			$insert = $this->users->insert($data);
-			$id     = check_islogin()['id'];
+			$id     = get_loggedin_user_id();
 			log_activity("User Added [ID:$insert] ", $id);
 
 			$role_id = $this->input->post('role');
@@ -65,7 +66,7 @@ class Users extends MY_Controller
 
 			foreach ($permissions as $key => $permission)
 			{
-				foreach ($permission as $use => $value)
+				foreach ($permission as $key_permission => $value)
 				{
 					$data = array
 						('user_id'     => $insert,
@@ -131,7 +132,7 @@ class Users extends MY_Controller
 				}
 
 				$update     = $this->users->update($id, $data);
-				$session_id = check_islogin()['id'];
+				$session_id = get_loggedin_user_id();
 				log_activity("User Updated [ID:$id] ", $session_id);
 				$user_id = $this->input->post('role');
 
@@ -146,7 +147,7 @@ class Users extends MY_Controller
 				{
 					if ($permission != NULL)
 					{
-						foreach ($permission as $use => $value)
+						foreach ($permission as $key_permission => $value)
 						{
 							$data = array
 								('user_id'     => $id,
@@ -169,7 +170,7 @@ class Users extends MY_Controller
 				$data['user']  = $this->users->get($id);
 				$data['roles'] = $this->roles->get_all();
 
-				if (check_islogin()['id'] == $id)
+				if (get_loggedin_user_id() == $id)
 				{
 					redirect('admin/myprofile/edit');
 				}
@@ -188,7 +189,7 @@ class Users extends MY_Controller
  */
 	public function update_status()
 	{
-		$session_id = check_islogin()['id'];
+		$session_id = get_loggedin_user_id();
 		$user_id    = $this->input->post('user_id');
 		$data       = array('is_active' => $this->input->post('is_active'));
 		$update     = $this->users->update($user_id, $data);
@@ -200,13 +201,13 @@ class Users extends MY_Controller
  */
 	public function delete()
 	{
-		if (empty(has_permissions(check_islogin()['id'])))
+		if (empty(has_permissions('users','delete')))
 		{
 			$this->session->set_flashdata('error', 'You have Not access');
 			redirect('admin/home');
 		}
 
-		$session_id = check_islogin()['id'];
+		$session_id = get_loggedin_user_id();
 		$user_id    = $this->input->post('user_id');
 		$result     = $this->users->delete($user_id);
 
@@ -218,7 +219,7 @@ class Users extends MY_Controller
  */
 	public function delete_selected()
 	{
-		$session_id = check_islogin()['id'];
+		$session_id = get_loggedin_user_id();
 		$where      = $this->input->post('ids');
 		$ids        = implode(",", $where);
 		$delete_all = $this->users->delete_many($where);

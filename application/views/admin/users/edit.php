@@ -13,7 +13,7 @@
 					<div class="breadcrumb-line">
 						<ul class="breadcrumb">
 							<?php  ?>
-							<li><a href="<?php echo base_url('admin/home'); ?>"><i class="icon-home2 position-left"></i>Dashboard</a></li>
+							<li><a href="<?php echo base_url('admin/dashboard'); ?>"><i class="icon-home2 position-left"></i>Dashboard</a></li>
 							<li><a href="<?php echo base_url('admin/users'); ?>">Users</a></li>
 							<li class="active">Edit</li>
 
@@ -88,7 +88,7 @@
 													<label>Status:</label>
 												 <?php 
 													$readonly = '';
-													if ($user['id']==$session['id'])
+													if ($user['id']==get_loggedin_user_id()	)
 													 {
 														 $readonly="readonly";
 													} 

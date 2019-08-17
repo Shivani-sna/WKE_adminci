@@ -19,6 +19,15 @@
 
 <!-- sweet alert -->
 	<link data-require="sweet-alert@*" data-semver="0.4.2" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css" />
+	<style type="text/css">
+		<style>
+/* Tooltip container */
+.tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
+}
+	</style>
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
   
 	<!-- Core JS files -->
@@ -131,11 +140,11 @@ $(function() {
 </head>
 
 <body>
-	<?php $user =$this->session->userdata('user'); ?>
+	<?php $session =is_user_logged_in(); ?>
 	<!-- Main navbar -->
 	<div class="navbar navbar-inverse">
 		<div class="navbar-header">
-			<a class="navbar-brand" href="index.html"><img src="<?php echo base_url("assets/images/logo_light.png"); ?>" alt=""></a>
+			<a class="navbar-brand" href="<?php echo base_url('admin/dashboard'); ?>"><img src="<?php echo base_url("assets/images/logo_light.png"); ?>" alt=""></a>
 
 			<ul class="nav navbar-nav visible-xs-block">
 				<li><a data-toggle="collapse" data-target="#navbar-mobile"><i class="icon-tree5"></i></a></li>
@@ -151,7 +160,7 @@ $(function() {
 			<ul class="nav navbar-nav navbar-right">
 				<li class="dropdown dropdown-user">
 					<a class="dropdown-toggle" data-toggle="dropdown">
-						<span><?php echo $user['firstname']; ?></span>
+						<span><?php echo $session['username']; ?></span>
 						<i class="caret"></i>
 					</a>
 
@@ -188,7 +197,7 @@ $(function() {
 										<?php
 										 //echo "<pre>";
 										 
-										 echo "Welcome".'&nbsp;'.$user['firstname'].'&nbsp;'; 
+										 echo "Welcome".'&nbsp;'.$session['username'].'&nbsp;'; 
 										?>
 										<a style="color: white;" href="<?php echo base_url('authentication/logout'); ?>" align="padding-right"><i class="icon-switch2" data-popup="tooltip"  data-placement="right" data-original-title="Logout"></i></a>
 											
@@ -214,11 +223,11 @@ $(function() {
 								<!-- Main -->
 							
 								<li <?php 
-									if ($this->uri->segment(2)=='home') 
+									if ($this->uri->segment(2)=='dashboard') 
 									{
 										echo 'class="active"';
 									}
-								 ?>><a href="<?php echo base_url('admin/home'); ?>"><i class="icon-home4"></i> <span>Dashboard</span></a></li>
+								 ?>><a href="<?php echo base_url('admin/dashboard'); ?>"><i class="icon-home4"></i> <span>Dashboard</span></a></li>
 								
 								<li <?php 
 									if ($this->uri->segment(2)=='users') 

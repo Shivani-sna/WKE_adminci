@@ -4,7 +4,7 @@
 
 
 					<!-- Password recovery -->
-					<form  class="resetform" action="<?php echo base_url('authentication/reset_password/').$user['remember_token']; ?>" method="POST">
+					<form  class="resetform" action="<?php echo base_url('authentication/reset_password/').$user['auth_token']; ?>" method="POST">
 						<div class="panel panel-body login-form">
 							<div class="text-center">
 								<div class="icon-object border-warning text-warning"><i class="icon-spinner11"></i></div>

@@ -15,7 +15,7 @@ function has_permissions($feature, $capability)
 	$CI = &get_instance();
 	$CI->load->model('user_permission_model', 'user_permissions');
 	$data = array(
-		'user_id'      => check_islogin()['id'],
+		'user_id'      => get_loggedin_user_id(),
 		'features'     => $feature,
 		'capabilities' => $capability
 
@@ -33,6 +33,10 @@ function access_denied($feature, $capability)
 {
 	$CI = &get_instance();
 	$CI->session->set_flashdata('error', 'You have Not Access ');
+
+// $user = session username
+	// $msg = $user. " tried to access $feature $capability page without permission"
+
 	log_activity("Try to Access page don't have Permissions in $feature ['Method' : $capability] ", check_islogin()['id']);
 
 	if (!empty($_SERVER['HTTP_REFERER']))
@@ -75,22 +79,18 @@ function list_controllers()
  * @param  [type] $msg  [for define msges]
  * @return [type]       [description]
  */
-function check_islogin()
+function is_user_logged_in()
+{
+	$CI   = &get_instance();
+	return $CI->session->userdata('user');
+	 
+}
+
+function get_loggedin_user_id()
 {
 	$CI   = &get_instance();
 	$user = $CI->session->userdata('user');
-
-	if ($user == NULL)
-	{
-		$CI->session->set_flashdata('error', 'Please Login');
-		redirect('authentication');
-	}
-	else
-	{
-		return $user;
-	}
-
-	// return $user;
+	return $user['user_id'];
 }
 
 /**
@@ -300,7 +300,7 @@ function time_stamp($session_time)
 /**
  * @return mixed
  */
-function remember_token()
+function auth_token()
 {
 	$n            = 15;
 	$characters   = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -313,4 +313,23 @@ function remember_token()
 	}
 
 	return $randomString;
+}
+
+/**
+ * @param $line
+ * @param $label
+ * @return mixed
+ */
+function _l($line, $label = '')
+{
+	$CI = &get_instance();
+
+	$output = $CI->lang->line($line);
+
+	if ($label != '')
+	{
+		$output = str_replace('%s', $label, $output);
+	}
+
+	return $output;
 }

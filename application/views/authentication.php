@@ -44,7 +44,7 @@
 									</div>
 
 									<div class="col-sm-6 text-right">
-										<a href="<?php echo base_url('authentication/password_recovery'); ?>">Forgot password?</a>
+										<a href="<?php echo base_url('authentication/forgot_password'); ?>">Forgot password?</a>
 									</div>
 								</div>
 							</div>

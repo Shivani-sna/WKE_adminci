@@ -15,7 +15,7 @@ class Myprofile extends MY_Controller
 	public function __construct()
 	{
 		parent::__construct();
-		check_islogin();
+		is_user_logged_in();
 		$this->load->model('user_model', 'users');
 		$this->load->model('activity_log_model', 'activity_log');
 	}
@@ -25,7 +25,7 @@ class Myprofile extends MY_Controller
 	 */
 	public function edit()
 	{
-		$id = check_islogin()['id'];
+		$id = get_loggedin_user_id();
 
 		if ($id)
 		{
@@ -49,7 +49,7 @@ class Myprofile extends MY_Controller
 			{
 				log_activity("MyProfile Updated", $id);
 				$this->session->set_flashdata('success', 'Profile Updated');
-				redirect('admin/myprofile/update');
+				redirect('admin/myprofile/edit');
 			}
 			else
 			{
@@ -64,7 +64,7 @@ class Myprofile extends MY_Controller
 	 */
 	public function edit_password()
 	{
-		$id = check_islogin()['id'];
+		$id = get_loggedin_user_id();
 
 		$data['user'] = $this->users->get($id);
 
@@ -82,13 +82,13 @@ class Myprofile extends MY_Controller
 			{
 				log_activity("MyPassword Changed", $id);
 				$this->session->set_flashdata('success', 'Password Changed');
-				redirect('admin/myprofile/update');
+				redirect('admin/myprofile/edit');
 			}
 			else
 			{
 				log_activity("!Error MyPassword Not Change", $id);
 				$this->session->set_flashdata('error', 'Password Not Change');
-				redirect('admin/myprofile/update');
+				redirect('admin/myprofile/edit');
 			}
 		}
 		else

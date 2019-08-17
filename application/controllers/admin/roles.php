@@ -6,7 +6,7 @@ class Roles extends MY_Controller
 	public function __construct()
 	{
 		parent::__construct();
-		check_islogin();
+		is_user_logged_in();
 		$this->load->model('role_model', 'roles');
 		$this->load->model('user_model', 'users');
 		$this->load->model('user_permission_model', 'user_permissions');
@@ -51,7 +51,7 @@ class Roles extends MY_Controller
 			);
 
 			$insert = $this->roles->insert($data);
-			log_activity("Role Added [ID:$insert] ", check_islogin()['id']);
+			log_activity("Role Added [ID:$insert] ", get_loggedin_user_id());
 
 			if ($insert)
 			{
@@ -86,7 +86,7 @@ class Roles extends MY_Controller
 				'permissions' => serialize($this->input->post('permissions'))
 			);
 			$update = $this->roles->update($id, $data);
-			log_activity("Role updated [ID:$update] ", check_islogin()['id']);
+			log_activity("Role updated [ID:$update] ", get_loggedin_user_id());
 			$users = $this->users->get_many_by(array('role' => $id));
 
 			if ($users != null)
@@ -105,9 +105,9 @@ class Roles extends MY_Controller
 
 				foreach ($permissions as $key => $permission)
 				{
-					foreach ($permission as $permi => $value)
+					foreach ($permission as $key_permission => $value)
 					{
-						foreach ($user_id_array as $user_id => $user)
+						foreach ($user_id_array as $key_user_id => $user)
 						{
 							$data = array
 								(
@@ -146,13 +146,13 @@ class Roles extends MY_Controller
 		if ($users == NULL)
 		{
 			$result = $this->roles->delete($role_id);
-			log_activity("Role Deleted [ID:$role_id] ", $session_id);
+			log_activity("Role Deleted [ID:$role_id] ", get_loggedin_user_id());
 			echo "deleted";
 		}
 		else
 		{
 			echo "error";
-			log_activity("Failed to Delete Role their related user exits [ID:$role_id] ", $session_id);
+			log_activity("Failed to Delete Role their related user exits [ID:$role_id] ", get_loggedin_user_id());
 		}
 	}
 
@@ -161,7 +161,7 @@ class Roles extends MY_Controller
  */
 	public function delete_selected()
 	{
-		$session_id = check_islogin()['id'];
+		$session_id = get_loggedin_user_id();
 		$where      = $this->input->post('ids');
 		$ids        = implode(",", $where);
 		$delete_all = $this->roles->delete_many($where);

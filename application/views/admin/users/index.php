@@ -1,7 +1,4 @@
-		<?php 
-			$session=check_islogin();
-
-      ?>
+		
 		 <style type="text/css">
 		 	.checkbox
 		 	{
@@ -19,7 +16,7 @@
           <div class="breadcrumb-line">
             <ul class="breadcrumb">
               <?php  ?>
-              <li><a href="<?php echo base_url('admin/home'); ?>"><i class="icon-home2 position-left"></i>Dashboard</a></li>
+              <li><a href="<?php echo base_url('admin/dashboard'); ?>"><i class="icon-home2 position-left"></i>Dashboard</a></li>
               <li class="active">Users</li>
               
 
@@ -44,9 +41,30 @@
 							<thead>
 								<tr>
 									<th><input type="checkbox" name="delete_id" id="select_all"></th>
-									<th>Full Name</th>
-									<th>Email</th>
-									<th>Role</th>
+									<th><input type="text" name="firstname" placeholder="FIrstname" class="form-control"></th>
+									<th><input type="email" name="email" placeholder="email" class="form-control"></th>
+									<th><select class="select" name="role" id="role">
+                      <!-- <option>Select Role</option> -->
+                          <?php 
+                              foreach ($roles as $key => $role)
+                               {
+                                ?>
+                                <div class="form-group">
+                    
+                      
+                        
+                      <option value="" name="select">Select Role</option>
+                        <option value="<?php echo $role['id']; ?>" name="role"><?php echo $role['name'] ?></option>
+                        
+                            <?php
+
+                            }
+
+                           ?>
+
+                      
+                           </select>
+</th>
 									<th>Last Login</th>
 									<th>Status</th>
 									<th class="text-center">Actions</th>
@@ -59,14 +77,14 @@
 									<tr>
 									<td><?php 
 									$disabled = '';
-									if ($user['id']==$session['id'])
+									if ($user['id']==get_loggedin_user_id())
 									 {
 										 $disabled="disabled";
 									} 
 
-									 ?> 	<input type="checkbox" class="checkbox"  name="delete"  id="<?php if ($user['id']!=$session['id']){ echo $user['id'];} ?>" <?php echo $disabled; ?>></td>
-									<td><?php echo $user['firstname'].'&nbsp;'.$user['lastname']; ?></td>
-									<td><?php echo $user['email']; ?></td>
+									 ?> 	<input type="checkbox" class="checkbox"  name="delete"  id="<?php if ($user['id']!=get_loggedin_user_id()){ echo $user['id'];} ?>" <?php echo $disabled; ?>></td>
+									<td><?php echo ucfirst($user['firstname']).'&nbsp;'.ucfirst($user['lastname']); ?></td>
+									<td><a href="mailto:<?php echo $user['email']; ?>"><?php echo $user['email']; ?></a></td>
 									<td><?php 
                         foreach ($roles as $key => $role)
                         {
@@ -78,7 +96,13 @@
                   ?>
                     
                   </td>
-									<td><?php if ($user['last_login']!="Never")
+                  <?php
+                      $login_datetime = $user['last_login']!='Never' ? date("d M Y, H:i:s", $user['last_login']) : "Never"; 
+                  ?>
+                  <!-- data-popup="tooltip" -->
+									<td  title="<?php echo $login_datetime;  ?>">
+                    
+                    <?php if ($user['last_login']!="Never")
                    {
                    echo time_stamp($user['last_login']);
                   }
@@ -89,7 +113,7 @@
                   ?></td>
 									 <?php 
 									$readonly = '';
-									if ($user['id']==$session['id'])
+									if ($user['id']==get_loggedin_user_id())
 									 {
 										 $readonly="readonly";
 									} 
@@ -134,7 +158,7 @@ $(function() {
         autoWidth: false,
         columnDefs: [{ 
             orderable: false,
-            width: '100px',
+          
             targets: [ 5 ]
         }],
         dom: '<"datatable-header"fl><"datatable-scroll"t><"datatable-footer"ip>',
@@ -200,7 +224,7 @@ $(function() {
    	  var check = 0;
       var BASE_URL = "<?php echo base_url(); ?>";
       var id = $(this).attr('id');
-      var session_id = "<?php echo $session['id']; ?>";
+      var session_id = "<?php echo get_loggedin_user_id(); ?>";
       //console.log(id);
 
        if (session_id!=id) 
@@ -242,7 +266,7 @@ $(function() {
       e.preventDefault();
       var BASE_URL = "<?php echo base_url(); ?>";
       var id = $(this).attr('id');
-      var session_id = "<?php echo $session['id']; ?>";
+      var session_id = "<?php echo get_loggedin_user_id(); ?>";
       if (id==session_id)
       {
       	 toastr.error("You Can't Delete your Account");

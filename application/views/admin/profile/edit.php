@@ -3,7 +3,12 @@
 	// print_r($user['password']);
 	$password_user=$user['password'];
  ?>
-
+<div class="page-header page-header-default">
+					<div class="page-header-content">
+						<div class="page-title">
+							<h4></i> <span class="text-semibold">Edit Profile</span></h4>
+						</div>
+					</div>
 				<div class="content">
 					<!-- Centered forms -->
 					<div class="row">

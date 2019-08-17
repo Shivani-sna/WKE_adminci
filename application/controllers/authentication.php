@@ -26,7 +26,6 @@ class Authentication extends MY_Controller
 		if ($this->input->post())
 		{
 			$remember = $this->input->post('remember');
-
 			$email    = $this->input->post('email');
 			$password = $this->input->post('password');
 
@@ -53,17 +52,30 @@ class Authentication extends MY_Controller
 				$firstname = $result['firstname'];
 				$lastname  = $result['lastname'];
 				$email     = $result['email'];
+
 				log_activity("Login User : [$firstname $lastname,$email]", $result['id']);
+
 				$data = array(
 					'last_ip'    => $this->input->ip_address(), //User Ip address
 					'last_login' => current_timestamp()
 				);
+
 				$update = $this->users->update($result['id'], $data);
 
 				if ($update)
 				{
-					$this->session->set_userdata('user', $result);
-					redirect('admin/home');
+					$data = array
+						(
+						'user_id'        => $result['id'],
+						'username'       => $result['firstname'].' '.$result['lastname'],
+						'user_logged_in' => TRUE
+					);
+
+					$this->session->set_userdata('user', $data);
+
+//print_r($this->session->get_userdata('user[user_id]'));
+					// die();
+					redirect('admin/dashboard');
 				}
 			}
 			else
@@ -94,11 +106,8 @@ class Authentication extends MY_Controller
 /**
  * [password_recovery for forgot password]
  */
-	public function password_recovery()
+	public function forgot_password()
 	{
-		$data['content'] = $this->load->view('password_recovery', '', TRUE);
-		$this->load->view('index', $data);
-
 		if ($this->input->post('email'))
 		{
 			$result = $this->users->get_by('email', $this->input->post('email'));
@@ -106,12 +115,14 @@ class Authentication extends MY_Controller
 			if ($result)
 			{
 				$this->session->set_flashdata('success', 'Your Reset Password Link has send');
+
 				$firstname = $result['firstname'];
 				$lastname  = $result['lastname'];
 				$email     = $result['email'];
-				$key       = array('remember_token' => remember_token());
+				$key       = array('auth_token' => auth_token());
 
 				log_activity("Forgot Password request user: [$firstname $lastname,$email]", $result['id']);
+
 				$update = $this->users->update($result['id'], $key);
 
 				if ($update)
@@ -130,48 +141,60 @@ class Authentication extends MY_Controller
 						$htmlContent       = $this->load->view('email_password_recovery', $data, TRUE);
 						send_mail($email, $subject, $htmlContent);
 					*/
-					redirect('authentication/reset_password');
+
+					$this->load->view('email_password_recovery', $key, TRUE);
 				}
 			}
 			else
 			{
 				$ip = $this->input->ip_address();
 				log_activity("Failed forgot Password request Unknown Access [IP : $ip]", NULL);
+
 				$this->session->set_flashdata('error', 'Please Enter Valid Email.');
+
 				redirect('authentication/password_recovery');
 			}
 		}
+		else
+		{
+			$data['content'] = $this->load->view('forgot_password', '', TRUE);
+			$this->load->view('index', $data);
+		}
 	}
+
+// public function
 
 	/**
 	 * [reset_password for sending mail after url redirect]
 	 */
 	public function reset_password($key)
 	{
-		if ($key == NULL)
-		{
-			$this->session->set_flashdata('error', 'your reset password link expire');
-			redirect('authentication');
-		}
+		/*if ($key == NULL)
+			{
+				$this->session->set_flashdata('error', 'your reset password link expire');
+				redirect('authentication');
+		*/
 
-		$data['user'] = $this->users->get_by(array('remember_token' => $key));
+		$data['user'] = $this->users->get_by(array('auth_token' => $key));
 
 		$data['content'] = $this->load->view('reset_password', $data, TRUE);
 		$this->load->view('index', $data);
 		$id = $data['user']['id'];
 
-		if ($id == null)
+		print_r($this->input->post());
+		die();
+
+		if ($this->input->post() == NULL)
 		{
 			$this->session->set_flashdata('error', 'Your key Expired');
-			redirect('authentication');
+			//redirect('authentication');
 		}
 		else
 		{
-			print_r('yes');
 			$data = array(
 				'password'             => md5($this->input->post('password')),
 				'last_password_change' => current_timestamp(),
-				'remember_token'       => null
+				'auth_token'           => null
 
 			);
 			$update = $this->users->update($id, $data);
@@ -196,11 +219,10 @@ class Authentication extends MY_Controller
  */
 	public function logout()
 	{
-		$session   = check_islogin();
-		$firstname = $session['firstname'];
-		$lastname  = $session['lastname'];
-		$email     = $session['email'];
-		log_activity("Logout User : [$firstname $lastname,$email]", $session['id']);
+		$session  = is_user_logged_in();
+		$username = $session['username'];
+		$email    = $session['email'];
+		log_activity("Logout User : [$username,$email]",get_loggedin_user_id());
 		$this->session->unset_userdata('user');
 		redirect('authentication');
 	}

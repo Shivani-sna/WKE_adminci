@@ -14,7 +14,7 @@ class Projects extends MY_Controller
 	public function __construct()
 	{
 		parent::__construct();
-		check_islogin();
+		is_user_logged_in();
 		$this->load->model('project_model', 'projects');
 	}
 
@@ -52,7 +52,7 @@ class Projects extends MY_Controller
 				'created'     => current_timestamp()
 			);
 			$insert = $this->projects->insert($data);
-			$id     = check_islogin()['id'];
+			$id     = get_loggedin_user_id();
 			log_activity("Project Added [ID:$insert] ", $id);
 
 			if ($insert)
@@ -93,7 +93,7 @@ class Projects extends MY_Controller
 				);
 
 				$update     = $this->projects->update($id, $data);
-				$session_id = check_islogin()['id'];
+				$session_id = get_loggedin_user_id();
 				log_activity("Project Updated [ID:$id] ", $session_id);
 
 				if ($update)
@@ -121,7 +121,7 @@ class Projects extends MY_Controller
 			access_denied('projects', 'delete');
 		}
 
-		$session_id = check_islogin()['id'];
+		$session_id = get_loggedin_user_id();
 		$project_id = $this->input->post('project_id');
 		$result     = $this->projects->delete($project_id);
 
@@ -133,7 +133,7 @@ class Projects extends MY_Controller
  */
 	public function delete_selected()
 	{
-		$session_id = check_islogin()['id'];
+		$session_id = get_loggedin_user_id();
 		$where      = $this->input->post('ids');
 		$ids        = implode(",", $where);
 		$delete_all = $this->projects->delete_many($where);

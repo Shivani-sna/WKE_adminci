@@ -14,7 +14,7 @@ class Categories extends MY_Controller
 	public function __construct()
 	{
 		parent::__construct();
-		check_islogin();
+		is_user_logged_in();
 		$this->load->model('category_model', 'category');
 		$this->load->model('user_permission_model', 'user_permissions');
 	}
@@ -49,13 +49,13 @@ class Categories extends MY_Controller
 		{
 			$data = array
 				('name'     => $this->input->post('name'),
-				'user_id'   => check_islogin()['id'],
+				'user_id'   => get_loggedin_user_id(),
 				'is_active' => 1,
 				'created'   => current_timestamp()
 			);
 			//print_r($data);
 			$insert = $this->category->insert($data);
-			$id     = check_islogin()['id'];
+			$id     =  get_loggedin_user_id();
 			log_activity("Category Added [ID:$insert] ", $id);
 
 			if ($insert)
@@ -88,12 +88,12 @@ class Categories extends MY_Controller
 			{
 				$data = array
 					('name'   => $this->input->post('name'),
-					'user_id' => check_islogin()['id'],
+					'user_id' =>  get_loggedin_user_id(),
 					'updated' => current_timestamp()
 				);
 
 				$update     = $this->category->update($id, $data);
-				$session_id = check_islogin()['id'];
+				$session_id =  get_loggedin_user_id();
 				log_activity("Category Updated [ID:$id] ", $session_id);
 
 				if ($update)
@@ -117,7 +117,7 @@ class Categories extends MY_Controller
  */
 	public function update_status()
 	{
-		$session_id  = check_islogin()['id'];
+		$session_id  =  get_loggedin_user_id();
 		$category_id = $this->input->post('category_id');
 		$data        = array('is_active' => $this->input->post('is_active'));
 
@@ -135,7 +135,7 @@ class Categories extends MY_Controller
 			access_denied('categories', 'delete');
 		}
 
-		$session_id  = check_islogin()['id'];
+		$session_id  =  get_loggedin_user_id();
 		$category_id = $this->input->post('category_id');
 		$result      = $this->category->delete($category_id);
 
@@ -146,7 +146,7 @@ class Categories extends MY_Controller
  */
 	public function delete_selected()
 	{
-		$session_id = check_islogin()['id'];
+		$session_id =  get_loggedin_user_id();
 		$where      = $this->input->post('ids');
 		$ids        = implode(",", $where);
 		$delete_all = $this->category->delete_many($where);

@@ -1,6 +1,4 @@
-		<?php 
-			$session=check_islogin();
-      ?>
+		
 		 <style type="text/css">
 		 	.checkbox
 		 	{
@@ -18,7 +16,7 @@
           <div class="breadcrumb-line">
             <ul class="breadcrumb">
               <?php  ?>
-              <li><a href="<?php echo base_url('admin/home'); ?>"><i class="icon-home2 position-left"></i>Dashboard</a></li>
+              <li><a href="<?php echo base_url('admin/dashboard'); ?>"><i class="icon-home2 position-left"></i>Dashboard</a></li>
               <li class="active">Projects</li>
               
 
@@ -46,7 +44,6 @@
                   <th>Project ID</th>
 									<th>Project Name</th>
                   <th>Details</th>
-									<th>Created</th>
                   
 									<th class="text-center">Actions</th>
                   
@@ -62,8 +59,7 @@
                   									<td><?php echo $project['project_id']; ?></td>
 									<td><?php echo $project['name']; ?></td>
 									<td><?php  echo $project['details']; ?></td>
-                  <td><?php  echo time_stamp($project['created']); ?></td>      
-                    
+                  
             
 									
 					
