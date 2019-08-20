@@ -49,9 +49,11 @@
 													<input type="text" class="form-control" placeholder="Role Name" id="name" name="name">
 													
 												</div>
+												
 												<div>
 													<?php echo $array; ?>
 												</div>
+												<div class="validate_permission"></div>
 
 											</div>
 										</div>
@@ -82,10 +84,11 @@ $(function () {
         		 required: true,
         	},
         	
+        	
         },
         messages: {
         	name: {
-                 required:"Please Enter Role Name",
+                 required:"<?php echo _l('required_field_msg', _l('role_name')) ?>",
     
 
             },
@@ -95,5 +98,22 @@ $(function () {
         
     });  
     });
+
+function onSubmit() 
+{ 
+    var check_permission = $(".permission").serializeArray(); 
+    if (check_permission.length === 0) 
+    { 
+         $(".validate_permission").html("<p style='color:red'><?php echo _l('select_before_delete_msg', _l('permission')) ?></p>");
+        // alert('not selected');
+        // cancel submit
+        return false;
+    } 
+}
+
+// register event on form, not submit button
+$('#roleform').submit(onSubmit)
+
+
 </script>
 

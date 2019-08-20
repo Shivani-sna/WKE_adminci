@@ -1,10 +1,4 @@
-		
-		 <style type="text/css">
-		 	.checkbox
-		 	{
-		 		background-color: red;
-		 	}
-		 </style>
+
      <!-- page header -->
         <div class="page-header page-header-default">
           <div class="page-header-content">
@@ -31,21 +25,42 @@
 					<!-- Page length options -->
 					<div class="panel panel-flat">
 						<div class="panel-heading">
-								<a href="<?php echo base_url('admin/projects/add'); ?>" class="btn btn-primary">Add New</a>
+              <?php 
+                  if (has_permissions('projects','create'))
+                   {
+                ?>
+                 <a href="<?php echo base_url('admin/projects/add'); ?>" class="btn btn-primary">Add New</a> 
+                 <?php
+                  }
+               ?>
+								<?php 
+                  if (has_permissions('projects','delete'))
+                   {
+                    ?>
 							<a href="" class="btn btn-danger" id="delete_all">Delete Selected</a>
+              <?php
+                  }
+               ?>
+				
 
-						<div class="panel-body">
-						</div>
-
-						<table class="table datatable-show-all" id="example">
+						<table class="table">
 							<thead>
 								<tr>
-									<th><input type="checkbox" name="delete_id" id="select_all"></th>
-                  <th>Project ID</th>
-									<th>Project Name</th>
-                  <th>Details</th>
+                  <?php if (has_permissions('projects','delete'))
+                     {
+                      ?>
+                  <th width="5%">
+                    <input type="checkbox" name="delete_id" id="select_all">
+                  </th>
+                  <?php  }  ?>
+									
+                  <th width="15%">Project ID</th>
+									<th width="45%">Project Name</th>
+                  <th width="25%">Details</th>
                   
-									<th class="text-center">Actions</th>
+									<?php if (has_permissions('projects','edit') || has_permissions('projects','delete')): ?>
+                  <th width="10%" class="text-center">Actions</th>
+                <?php endif ?>
                   
 								</tr>
 							</thead>
@@ -54,20 +69,35 @@
 								{ ?>
 									
 									<tr>
+                    <?php if (has_permissions('projects','delete'))
+                     {
+                      ?>
 									<td>
-                  	<input type="checkbox" class="checkbox"  name="delete"  id="<?php  echo $project['id']; ?>"></td>
-                  									<td><?php echo $project['project_id']; ?></td>
+                  	<input type="checkbox" class="checkbox"  name="delete"  id="<?php  echo $project['id']; ?>">
+                  </td>
+                  <?php  }  ?>
+                  <td><?php echo $project['project_id']; ?></td>
 									<td><?php echo $project['name']; ?></td>
 									<td><?php  echo $project['details']; ?></td>
                   
             
 									
-					
-									<td class="text-center">
- <a href="<?php echo site_url('admin/projects/edit/').$project['id']; ?>" id="<?php echo $project['id']; ?>" class="text-info">
+					 <?php if (has_permissions('projects','edit') || has_permissions('projects','delete')): ?>
+                 <td class="text-center">
+            <?php if (has_permissions('projects','edit')) 
+            {
+          ?>
+             <a href="<?php echo site_url('admin/projects/edit/').$project['id']; ?>" id="<?php echo $project['id']; ?>" class="text-info">
                           <i class="icon-pencil7"></i></a>
-												<a href="" class="text-danger delete" id="<?php echo $project['id']; ?>"><i class=" icon-trash"></i></a>
-									</td>
+           <?php  }  ?>
+            <?php if (has_permissions('projects','delete')) 
+            {
+          ?>
+                        <a href="" class="text-danger delete" id="<?php echo $project['id']; ?>"><i class=" icon-trash"></i></a>
+                         <?php  }  ?>
+                  </td>
+                <?php endif ?>
+									
 								</tr>
 								<?php
 									} 
@@ -91,78 +121,7 @@ $( document ).ready(function()
 {
 
 
-    $('#example').DataTable();
-
-$(function() {
-
-
-    // Table setup
-    // ------------------------------
-
-    // Setting datatable defaults
-    $.extend( $.fn.dataTable.defaults, {
-        autoWidth: false,
-        columnDefs: [{ 
-            orderable: false,
-            width: '100px',
-            targets: [ 5 ]
-        }],
-        dom: '<"datatable-header"fl><"datatable-scroll"t><"datatable-footer"ip>',
-        language: {
-            search: '<span>Filter:</span> _INPUT_',
-            lengthMenu: '<span>Show:</span> _MENU_',
-            paginate: { 'first': 'First', 'last': 'Last', 'next': '&rarr;', 'previous': '&larr;' }
-        },
-        drawCallback: function () {
-            $(this).find('tbody tr').slice(-3).find('.dropdown, .btn-group').addClass('dropup');
-        },
-        preDrawCallback: function() {
-            $(this).find('tbody tr').slice(-3).find('.dropdown, .btn-group').removeClass('dropup');
-        }
-    });
-
-
-    // Basic datatable
-    $('.datatable-basic').DataTable();
-
-
-    // Alternative pagination
-    $('.datatable-pagination').DataTable({
-        pagingType: "simple",
-        language: {
-            paginate: {'next': 'Next &rarr;', 'previous': '&larr; Prev'}
-        }
-    });
-
-
-    // Datatable with saving state
-    $('.datatable-save-state').DataTable({
-        stateSave: true
-    });
-
-
-    // Scrollable datatable
-    $('.datatable-scroll-y').DataTable({
-        autoWidth: true,
-        scrollY: 300
-    });
-
-
-
-    // External table additions
-    // ------------------------------
-
-    // Add placeholder to the datatable filter option
-    $('.dataTables_filter input[type=search]').attr('placeholder','Type to filter...');
-
-
-    // Enable Select2 select for the length option
-    $('.dataTables_length select').select2({
-        minimumResultsForSearch: Infinity,
-        width: 'auto'
-    });
-    
-});
+   
 /* simple delete on sigle value */
 	$(".delete").click(function(e) 
 	{ 
@@ -171,8 +130,8 @@ $(function() {
       var id = $(this).attr('id');
      
       swal({
-          title: "Are you sure?",
-          text: "You will not be able to recover project!",
+         title: "<?php echo _l('deletion_msg', _l('user')); ?>",
+          text: "<?php echo _l('recovery_msg', _l('user')); ?>",
           buttons: [
             'No, cancel it!',
             'Yes, I am sure!'
@@ -188,7 +147,15 @@ $(function() {
               			 },
               	})
               	.done(function() {
-              		toastr.success("projects Deleted.");
+              		if (msg=="success")
+                   {
+                     toastr.success("<?php echo _l('deleted', _l('project')); ?>");
+                   
+                   }
+                   else
+                   {
+                     toastr.error("<?php echo _l('access_denied'); ?>");
+                   }
               	})
               	.fail(function() {
               		console.log("error");
@@ -216,13 +183,13 @@ $("#delete_all").click(function(e)
 		 //console.log(delete_array);
 		 if (delete_array == '')
 		  {
-        toastr.error("Please Select projects");
+         toastr.error("<?php echo _l('select_before_delete_msg', _l('projects')) ?>");
 		  	 // swal("", "Please Select projects", "warning");
 		  	 return false;
 		  }
 		   swal({
-          title: "Are you sure?",
-          text: "You will not be able to recover project!",
+         title: "<?php echo _l('deletion_multiple_msg', _l('projects')); ?>",
+          text: "<?php echo _l('recovery_multiple_msg', _l('projects')); ?>",
           buttons: [
             'No, cancel it!',
           'Yes, I am sure!'
@@ -240,7 +207,7 @@ $("#delete_all").click(function(e)
               			 },
               	})
               	.done(function() {
-              		toastr.success("projects Deleted.");
+              		toastr.success("<?php echo _l('deleted', _l('projects')); ?>");
               	})
               	.fail(function() {
               		console.log("error");

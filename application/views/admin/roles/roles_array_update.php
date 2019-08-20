@@ -38,7 +38,8 @@
 						 			if ($view==$value)
 						 			 {
 						 			 		$match = TRUE;
-						 		 }
+
+						 		   }
 						 			}
 						 			
 						 			
@@ -50,14 +51,14 @@
 						 }
 					?>
 
-					
+					<?php $id = $permission['name']."_".$value; ?>
 						
 	<input type="checkbox" name="permissions[<?php echo $permission['name']; ?>][]" value="<?php echo $value; ?>" <?php if ($match == TRUE)
 	 {
 		echo "checked";
-	} ?> >
+	} ?>  id="<?php echo $id; ?>" class="permission">
 
-						<?php echo $value; ?>
+						<label for="<?php echo $id; ?>"><?php echo $value; ?></label>
 					</br>
 					
 				<?php 

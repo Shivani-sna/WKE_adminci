@@ -16,20 +16,75 @@
 	  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
 
 	<!-- /global stylesheets -->
-
-<!-- sweet alert -->
+	<!-- sweet alert -->
 	<link data-require="sweet-alert@*" data-semver="0.4.2" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css" />
 	<style type="text/css">
+		.error
+	{
+  	 color:red;
+    }
+
 		<style>
-/* Tooltip container */
+			<style type="text/css">
+		/* Tooltip container */
 .tooltip {
   position: relative;
   display: inline-block;
   border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
 }
 	</style>
+		<style type="text/css">
+	
+    .input-group-addon {
+    padding: 6px 12px;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1;
+    color: #555;
+    text-align: center;
+   
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+.input-group-addon, .input-group-btn {
+    width: 1%;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+.input-group .form-control, .input-group-addon, .input-group-btn {
+    display: table-cell;
+}
+.input-group {
+    position: relative;
+    display: table;
+    border-collapse: separate;
+}
+.btn-info.active.focus, .btn-info.active:focus, .btn-info.active:hover, .btn-info:active.focus, .btn-info:active:focus, .btn-info:active:hover, .open>.dropdown-toggle.btn-info.focus, .open>.dropdown-toggle.btn-info:focus, .open>.dropdown-toggle.btn-info:hover {
+    color: #fff;
+    background-color: #269abc;
+    border-color: #1b6d85;
+}
+	.btn-toolbar-container-out {
+    margin-left: -10px;
+}
+.btn-bottom-toolbar {
+    position: fixed;
+    bottom: 0;
+    padding: 15px;
+    padding-right: 41px;
+    margin: 0 0 0 -46px;
+    -webkit-box-shadow: 0 -4px 1px -4px rgba(0,0,0,.1);
+    box-shadow: 0 -4px 1px -4px rgba(0,0,0,.1);
+    background: #fff;
+    width: calc(100% - 211px);
+    z-index: 5;
+    border-top: 1px solid #ededed;
+}
+
+	</style>
+
+
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-  
 	<!-- Core JS files -->
 	<script type="text/javascript" src="<?php echo base_url('assets/js/plugins/loaders/pace.min.js'); ?>"></script>
 	
@@ -52,7 +107,7 @@
 	 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 
 	 <!-- date picker -->
-	 	<script type="text/javascript" src="<?php echo base_url('assets/js/plugins/ui/moment/moment.min.js')?>"></script>
+	 <script type="text/javascript" src="<?php echo base_url('assets/js/plugins/ui/moment/moment.min.js')?>"></script>
 	 <script type="text/javascript" src="<?php echo base_url('assets/js/plugins/pickers/daterangepicker.js'); ?>"></script>
 	<script type="text/javascript" src="<?php echo base_url('assets/js/plugins/pickers/anytime.min.js'); ?>"></script>
 	<script type="text/javascript" src="<?php echo base_url('assets/js/plugins/pickers/pickadate/picker.js'); ?>"></script>
@@ -80,67 +135,11 @@ $(function() {
 /*End of Jquery for checkbox switch */
 	 </script>
 <!-- sweet alert -->
-	<style type="text/css">
-	.error
-	{
-  	 color:red;
-    }
-
-    .input-group-addon {
-    padding: 6px 12px;
-    font-size: 14px;
-    font-weight: 400;
-    line-height: 1;
-    color: #555;
-    text-align: center;
-   
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-.input-group-addon, .input-group-btn {
-    width: 1%;
-    white-space: nowrap;
-    vertical-align: middle;
-}
-.input-group .form-control, .input-group-addon, .input-group-btn {
-    display: table-cell;
-}
-.input-group {
-    position: relative;
-    display: table;
-    border-collapse: separate;
-}
-	</style>
-	<style type="text/css">
-		.btn-info.active.focus, .btn-info.active:focus, .btn-info.active:hover, .btn-info:active.focus, .btn-info:active:focus, .btn-info:active:hover, .open>.dropdown-toggle.btn-info.focus, .open>.dropdown-toggle.btn-info:focus, .open>.dropdown-toggle.btn-info:hover {
-    color: #fff;
-    background-color: #269abc;
-    border-color: #1b6d85;
-}
-	.btn-toolbar-container-out {
-    margin-left: -10px;
-}
-.btn-bottom-toolbar {
-    position: fixed;
-    bottom: 0;
-    padding: 15px;
-    padding-right: 41px;
-    margin: 0 0 0 -46px;
-    -webkit-box-shadow: 0 -4px 1px -4px rgba(0,0,0,.1);
-    box-shadow: 0 -4px 1px -4px rgba(0,0,0,.1);
-    background: #fff;
-    width: calc(100% - 211px);
-    z-index: 5;
-    border-top: 1px solid #ededed;
-}
-
-</style>
-
+	
 
 </head>
 
 <body>
-	<?php $session =$this->session->userdata('user'); ?>
 	<!-- Main navbar -->
 	<div class="navbar navbar-inverse">
 		<div class="navbar-header">
@@ -160,7 +159,7 @@ $(function() {
 			<ul class="nav navbar-nav navbar-right">
 				<li class="dropdown dropdown-user">
 					<a class="dropdown-toggle" data-toggle="dropdown">
-						<span><?php echo $session['username']; ?></span>
+						<span><?php echo get_loggedin_info('username'); ?></span>
 						<i class="caret"></i>
 					</a>
 
@@ -174,10 +173,6 @@ $(function() {
 		</div>
 	</div>
 	<!-- /main navbar -->
-
-
-
-
 	<!-- Page container -->
 	<div class="page-container">
 
@@ -195,17 +190,10 @@ $(function() {
 								<div class="media-body">
 									<span class="media-heading text-semibold">
 										<?php
-										 //echo "<pre>";
-										 
-										 echo "Welcome".'&nbsp;'.$session['username'].'&nbsp;'; 
+										 echo "Welcome".'&nbsp;'.get_loggedin_info('username').'&nbsp;'; 
 										?>
-										<a style="color: white;" href="<?php echo base_url('authentication/logout'); ?>" align="padding-right"><i class="icon-switch2" data-popup="tooltip"  data-placement="right" data-original-title="Logout"></i></a>
-											
+										<a style="color: white;" href="<?php echo base_url('authentication/logout'); ?>" align="padding-right"><i class="icon-switch2" data-popup="tooltip"  data-placement="right" data-original-title="Logout"></i></a>			
 										</span>
-
-								<!-- 	<div class="text-size-mini text-muted">
-										<i class="icon-pin text-size-small"></i> &nbsp;Santa Ana, CA
-									</div> -->
 								</div>
 
 

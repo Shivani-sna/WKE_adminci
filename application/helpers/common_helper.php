@@ -8,14 +8,16 @@ function current_timestamp()
 }
 
 /**
- * @param $id
+ * @param  [type]
+ * @param  [type]
+ * @return boolean
  */
 function has_permissions($feature, $capability)
 {
 	$CI = &get_instance();
 	$CI->load->model('user_permission_model', 'user_permissions');
 	$data = array(
-		'user_id'      => get_loggedin_user_id(),
+		'user_id'      => get_loggedin_info('user_id'),
 		'features'     => $feature,
 		'capabilities' => $capability
 
@@ -27,17 +29,21 @@ function has_permissions($feature, $capability)
 }
 
 /**
- * @param $id
+ * @param  [str] name of the feature
+ * @param  [str] name of capability
+ * @return [null]
  */
 function access_denied($feature, $capability)
 {
 	$CI = &get_instance();
-	$CI->session->set_flashdata('error', 'You have Not Access ');
+	$CI->session->set_flashdata('error', _l('access_denied'));
 
 // $user = session username
 	// $msg = $user. " tried to access $feature $capability page without permission"
 
-	log_activity("Try to Access page don't have Permissions in $feature ['Method' : $capability] ", get_loggedin_user_id());
+	log_activity(get_loggedin_info('username').' '._l('log_access_denied')." $feature $capability page without permission");
+
+	$CI->session->set_userdata('redirect_url', current_url());
 
 	if (!empty($_SERVER['HTTP_REFERER']))
 	{
@@ -45,77 +51,45 @@ function access_denied($feature, $capability)
 	}
 	else
 	{
-		is_user_logged_in();
+		redirect("admin/dashboard");
 	}
 }
 
 /**
- * @return mixed
- */
-function list_controllers()
-{
-	$controllers = array();
-
-// Scan files in the /application/controllers directory
-
-// Set the second param to TRUE or remove it if you
-	// don't have controllers in sub directories
-	$files = get_dir_file_info(APPPATH.'controllers', FALSE);
-
-	foreach (array_keys($files) as $file)
-	{
-		if ($file != 'index.html')
-		{
-			$controllers[] = str_replace('.php', '', $file);
-		}
-	}
-
-	return $controllers;
-}
-
-/**
- * [_setflashdata for get notification to set session]
- * @param  [type] $name [for define session name]
- * @param  [type] $msg  [for define msges]
- * @return [type]       [description]
+ * check if user is logged in or not
+ * @return boolean
  */
 function is_user_logged_in()
 {
 	$CI = &get_instance();
 
-
-	// if ($CI->session->userdata('user'))
-	// {
-	// 	 return $CI->session->userdata('user');
-	// 	// redirect('admin\dashboard');
-	// }
-
 	if (!$CI->session->userdata('user'))
 	{
-		$CI->session->set_userdata('redirect_url',current_url());
-		redirect ('authentication');
+		$CI->session->set_userdata('redirect_url', current_url());
+		redirect('authentication');
 	}
-	
-		
-	
-
-	
 }
 
 /**
  * @return mixed
  */
-function get_loggedin_user_id()
+
+/**
+ * get the user id of logged in user
+ * @return int user id
+ */
+function get_loggedin_info($info)
 {
 	$CI   = &get_instance();
 	$user = $CI->session->userdata('user');
 
-	return $user['user_id'];
+	return $user[$info];
 }
 
 /**
- * Permissions Array
- * @param array $data
+ * [get_users_permissions for user's permissions]
+ * @param  array  $data [user's permissions]
+ * @return [array]       [user's permissions]
  */
 function get_users_permissions($data = [])
 {
@@ -160,7 +134,9 @@ function get_users_permissions($data = [])
  * @param $email [registration Email]
  * @param $subject [Subject for mail]
  * @param $htmlContent[Load view]
+ * @return [boolean]
  */
+
 function send_mail($email = '', $subject = '', $htmlContent = '')
 {
 	// email SMTP config
@@ -190,25 +166,73 @@ function send_mail($email = '', $subject = '', $htmlContent = '')
 }
 
 /**
- * @param $data
+ * [log_activity maintain logs in log_activity table]
+ * @param  [string] $description [for log_sctivity]
+ * @param  string $user_id     [get logged In user_id]
  */
-function log_activity($description, $user_id)
+function log_activity($description, $user_id = '')
 {
 	$CI = &get_instance();
 	$CI->load->model('activity_log_model', 'activity_log');
 
+	if ($user_id == '')
+	{
+		$user_id = get_loggedin_info('user_id');
+	}
+
 	$data = array(
 		'description' => $description,
 		'date'        => current_timestamp(),
-		' user_id'    => $user_id
-
+		'user_id'     => $user_id,
+		'ip_address'  => $CI->input->ip_address()
 	);
 
 	$CI->activity_log->insert($data);
 }
 
 /**
- * @param $session_time
+ * [auth_token generate random string]
+ * @return [string] [random stringfor auth_token]
+ */
+function auth_token()
+{
+	$n            = 15;
+	$characters   = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+	$randomString = '';
+
+	for ($i = 0; $i < $n; $i++)
+	{
+		$index = rand(0, strlen($characters) - 1);
+		$randomString .= $characters[$index];
+	}
+
+	return $randomString;
+}
+
+/**
+ * [_l for lanuguage conversion]
+ * @param  [string] $line  [string]
+ * @param  string $label [entity name]
+ * @return [string]        [convert string from language file]
+ */
+function _l($line, $label = '')
+{
+	$CI = &get_instance();
+
+	$output = $CI->lang->line($line);
+
+	if ($label != '')
+	{
+		$output = str_replace('%s', $label, $output);
+	}
+
+	return $output;
+}
+
+/**
+ * [time_stamp for formate date and time]
+ * @param  [timestamp] $session_time [get timestamp]
+ * @return [string]               [time in proper formate ]
  */
 function time_stamp($session_time)
 {
@@ -315,41 +339,4 @@ function time_stamp($session_time)
 			echo "$years years ago";
 		}
 	}
-}
-
-/**
- * @return mixed
- */
-function auth_token()
-{
-	$n            = 15;
-	$characters   = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-	$randomString = '';
-
-	for ($i = 0; $i < $n; $i++)
-	{
-		$index = rand(0, strlen($characters) - 1);
-		$randomString .= $characters[$index];
-	}
-
-	return $randomString;
-}
-
-/**
- * @param $line
- * @param $label
- * @return mixed
- */
-function _l($line, $label = '')
-{
-	$CI = &get_instance();
-
-	$output = $CI->lang->line($line);
-
-	if ($label != '')
-	{
-		$output = str_replace('%s', $label, $output);
-	}
-
-	return $output;
 }

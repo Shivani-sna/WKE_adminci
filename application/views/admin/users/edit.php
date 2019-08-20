@@ -1,7 +1,3 @@
-<?php 
-	$session = $this->session->userdata('user');
-
- ?>
  <!-- page header -->
 				<div class="page-header page-header-default">
 					<div class="page-header-content">
@@ -88,7 +84,7 @@
 													<label>Status:</label>
 												 <?php 
 													$readonly = '';
-													if ($user['id']==get_loggedin_user_id()	)
+													if ($user['id']==get_loggedin_info('user_id')	)
 													 {
 														 $readonly="readonly";
 													} 
@@ -113,7 +109,7 @@
 															foreach ($roles as $key => $role)
 															 {
 															 	?>
-																<div class="form-group">
+		<div class="form-group">
 										
 											
 												
@@ -189,27 +185,30 @@ $(function () {
         },
         messages: {
         	firstname: {
-                 required:"Please Enter your Firstname",
+                 required:"<?php echo _l('required_field_msg', _l('firstname')) ?>",
                     // email:"Please enter a valid email address"
 
             },
             lastname: {
-                 required:"Please Enter your Lastname",
+                 required:"<?php echo _l('required_field_msg', _l('lastname')) ?>",
                     // email:"Please enter a valid email address"
 
             },
               mobile_no: {
-                 required:"Please Enter your Contact No",
+                 required:"<?php echo _l('required_field_msg', _l('contact_no')) ?>",
                    mobile_no:"Please Enter Digits"
 
             },
             email: {
-                 required:"Please Enter your email",
-                    email:"Please Enter a valid email address"
+                 required:"<?php echo _l('required_field_msg', _l('email')) ?>",
+                    email:"<?php echo _l('required_field_valid', _l('email')) ?>"
 
             },
             password:{
-                 required:"Please Enter Password"
+                 required:"<?php echo _l('required_field_msg', _l('password')) ?>"
+            },
+             role:{
+                 required:"<?php echo _l('select', _l('contact_no')) ?>"
             },
 
         }

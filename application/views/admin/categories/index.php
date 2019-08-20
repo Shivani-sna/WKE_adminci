@@ -1,10 +1,4 @@
-	
-		 <style type="text/css">
-		 	.checkbox
-		 	{
-		 		background-color: red;
-		 	}
-		 </style>
+
      <!-- page header -->
         <div class="page-header page-header-default">
           <div class="page-header-content">
@@ -31,24 +25,40 @@
 					<!-- Page length options -->
 					<div class="panel panel-flat">
 						<div class="panel-heading">
+              <?php 
+                  if (has_permissions('categories','create'))
+                   {
+                ?>
 								<a href="<?php echo base_url('admin/categories/add'); ?>" class="btn btn-primary">Add New</a>
+                  <?php
+                  }
+               ?>
+               <?php 
+                  if (has_permissions('categories','delete'))
+                   {
+                ?>
 							<a href="" class="btn btn-danger" id="delete_all">Delete Selected</a>
-
-						<div class="panel-body">
-						</div>
-
-
-				      <table class="table datatable-basic" id="example">
+              <?php
+                  }
+               ?>
+				      <table class="table">
               <thead>
                 <tr>
-                  <th><input type="checkbox" name="delete_id" id="select_all"></th>
-                  <th>Name</th>
-                  <th>Status</th>
+                  <?php 
+                  if (has_permissions('categories','delete'))
+                   {
+                ?>
+                  <th width="5%"><input type="checkbox" name="delete_id" id="select_all"></th>
+                   <?php
+                  }
+               ?>
+                  <th width="75%">Name</th>
+                  <th width="5%">Status</th>
 
-                  <th class="text-center">Actions</th>
-                 <!--   <th></th>
-                  <th></th>
-                  <th></th> -->
+                  <?php if (has_permissions('categories','edit') || has_permissions('categories','delete')): ?>
+                  <th width="10%" class="text-center">Actions</th>
+                <?php endif ?>
+            
                 </tr>
               </thead>
               <tbody>
@@ -57,18 +67,47 @@
                 { ?>
                   <tr>
 
-                  
+                    <?php 
+                  if (has_permissions('categories','delete'))
+                   {
+                ?>
                   <td><input type="checkbox" class="checkbox"  name="delete"  id="<?php echo $category['id']; ?>"></td>
+                    <?php
+                  }
+               ?>
                   <td><?php echo $category['name']; ?></td>
                  
+                 <?php
+                  $readonly_status = '';
+                  if (!has_permissions('categories','edit'))
+                   {
+                    $readonly_status = "readonly";
+                   }
+               ?>
                   <td><input type="checkbox" class="switch"  id="<?php echo $category['id']; ?>" <?php if ($category['is_active']==1) {
                     echo "checked";
-                  }  ?> ></td>
+                  }  ?> <?php echo  $readonly_status; ?>></td>
+                  <?php if (has_permissions('categories','edit') || has_permissions('categories','delete')): ?>
                   <td class="text-center">
+               <?php
+                  if (has_permissions('categories','edit'))
+                   {
+               ?>
    <a href="<?php echo site_url('admin/categories/edit/').$category['id']; ?>" id="<?php echo $category['id']; ?>" class="text-info">
                           <i class="icon-pencil7"></i></a>
+              <?php
+                  }
+               ?>
+                <?php 
+                  if (has_permissions('categories','delete'))
+                   {
+                ?>
                         <a href="" class="text-danger delete" id="<?php echo $category['id']; ?>"><i class=" icon-trash"></i></a>
+                <?php
+                  }
+               ?>
                   </td>
+                    <?php endif ?>
                   <!-- <td></td>
                  <td></td>
                  <td></td> -->
@@ -95,79 +134,7 @@
 $( document ).ready(function() 
 {
 
-    $('#example').DataTable();
-
-$(function() {
-
-
-    // Table setup
-    // ------------------------------
-
-    // Setting datatable defaults
-    $.extend( $.fn.dataTable.defaults, {
-        autoWidth: false,
-        columnDefs: [{ 
-            orderable: false,
-            width: '100px',
-            targets: [ 5 ]
-        }],
-        dom: '<"datatable-header"fl><"datatable-scroll"t><"datatable-footer"ip>',
-        language: {
-            search: '<span>Filter:</span> _INPUT_',
-            lengthMenu: '<span>Show:</span> _MENU_',
-            paginate: { 'first': 'First', 'last': 'Last', 'next': '&rarr;', 'previous': '&larr;' }
-        },
-        drawCallback: function () {
-            $(this).find('tbody tr').slice(-3).find('.dropdown, .btn-group').addClass('dropup');
-        },
-        preDrawCallback: function() {
-            $(this).find('tbody tr').slice(-3).find('.dropdown, .btn-group').removeClass('dropup');
-        }
-    });
-
-
-    // Basic datatable
-    $('.datatable-basic').DataTable();
-
-
-    // Alternative pagination
-    $('.datatable-pagination').DataTable({
-        pagingType: "simple",
-        language: {
-            paginate: {'next': 'Next &rarr;', 'previous': '&larr; Prev'}
-        }
-    });
-
-
-    // Datatable with saving state
-    $('.datatable-save-state').DataTable({
-        stateSave: true
-    });
-
-
-    // Scrollable datatable
-    $('.datatable-scroll-y').DataTable({
-        autoWidth: true,
-        scrollY: 300
-    });
-
-
-
-    // External table additions
-    // ------------------------------
-
-    // Add placeholder to the datatable filter option
-    $('.dataTables_filter input[type=search]').attr('placeholder','Type to filter...');
-
-
-    // Enable Select2 select for the length option
-    $('.dataTables_length select').select2({
-        minimumResultsForSearch: Infinity,
-        width: 'auto'
-    });
     
-});
-
  
 /*Update User Status Jquery for checkbox switch */
   $(".switch").change(function()
@@ -222,8 +189,8 @@ $(function() {
       var id = $(this).attr('id');
      
       swal({
-          title: "Are you sure?",
-          text: "You will not be able to recover User!",
+         title: "<?php echo _l('deletion_msg', _l('category')); ?>",
+          text: "<?php echo _l('recovery_msg', _l('category')); ?>",
           buttons: [
             'No, cancel it!',
             'Yes, I am sure!'
@@ -239,7 +206,15 @@ $(function() {
                      },
                 })
                 .done(function() {
-                  toastr.success("Category Deleted.");
+                 if (msg=="success")
+                   {
+                     toastr.success("<?php echo _l('deleted', _l('category')); ?>");
+                   
+                   }
+                   else
+                   {
+                     toastr.error("<?php echo _l('access_denied'); ?>");
+                   }
                 })
                 .fail(function() {
                   console.log("error");
@@ -267,13 +242,13 @@ $("#delete_all").click(function(e)
      //console.log(delete_array);
      if (delete_array == '')
       {
-        toastr.error("Please Select Tasks");
+       toastr.error("<?php echo _l('select_before_delete_msg', _l('category')) ?>");
          // swal("", "Please Select Users", "warning");
          return false;
       }
        swal({
-          title: "Are you sure?",
-          text: "You will not be able to recover User!",
+          title: "<?php echo _l('deletion_multiple_msg', _l('categories')); ?>",
+          text: "<?php echo _l('recovery_multiple_msg', _l('categories')); ?>",
           buttons: [
             'No, cancel it!',
           'Yes, I am sure!'
@@ -290,8 +265,9 @@ $("#delete_all").click(function(e)
                         ids:delete_array
                      },
                 })
-                .done(function() {
-                  toastr.success("Categories Deleted.");
+                .done(function()
+                 {
+                    toastr.success("<?php echo _l('deleted', _l('users')); ?>");
                 })
                 .fail(function() {
                   console.log("error");

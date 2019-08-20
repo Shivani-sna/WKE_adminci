@@ -1,8 +1,4 @@
-<?php 
-	$session = $this->session->userdata('user');
-	// print_r($user['password']);
-	$password_user=$user['password'];
- ?>
+
 <div class="page-header page-header-default">
 					<div class="page-header-content">
 						<div class="page-title">
@@ -88,14 +84,12 @@
 													<small class="req text-danger">* </small>
 													<label>New Password:</label>
 													<input type="password" class="form-control" placeholder="Password" id="newpassword" name="newpassword">
-													<a class="btn toggle">
-														<span>
-														<!-- <label>
-															 -->
 													
-													<i class="icon-eye"></i><!-- 
-														</label> -->
-													<!-- </div> -->
+												</div>
+												<div class="form-group">
+													<a class="btn toggle">
+														
+													<i class="icon-eye"></i>
 													</span>
 
 													</a>
@@ -147,29 +141,28 @@ $(function () {
                 },
            
         },
-        messages: {
+       messages: {
         	firstname: {
-                 required:"Please Enter your Firstname",
+                 required:"<?php echo _l('required_field_msg', _l('firstname')) ?>",
                     // email:"Please enter a valid email address"
 
             },
             lastname: {
-                 required:"Please Enter your Lastname",
+                 required:"<?php echo _l('required_field_msg', _l('lastname')) ?>",
                     // email:"Please enter a valid email address"
 
             },
               mobile_no: {
-                 required:"Please Enter your Contact No",
+                 required:"<?php echo _l('required_field_msg', _l('contact_no')) ?>",
                    mobile_no:"Please Enter Digits"
 
             },
             email: {
-                 required:"Please Enter your email",
-                    email:"Please Enter a valid email address"
+                 required:"<?php echo _l('required_field_msg', _l('email')) ?>",
+                    email:"<?php echo _l('required_field_valid', _l('email')) ?>"
 
             },
-            
-
+          
         }
         
     });  
@@ -185,19 +178,20 @@ $(function () {
         	},  
 
         },
+
         messages: {
         	password: {
-                 required:"Please Enter your old password",
+                 required:"<?php echo _l('required_field_msg', _l('old_password')) ?>",
                     // email:"Please enter a valid email address"
 
             },
             newpassword: {
-                 required:"Please Enter password",
+                 required:"<?php echo _l('required_field_msg', _l('password')) ?>",
                     // email:"Please enter a valid email address"
 
             },
             repeat_password: {
-                 required:"Please Enter valid Password",
+                 required:"<?php echo _l('required_field_valid', _l('password')) ?>",
                     // email:"Please enter a valid email address"
 
             },
@@ -213,13 +207,13 @@ $("#password").change(function(event) {
 	var user_password = "<?php  echo $user['password']; ?>";
 	if (user_password==old_password)
 	 {
-	 	 $(".msg").html("<strong style='color:green'>Password Match</strong>");
+	 	 $(".msg").html("<strong style='color:green'><?php echo _l('match', _l('password')) ?></strong>");
 	 	//toastr.success('Password Match');
 	 }
 	 
 	 else
 	 {
-	 	 $(".msg").html("<strong style='color:red'>Password Not Match</strong>");
+	 	 $(".msg").html("<strong style='color:red'><?php echo _l('not_match', _l('password')) ?></strong>");
 	 	 return false;
 	 }
 });
@@ -230,12 +224,12 @@ $("#repeat_password").change(function(event) {
 
 	if (newpassword==repeat_password)
 	 {
-	 	 $(".valid").html("<strong style='color:green'>Repeat Password Match</strong>");
+	 	 $(".valid").html("<strong style='color:green'><?php echo _l('match', _l('repeat_password')) ?></strong>");
 	 	
 	 }
 	 else
 	 {
-	 	 $(".valid").html("<strong style='color:red'>Repeat Password Not Match</strong>");
+	 	 $(".valid").html("<strong style='color:red'><?php echo _l('not_match', _l('repeat_password')) ?></strong>");
 	 }
 	
 });
@@ -246,12 +240,12 @@ $("#newpassword").change(function(event) {
 
 	if (newpassword==repeat_password)
 	 {
-	 	 $(".valid").html("<strong style='color:green'>Repeat Password Match</strong>");
+	 	 $(".valid").html("<strong style='color:green'><?php echo _l('repeat_password_match'); ?></strong>");
 	 	
 	 }
 	 else
 	 {
-	 	 $(".valid").html("<strong style='color:red'>Repeat Password Not Match</strong>");
+	 	 $(".valid").html("<strong style='color:red'><?php echo _l('repeat_password_not_match'); ?></strong>");
 	 }
 	
 });

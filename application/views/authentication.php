@@ -73,8 +73,8 @@
         },
         messages: {
             email: {
-                 required:"Please Enter your email",
-                    email:"Please enter a valid email address"
+                  required:"<?php echo _l('required_field_msg', _l('email')) ?>",
+                    email:"<?php echo _l('required_field_valid', _l('email')) ?>"
 
             },
             password:{

@@ -1,15 +1,4 @@
-		<?php 
-			// $session=check_session();
-      // echo "<pre>";
-      // print_r($roles);
-      // die();
-      ?>
-		 <style type="text/css">
-		 	.checkbox
-		 	{
-		 		background-color: red;
-		 	}
-		 </style>
+
      <!-- page header -->
         <div class="page-header page-header-default">
           <div class="page-header-content">
@@ -36,18 +25,38 @@
 					<!-- Page length options -->
 					<div class="panel panel-flat">
 						<div class="panel-heading">
-								<a href="<?php echo base_url('admin/roles/add'); ?>" class="btn btn-primary">Add New</a>
+              <?php 
+                  if (has_permissions('roles','create'))
+                   {
+              ?>
+                  <a href="<?php echo base_url('admin/roles/add'); ?>" class="btn btn-primary">Add New</a>
+              <?php
+                  }
+               ?>
+								<?php 
+                  if (has_permissions('roles','delete'))
+                   {
+              ?>
 							<a href="" class="btn btn-danger" id="delete_all">Delete Selected</a>
+                <?php
+                  }
+               ?>
 
-						<div class="panel-body">
-						</div>
-
-				      <table class="table datatable-show-all" id="example">
+				      <table class="table">
               <thead>
                 <tr>
-                  <th><input type="checkbox" name="delete_id" id="select_all"></th>
-                  <th>Role Name</th>
+                  <?php 
+                  if (has_permissions('roles','delete'))
+                   {
+              ?>
+                  <th width="5%"><input type="checkbox" name="delete_id" id="select_all"></th>
+                    <?php
+                  }
+               ?>
+                  <th width="85%">Role Name</th>
+                   <?php if (has_permissions('roles','edit') || has_permissions('roles','delete')): ?>
                   <th class="text-center">Actions</th>
+                <?php endif ?>
                 </tr>
               </thead>
               <tbody>
@@ -56,15 +65,37 @@
                 { ?>
                   <tr>
 
-                  
+                  <?php 
+                  if (has_permissions('roles','delete'))
+                   {
+              ?>
                   <td><input type="checkbox" class="checkbox"  name="delete"  id="<?php echo $role['id']; ?>"></td>
+                   <?php
+                  }
+               ?>
                   <td><?php echo $role['name']; ?></td>
-                 
+                   <?php if (has_permissions('roles','edit') || has_permissions('roles','delete'))
+                   {
+                    ?>
+                  
                   <td class="text-center">
-   <a href="<?php echo site_url('admin/roles/edit/').$role['id']; ?>" id="<?php echo $role['id']; ?>" class="text-info">
+                     <?php if (has_permissions('roles','edit'))
+                   {
+                    ?>
+                    <a href="<?php echo site_url('admin/roles/edit/').$role['id']; ?>" id="<?php echo $role['id']; ?>" class="text-info">
                           <i class="icon-pencil7"></i></a>
-                        <a href="" class="text-danger delete" id="<?php echo $role['id']; ?>"><i class=" icon-trash"></i></a>
+                      <?php 
+                        }
+                       ?>
+                     <?php if (has_permissions('roles','delete'))
+                   {
+                    ?>
+                    <a href="" class="text-danger delete" id="<?php echo $role['id']; ?>"><i class=" icon-trash"></i></a>
+                    <?php 
+                      }
+                     ?>
                   </td>
+                <?php } ?>
                  
                   </tr>
                 <?php
@@ -75,12 +106,7 @@
               </tbody>
             </table>
 					</div>
-					<!-- /page length options -->
-					<!-- Footer -->
-					<!-- <div class="footer text-muted">
-						&copy; 2015. <a href="#">Limitless Web App Kit</a> by <a href="http://themeforest.net/project/Kopyov" target="_blank">Eugene Kopyov</a>
-					</div> -->
-					<!-- /footer -->
+		
 
 				</div>
 				<!-- /content area -->
@@ -88,83 +114,6 @@
  <script type="text/javascript">
 $( document ).ready(function() 
 {
-
- 
-
-    $('#example').DataTable();
-
-$(function() {
-
-
-    // Table setup
-    // ------------------------------
-
-    // Setting datatable defaults
-    $.extend( $.fn.dataTable.defaults, {
-        autoWidth: false,
-        columnDefs: [{ 
-            orderable: false,
-            width: '100px',
-            targets: [ 5 ]
-        }],
-        dom: '<"datatable-header"fl><"datatable-scroll"t><"datatable-footer"ip>',
-        language: {
-            search: '<span>Filter:</span> _INPUT_',
-            lengthMenu: '<span>Show:</span> _MENU_',
-            paginate: { 'first': 'First', 'last': 'Last', 'next': '&rarr;', 'previous': '&larr;' }
-        },
-        drawCallback: function () {
-            $(this).find('tbody tr').slice(-3).find('.dropdown, .btn-group').addClass('dropup');
-        },
-        preDrawCallback: function() {
-            $(this).find('tbody tr').slice(-3).find('.dropdown, .btn-group').removeClass('dropup');
-        }
-    });
-
-
-    // Basic datatable
-    $('.datatable-basic').DataTable();
-
-
-    // Alternative pagination
-    $('.datatable-pagination').DataTable({
-        pagingType: "simple",
-        language: {
-            paginate: {'next': 'Next &rarr;', 'previous': '&larr; Prev'}
-        }
-    });
-
-
-    // Datatable with saving state
-    $('.datatable-save-state').DataTable({
-        stateSave: true
-    });
-
-
-    // Scrollable datatable
-    $('.datatable-scroll-y').DataTable({
-        autoWidth: true,
-        scrollY: 300
-    });
-
-
-
-    // External table additions
-    // ------------------------------
-
-    // Add placeholder to the datatable filter option
-    $('.dataTables_filter input[type=search]').attr('placeholder','Type to filter...');
-
-
-    // Enable Select2 select for the length option
-    $('.dataTables_length select').select2({
-        minimumResultsForSearch: Infinity,
-        width: 'auto'
-    });
-    
-});
-  
-
 /* simple delete on sigle value */
   $(".delete").click(function(e) 
   { 

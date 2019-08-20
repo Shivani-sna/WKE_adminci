@@ -28,10 +28,11 @@
 																	 {
 																	 	
 																		$permission_array= array();
-																		?>
-<input type="checkbox" name="permissions[<?php echo $permission['name']; ?>][]" value="<?php echo $value; ?>">
 
-																			<?php echo $value; ?>
+																		$id = $permission['name']."_".$value;
+																		?>
+<input type="checkbox" name="permissions[<?php echo $permission['name']; ?>][]" value="<?php echo $value; ?>" id="<?php echo $id; ?>" class="permission">
+<label for="<?php echo $id; ?>"><?php echo $value; ?></label>
 																		</br>
 																		
 																	<?php 

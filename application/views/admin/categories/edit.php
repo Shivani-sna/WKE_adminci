@@ -27,7 +27,7 @@
 					<div class="row">
 						
 						<div class="col-md-8 col-md-offset-2">
-							<form action="<?php echo base_url('admin/categories/edit/').$category['id']; ?>" id="taskform" method="POST">
+							<form action="<?php echo base_url('admin/categories/edit/').$category['id']; ?>" id="categoryform" method="POST">
 								<div class="panel panel-flat">
 									<div class="panel-heading">
 										<div class="row">
@@ -84,7 +84,7 @@
 
 <script type="text/javascript">
 $(function () {
-    $("#projectform").validate({
+    $("#categoryform").validate({
         rules: {
         	name:
         	{
@@ -94,7 +94,7 @@ $(function () {
         },
         messages: {
         	name: {
-                 required:"Please Enter Project name",
+                 required:"<?php echo _l('required_field_msg', _l('category_name')) ?>",
                     // email:"Please enter a valid email address"
 
             },

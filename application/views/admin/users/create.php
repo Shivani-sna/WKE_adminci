@@ -162,7 +162,7 @@ $(function () {
         	},
         	mobile_no: {
                     required: true,
-                     // digit: true
+                     digit: true
                 },
 
             email: {
@@ -178,30 +178,30 @@ $(function () {
         },
         messages: {
         	firstname: {
-                 required:"Please Enter your Firstname",
+                 required:"<?php echo _l('required_field_msg', _l('firstname')) ?>",
                     // email:"Please enter a valid email address"
 
             },
             lastname: {
-                 required:"Please Enter your Lastname",
+                 required:"<?php echo _l('required_field_msg', _l('lastname')) ?>",
                     // email:"Please enter a valid email address"
 
             },
               mobile_no: {
-                 required:"Please Enter your Contact No",
+                 required:"<?php echo _l('required_field_msg', _l('contact_no')) ?>",
                    mobile_no:"Please Enter Digits"
 
             },
             email: {
-                 required:"Please Enter your email",
-                    email:"Please Enter a valid email address"
+                 required:"<?php echo _l('required_field_msg', _l('email')) ?>",
+                    email:"<?php echo _l('required_field_valid', _l('email')) ?>"
 
             },
             password:{
-                 required:"Please Enter Password"
+                 required:"<?php echo _l('required_field_msg', _l('password')) ?>"
             },
              role:{
-                 required:"Please Select Role"
+                 required:"<?php echo _l('select', _l('contact_no')) ?>"
             },
 
         }

@@ -1,4 +1,8 @@
-		
+<?php 
+
+  // echo $links;
+  // die();
+ ?>
 		 <style type="text/css">
 		 	.checkbox
 		 	{
@@ -15,10 +19,10 @@
 
           <div class="breadcrumb-line">
             <ul class="breadcrumb">
-              <?php  ?>
+              <?php ?>
               <li><a href="<?php echo base_url('admin/dashboard'); ?>"><i class="icon-home2 position-left"></i>Dashboard</a></li>
               <li class="active">Users</li>
-              
+
 
             </ul>
           </div>
@@ -29,207 +33,225 @@
 				<div class="content">
 
 					<!-- Page length options -->
+        
 					<div class="panel panel-flat">
+
 						<div class="panel-heading">
-								<a href="<?php echo base_url('admin/users/add'); ?>" class="btn btn-primary">Add New</a>
-							<a href="" class="btn btn-danger" id="delete_all">Delete Selected</a>
+								<?php 
+                    if (has_permissions('users','create'))
+                     {
+                ?>
+                  <a href="<?php echo base_url('admin/users/add'); ?>" class="btn btn-primary">Add New</a>  
+                <?php
+                    }
+                 ?>
 
-						<div class="panel-body">
-						</div>
-
-						<table class="table datatable-show-all" id="example">
+                 <?php 
+                    if (has_permissions('users','Delete'))
+                     {
+                ?>
+                <a href="" class="btn btn-danger" id="delete_all">Delete Selected</a>
+                <?php
+                    }
+                 ?>
+						<table class="table">
 							<thead>
+                <tr>
+                  <th></th>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Role</th>
+                  <th>Last Login</th>
+                  <th>Status</th>
+                  <?php if (has_permissions('users','edit') || has_permissions('users','delete')): ?>
+                  <th class="text-center">Actions</th>
+                <?php endif ?>
+
+
+                </tr>
+                <form method="POST" action="<?php echo base_url("admin/users/search"); ?>">
 								<tr>
-									<th><input type="checkbox" name="delete_id" id="select_all"></th>
-									<th><input type="text" name="firstname" placeholder="FIrstname" class="form-control"></th>
-									<th><input type="email" name="email" placeholder="email" class="form-control"></th>
-									<th><select class="select" name="role" id="role">
-                      <!-- <option>Select Role</option> -->
-                          <?php 
-                              foreach ($roles as $key => $role)
-                               {
-                                ?>
-                                <div class="form-group">
+									<?php if (has_permissions('users','delete'))
+                  { 
+                  ?>
+                    <th><input type="checkbox" name="delete_id" id="select_all"></th>
                     
-                      
-                        
+                  <?php } ?>
+									<th>
+                        <input type="text" name="firstname" placeholder="Firstname" class="form-control">         
+
+                    <input type="text" name="lastname" placeholder="Lastname" class="form-control"></th>
+									<th><input type="email" name="email" placeholder="email" class="form-control"></th>
+									<th>
+                    <select class="select" name="role" id="role">
+                     <div class="form-group">
                       <option value="" name="select">Select Role</option>
-                        <option value="<?php echo $role['id']; ?>" name="role"><?php echo $role['name'] ?></option>
-                        
-                            <?php
+                      <?php
+                      foreach ($roles as $key => $role)
+                      {
+                      	?>
+                               
+                        <option value="<?php echo $role['id']; ?>"><?php echo $role['name'] ?></option>
 
-                            }
+                      <?php
+                      }
 
-                           ?>
-
-                      
-                           </select>
-</th>
+                      ?>
+                 </select>
+                  </th>
 									<th>Last Login</th>
-									<th>Status</th>
-									<th class="text-center">Actions</th>
+									<th>
+                   Status        
+
+                  </th>
+                  <th><input type="submit" class="btn btn-primary" name="search" value="Search"></th>
 								</tr>
+                </form>
 							</thead>
 							<tbody>
-								<?php foreach ($users as $key => $user)
-								{ ?>
-									
-									<tr>
-									<td><?php 
-									$disabled = '';
-									if ($user['id']==get_loggedin_user_id())
-									 {
-										 $disabled="disabled";
-									} 
+								<?php
+                foreach ($users as $key => $user)
+                {
+                	?>
 
-									 ?> 	<input type="checkbox" class="checkbox"  name="delete"  id="<?php if ($user['id']!=get_loggedin_user_id()){ echo $user['id'];} ?>" <?php echo $disabled; ?>></td>
+									<tr>
+                     <?php if (has_permissions('users','delete')): ?>
+									<td>
+                    <?php
+$disabled = '';
+
+	if ($user['id'] == get_loggedin_info('user_id'))
+	{
+		$disabled = "disabled";
+	}
+
+	?> 	<input type="checkbox" class="checkbox"  name="delete"  id="<?php
+if ($user['id'] != get_loggedin_info('user_id'))
+	{
+		echo $user['id'];}
+	?>" <?php echo $disabled; ?>>
+</td>
+ <?php endif ?>
 									<td><?php echo ucfirst($user['firstname']).'&nbsp;'.ucfirst($user['lastname']); ?></td>
 									<td><a href="mailto:<?php echo $user['email']; ?>"><?php echo $user['email']; ?></a></td>
-									<td><?php 
-                        foreach ($roles as $key => $role)
-                        {
-                          if ($role['id']==$user['role'])
-                           {
-                            echo $role['name'];
-                          }
-                        }
-                  ?>
-                    
+									<td><?php
+
+	foreach ($roles as $key => $role)
+	{
+		if ($role['id'] == $user['role'])
+		{
+			echo $role['name'];
+		}
+	}
+
+	?>
+
                   </td>
                   <?php
-                      $login_datetime = $user['last_login']!='Never' ? date("d M Y, H:i:s", $user['last_login']) : "Never"; 
-                  ?>
+$login_datetime = $user['last_login'] != 'Never' ? date("d M Y, H:i:s", $user['last_login']) : "Never";
+	?>
                   <!-- data-popup="tooltip" -->
-									<td  title="<?php echo $login_datetime;  ?>">
-                    
-                    <?php if ($user['last_login']!="Never")
-                   {
-                   echo time_stamp($user['last_login']);
-                  }
-                  else
-                  {
-                    echo "Never";
-                  } 
-                  ?></td>
-									 <?php 
-									$readonly = '';
-									if ($user['id']==get_loggedin_user_id())
-									 {
-										 $readonly="readonly";
-									} 
+									<td  title="<?php echo $login_datetime; ?>">
 
-									 ?> 
-									<td ><input type="checkbox" class="switch"  id="<?php echo $user['id']; ?>" <?php if ($user['is_active']==1) {
-										echo "checked";
-									}  ?> <?php echo $readonly; ?>></td>
+                    <?php
+if ($user['last_login'] != "Never")
+	{
+		echo time_stamp($user['last_login']);
+	}
+	else
+	{
+		echo "Never";
+	}
+
+	?></td>
+									 <?php
+          $readonly = '';
+
+	if ($user['id'] == get_loggedin_info('user_id'))
+	{
+		$readonly = "readonly";
+	}
+
+	?>
+ <?php
+$not_permissions = '';
+  if (!has_permissions('users','edit'))
+ {
+   $not_permissions="readonly";
+ }
+  ?>
+   
+
+                    <td>
+                    <input type="checkbox" class="switch"  id="<?php echo $user['id']; ?>" <?php
+if ($user['is_active'] == 1)
+  {
+    echo "checked";
+  }
+  ?> <?php echo $readonly; ?> <?php echo $not_permissions; ?>>
+</td>
+ 
+	 <?php if (has_permissions('users','edit') || has_permissions('users','delete')): ?>
+     
+  
 									<td class="text-center">
-
+                       <?php 
+                              if (has_permissions('users', 'edit'))
+                               {
+                                ?>
                        <a href="<?php echo site_url('admin/users/edit/').$user['id']; ?>" id="<?php echo $user['id']; ?>" class="text-info">
                           <i class="icon-pencil7"></i></a>
-												<a href="" class="text-danger delete" id="<?php echo $user['id']; ?>"><i class=" icon-trash"></i></a>
+                           <?php
+                              }
+                           ?>
+                          <?php 
+                              if (has_permissions('users', 'delete'))
+                               {
+                                ?>
+                                <a href="" class="text-danger delete" id="<?php echo $user['id']; ?>"><i class=" icon-trash"></i></a>
+                             <?php
+                              }
+                           ?>
+												
 									</td>
+                   <?php endif ?>
 								</tr>
 								<?php
-									} 
-								?>
-								
+}
+?>
+
 							</tbody>
 						</table>
 					</div>
-			
+<div class="table-foot">
+  <ul class="pagination pull-right">
+    <li>
+      <?php echo $links; ?>
+    </li>
+  </ul>
+</div>
 
 				</div>
 				<!-- /content area -->
 
  <script type="text/javascript">
-$( document ).ready(function() 
+$( document ).ready(function()
 {
-	
-    $('#example').DataTable();
 
-$(function() {
-
-
-    // Table setup
-    // ------------------------------
-
-    // Setting datatable defaults
-    $.extend( $.fn.dataTable.defaults, {
-        autoWidth: false,
-        columnDefs: [{ 
-            orderable: false,
-          
-            targets: [ 5 ]
-        }],
-        dom: '<"datatable-header"fl><"datatable-scroll"t><"datatable-footer"ip>',
-        language: {
-            search: '<span>Filter:</span> _INPUT_',
-            lengthMenu: '<span>Show:</span> _MENU_',
-            paginate: { 'first': 'First', 'last': 'Last', 'next': '&rarr;', 'previous': '&larr;' }
-        },
-        drawCallback: function () {
-            $(this).find('tbody tr').slice(-3).find('.dropdown, .btn-group').addClass('dropup');
-        },
-        preDrawCallback: function() {
-            $(this).find('tbody tr').slice(-3).find('.dropdown, .btn-group').removeClass('dropup');
-        }
-    });
-
-
-    // Basic datatable
-    $('.datatable-basic').DataTable();
-
-
-    // Alternative pagination
-    $('.datatable-pagination').DataTable({
-        pagingType: "simple",
-        language: {
-            paginate: {'next': 'Next &rarr;', 'previous': '&larr; Prev'}
-        }
-    });
-
-
-    // Datatable with saving state
-    $('.datatable-save-state').DataTable({
-        stateSave: true
-    });
-
-
-    // Scrollable datatable
-    $('.datatable-scroll-y').DataTable({
-        autoWidth: true,
-        scrollY: 300
-    });
-
-
-
-    // External table additions
-    // ------------------------------
-
-    // Add placeholder to the datatable filter option
-    $('.dataTables_filter input[type=search]').attr('placeholder','Type to filter...');
-
-
-    // Enable Select2 select for the length option
-    $('.dataTables_length select').select2({
-        minimumResultsForSearch: Infinity,
-        width: 'auto'
-    });
     
-});
 /*Update User Status Jquery for checkbox switch */
 	$(".switch").change(function()
 	 {
-	 	
+
    	  var check = 0;
       var BASE_URL = "<?php echo base_url(); ?>";
       var id = $(this).attr('id');
-      var session_id = "<?php echo get_loggedin_user_id(); ?>";
+      var session_id = "<?php echo get_loggedin_info('user_id'); ?>";
       //console.log(id);
 
-       if (session_id!=id) 
+       if (session_id!=id)
        {
-       	if($(this).is(":checked")) 
+       	if($(this).is(":checked"))
        {
        		check = 1;
        }
@@ -253,12 +275,12 @@ $(function() {
                     {
                         toastr.success("<?php echo _l('deactivation_msg', _l('user')); ?>");
                     }
-               
+
           response = (msg == '0') ? true : false;
           return response;
         }).fail(function(data){
-        console.log("fail method is called");
-        }); 
+        
+        });
        }
        else
        {
@@ -269,20 +291,21 @@ $(function() {
 /* End of Update User Status Jquery for checkbox switch  */
 
 /* simple delete on sigle value */
-	$(".delete").click(function(e) 
-	{ 
+	$(".delete").click(function(e)
+	{
       e.preventDefault();
       var BASE_URL = "<?php echo base_url(); ?>";
       var id = $(this).attr('id');
-      var session_id = "<?php echo get_loggedin_user_id(); ?>";
+      var session_id = "<?php echo get_loggedin_info('user_id'); ?>";
       if (id==session_id)
       {
       	 toastr.error("You Can't Delete your Account");
       	return false;
       }
+    
       swal({
-          title: "Are you sure?",
-          text: "You will not be able to recover User!",
+            title: "<?php echo _l('deletion_msg', _l('user')); ?>",
+          text: "<?php echo _l('recovery_msg', _l('user')); ?>",
           buttons: [
             'No, cancel it!',
             'Yes, I am sure!'
@@ -297,8 +320,17 @@ $(function() {
               			    user_id:id
               			 },
               	})
-              	.done(function() {
-              		toastr.success("Users Deleted.");
+              	.done(function(msg)
+                {
+              		if (msg=="success")
+                   {
+                     toastr.success("<?php echo _l('deleted', _l('user')); ?>");
+                   
+                   }
+                   else
+                   {
+                     toastr.error("<?php echo _l('access_denied'); ?>");
+                   }
               	})
               	.fail(function() {
               		console.log("error");
@@ -313,8 +345,8 @@ $(function() {
         //});
   });
 /* end of sigle delete*/
-$("#delete_all").click(function(e) 
-	{ 
+$("#delete_all").click(function(e)
+	{
 		e.preventDefault();
 		var BASE_URL = "<?php echo base_url(); ?>";
 		var delete_array = [];
@@ -322,22 +354,22 @@ $("#delete_all").click(function(e)
 		 	var id = $(this).attr('id');
              delete_array.push(id);
             });
-		
+
 		 //console.log(delete_array);
 		 if (delete_array == '')
 		  {
-        toastr.error("Please Select Users");
+        toastr.error("<?php echo _l('select_before_delete_msg', _l('user')) ?>");
 		  	 // swal("", "Please Select Users", "warning");
 		  	 return false;
 		  }
 		   swal({
-          title: "Are you sure?",
-          text: "You will not be able to recover User!",
+          title: "<?php echo _l('deletion_multiple_msg', _l('users')); ?>",
+          text: "<?php echo _l('recovery_multiple_msg', _l('users')); ?>",
           buttons: [
             'No, cancel it!',
           'Yes, I am sure!'
-          
-            
+
+
           ],
           dangerMode: true,
         }).then(function(isConfirm) {
@@ -350,7 +382,7 @@ $("#delete_all").click(function(e)
               			 },
               	})
               	.done(function() {
-              		toastr.success("Users Deleted.");
+              		toastr.success("<?php echo _l('deleted', _l('users')); ?>");
               	})
               	.fail(function() {
               		console.log("error");
@@ -358,7 +390,7 @@ $("#delete_all").click(function(e)
               	.always(function() {
               		console.log("complete");
               	});
-              	$(delete_array).each(function(index, el) 
+              	$(delete_array).each(function(index, el)
               	{
               		//console.log(el);
               		$("#"+el).closest("tr").remove();

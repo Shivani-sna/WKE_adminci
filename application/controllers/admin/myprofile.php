@@ -4,28 +4,25 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Myprofile extends MY_Controller
 {
 	/**
-	 * @var mixed
+	 * [__construct load models and session function]
 	 */
-	protected $soft_delete = TRUE;
-	/**
-	 * @var string
-	 */
-	protected $soft_delete_key = 'is_deleted';
-
 	public function __construct()
 	{
 		parent::__construct();
+
 		is_user_logged_in();
+
 		$this->load->model('user_model', 'users');
 		$this->load->model('activity_log_model', 'activity_log');
 	}
 
 	/**
-	 * [edit  for update profile details by session_id]
+	 * [edit for update user's personal profile]
+	 * @return [array] [updated profile load]
 	 */
 	public function edit()
 	{
-		$id = get_loggedin_user_id();
+		$id = get_loggedin_info('user_id');
 
 		if ($id)
 		{
@@ -47,54 +44,45 @@ class Myprofile extends MY_Controller
 
 			if ($update)
 			{
-				log_activity("MyProfile Updated", $id);
-				$this->session->set_flashdata('success', 'Profile Updated');
+				log_activity(get_loggedin_info('username').' '._l('updated', _l('profile')), $id);
+
+				$this->session->set_flashdata('success', _l('updated', _l('profile')));
 				redirect('admin/myprofile/edit');
-			}
-			else
-			{
-				log_activity("!Error Myprofile not update", $id);
-				$this->session->set_flashdata('error', 'Error Update');
 			}
 		}
 	}
 
-	/**
-	 * [edit password for change password]
-	 */
+/**
+ * [edit_password for update user's password]
+ * @return [array] [updated password]
+ */
 	public function edit_password()
 	{
-		$id = get_loggedin_user_id();
-
+		$id = get_loggedin_info('user_id');
 		$data['user'] = $this->users->get($id);
 
 		if ($this->input->post())
 		{
-			$data = array(
+			$data = array
+				(
 				'password'             => md5($this->input->post('newpassword')),
 				'last_password_change' => current_timestamp()
-
 			);
 
 			$update = $this->users->update($id, $data);
 
 			if ($update)
 			{
-				log_activity("MyPassword Changed", $id);
-				$this->session->set_flashdata('success', 'Password Changed');
-				redirect('admin/myprofile/edit');
-			}
-			else
-			{
-				log_activity("!Error MyPassword Not Change", $id);
-				$this->session->set_flashdata('error', 'Password Not Change');
+				
+				log_activity(get_loggedin_info('username').' '._l('changed', _l('password')), $id);
+				$this->session->set_flashdata('success', _l('changed', _l('password')));
 				redirect('admin/myprofile/edit');
 			}
 		}
 		else
 		{
-			log_activity("!Error MyPassword Not Change", $id);
-			$this->session->set_flashdata('error', 'Plese Enter valid Password');
+			log_activity(_l('error').' '._l('password', _l('not_change')), $id);
+			$this->session->set_flashdata('error', _l('password', 'required_field_msg'));
 		}
 	}
 }

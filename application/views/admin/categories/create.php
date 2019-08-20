@@ -89,7 +89,7 @@ $(function () {
         },
         messages: {
         	name: {
-                 required:"Please Enter Name",
+                 required:"<?php echo _l('required_field_msg', _l('category_name')) ?>",
                     // email:"Please enter a valid email address"
 
             },

@@ -3,24 +3,22 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Categories extends MY_Controller
 {
-/**
- * @var mixed
- */
-	protected $soft_delete = TRUE;
 	/**
-	 * @var string
+	 * [__construct load model and session function]
 	 */
-	protected $soft_delete_key = 'is_deleted';
 	public function __construct()
 	{
 		parent::__construct();
+
 		is_user_logged_in();
+
 		$this->load->model('category_model', 'category');
 		$this->load->model('user_permission_model', 'user_permissions');
 	}
 
 /**
- * [index for view Categories]
+ * [index load view for categories]
+ * @return [type] [description]
  */
 	public function index()
 	{
@@ -28,15 +26,19 @@ class Categories extends MY_Controller
 		{
 			access_denied('categories', 'view');
 		}
+		else
+		{
+			$data['categories'] = $this->category->get_all();
 
-		$data['categories'] = $this->category->get_all();
+			$data['content'] = $this->load->view('admin/categories/index', $data, TRUE);
+			$this->load->view('admin/index', $data);
 
-		$data['content'] = $this->load->view('admin/categories/index', $data, TRUE);
-		$this->load->view('admin/index', $data);
+			log_activity(_l('view', _l('categories')));
+		}
 	}
 
 /**
- * [add for insert Categories]
+ * [add for categories insert]
  */
 	public function add()
 	{
@@ -44,70 +46,74 @@ class Categories extends MY_Controller
 		{
 			access_denied('categories', 'create');
 		}
-
-		if ($this->input->post())
-		{
-			$data = array
-				('name'     => $this->input->post('name'),
-				'user_id'   => get_loggedin_user_id(),
-				'is_active' => 1,
-				'created'   => current_timestamp()
-			);
-			//print_r($data);
-			$insert = $this->category->insert($data);
-			$id     = get_loggedin_user_id();
-			log_activity("Category Added [ID:$insert] ", $id);
-
-			if ($insert)
-			{
-				$this->session->set_flashdata('success', _l('added_successfully_msg', _l('category')));
-				redirect('admin/categories');
-			}
-		}
 		else
 		{
-			$data['content'] = $this->load->view('admin/categories/create', '', TRUE);
-			$this->load->view('admin/index', $data);
+			if ($this->input->post())
+			{
+				$data = array
+					('name'     => $this->input->post('name'),
+					'user_id'   => get_loggedin_info('user_id'),
+					'is_active' => 1,
+					'created'   => current_timestamp()
+				);
+				$insert = $this->category->insert($data);
+
+				log_activity(_l('added', _l('user'))."[ID:$insert] ");
+
+				if ($insert)
+				{
+					$this->session->set_flashdata('success', _l('added_successfully_msg', _l('category')));
+					redirect('admin/categories');
+				}
+			}
+			else
+			{
+				$data['content'] = $this->load->view('admin/categories/create', '', TRUE);
+				$this->load->view('admin/index', $data);
+			}
 		}
 	}
 
-	/**
-	 *[update category by category id]
-	 * @param $id
-	 */
+/**
+ * [edit for update category by their id]
+ * @param  [int] $id [category id]
+ * @return [array]     [updated category]
+ */
 	public function edit($id)
 	{
 		if (!has_permissions('categories', 'edit'))
 		{
 			access_denied('categories', 'edit');
 		}
-
-		if ($id)
+		else
 		{
-			if ($this->input->post())
+			if ($id)
 			{
-				$data = array
-					('name'   => $this->input->post('name'),
-					'user_id' => get_loggedin_user_id(),
-					'updated' => current_timestamp()
-				);
-
-				$update     = $this->category->update($id, $data);
-				$session_id = get_loggedin_user_id();
-				log_activity("Category Updated [ID:$id] ", $session_id);
-
-				if ($update)
+				if ($this->input->post())
 				{
-					$this->session->set_flashdata('success', 'You have Updated category.');
+					$data = array
+						('name'   => $this->input->post('name'),
+						'user_id' => get_loggedin_info('user_id'),
+						'updated' => current_timestamp()
+					);
 
-					redirect('admin/categories');
+					$update = $this->category->update($id, $data);
+
+					if ($update)
+					{
+						log_activity(_l('updated', _l('category'))."[ID:$id] ");
+
+						$this->session->set_flashdata('success', _l('updated_successfully_msg', _l('category')));
+
+						redirect('admin/categories');
+					}
 				}
-			}
-			else
-			{
-				$data['category'] = $this->category->get($id);
-				$data['content']  = $this->load->view('admin/categories/edit', $data, TRUE);
-				$this->load->view('admin/index', $data);
+				else
+				{
+					$data['category'] = $this->category->get($id);
+					$data['content']  = $this->load->view('admin/categories/edit', $data, TRUE);
+					$this->load->view('admin/index', $data);
+				}
 			}
 		}
 	}
@@ -117,7 +123,6 @@ class Categories extends MY_Controller
  */
 	public function update_status()
 	{
-		$session_id  = get_loggedin_user_id();
 		$category_id = $this->input->post('category_id');
 		$data        = array('is_active' => $this->input->post('is_active'));
 
@@ -131,7 +136,7 @@ class Categories extends MY_Controller
 			}
 		}
 
-		log_activity("Task Status Updated [ID:$category_id] ", $session_id);
+		log_activity(_l('status_updated', _l('category'))." [ID:$category_id]");
 	}
 
 /**
@@ -139,16 +144,15 @@ class Categories extends MY_Controller
  */
 	public function delete()
 	{
-		if (!has_permissions('categories', 'delete'))
+		$category_id = $this->input->post('category_id');
+		$delete      = $this->category->delete($category_id);
+
+		if ($delete)
 		{
-			access_denied('categories', 'delete');
+			log_activity(_l('deleted', _l('category'))." [ID:$category_id]");
 		}
 
-		$session_id  = get_loggedin_user_id();
-		$category_id = $this->input->post('category_id');
-		$result      = $this->category->delete($category_id);
-
-		log_activity("Task Deleted [ID:$category_id] ", $session_id);
+		echo "success";
 	}
 
 /**
@@ -156,11 +160,14 @@ class Categories extends MY_Controller
  */
 	public function delete_selected()
 	{
-		$session_id = get_loggedin_user_id();
-		$where      = $this->input->post('ids');
-		$ids        = implode(",", $where);
-		$delete_all = $this->category->delete_many($where);
+		$where = $this->input->post('ids');
+		$ids   = implode(",", $where);
 
-		log_activity("category Deleted [IDS:$ids] ", $session_id);
+		$delete_many = $this->category->delete_many($where);
+
+		if ($delete_many)
+		{
+			log_activity(_l('deleted', _l('category'))."[IDS:$ids] ");
+		}
 	}
 }
