@@ -38,9 +38,6 @@ function access_denied($feature, $capability)
 	$CI = &get_instance();
 	$CI->session->set_flashdata('error', _l('access_denied'));
 
-// $user = session username
-	// $msg = $user. " tried to access $feature $capability page without permission"
-
 	log_activity(get_loggedin_info('username').' '._l('log_access_denied')." $feature $capability page without permission");
 
 	$CI->session->set_userdata('redirect_url', current_url());

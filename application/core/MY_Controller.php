@@ -7,7 +7,6 @@ class MY_Controller extends CI_Controller
 	{
 		parent::__construct();
 		$this->lang->load('english');
-
 	}
 
 	/**
@@ -39,4 +38,30 @@ class MY_Controller extends CI_Controller
 		return $config;
 	}
 
+	/**
+	 * @param $sort_by
+	 */
+	public function sort_by($sort_by)
+	{
+		$order = 'ASC';
+
+		if (null !== $this->session->userdata('sort_order'))
+		{
+			$sort_order =  $this->session->userdata('sort_order');
+			 $order      = $sort_order['order'];
+			$order      = ($order == 'ASC') ? 'DESC' : 'ASC';
+		}
+
+		//	$sort_order = $sort_by.'@'.$order;
+		$sort_order = array
+			(
+			'sort_by'    => $sort_by,
+			'order'      => $order,
+			'controller' => $this->router->fetch_class()
+		);
+	
+		$this->session->set_userdata('sort_order', $sort_order);
+		//print_r($this->session->userdata('sort_order'));
+		redirect($this->session->userdata('sort_redirect_to'));
+	}
 }

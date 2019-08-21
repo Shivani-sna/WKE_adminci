@@ -52,5 +52,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 $route['default_controller'] = 'authentication';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
+
 $route['admin/users/(:num)'] = 'admin/users';
 $route['admin/users/search/(:num)'] = 'admin/users/search';
+
+$route['admin/projects/(:num)'] = 'admin/projects';
+$route['admin/projects/search/(:num)'] = 'admin/projects/search';
+
+$route['admin/categories/(:num)'] = 'admin/categories';
+$route['admin/categories/search/(:num)'] = 'admin/categories/search';
+
+$route['admin/roles/(:num)'] = 'admin/roles';
+$route['admin/roles/search/(:num)'] = 'admin/roles/search';

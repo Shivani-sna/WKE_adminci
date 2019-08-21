@@ -1,13 +1,23 @@
-<?php 
+<?php
 
-  // echo $links;
-  // die();
- ?>
+                  if ($this->uri->segment(3)!=NULL)
+                   {
+                     $sort_redirect_to = $this->uri->segment(1).'/'.$this->uri->segment(2).'/'.$this->uri->segment(3);
+                  }
+                  else
+                  {
+                    $sort_redirect_to = $this->uri->segment(1).'/'.$this->uri->segment(2);
+                  }
+
+                   $this->session->set_userdata('sort_redirect_to',$sort_redirect_to) ?>
 		 <style type="text/css">
-		 	.checkbox
-		 	{
-		 		background-color: red;
-		 	}
+
+		 	.name
+      {
+        width:49% !important;
+        display:inline-block !important;
+      }
+      
 		 </style>
      <!-- page header -->
         <div class="page-header page-header-default">
@@ -56,32 +66,17 @@
                  ?>
 						<table class="table">
 							<thead>
-                <tr>
-                  <th></th>
-                  <th>Name</th>
-                  <th>Email</th>
-                  <th>Role</th>
-                  <th>Last Login</th>
-                  <th>Status</th>
-                  <?php if (has_permissions('users','edit') || has_permissions('users','delete')): ?>
-                  <th class="text-center">Actions</th>
-                <?php endif ?>
-
-
-                </tr>
+               
                 <form method="POST" action="<?php echo base_url("admin/users/search"); ?>">
 								<tr>
-									<?php if (has_permissions('users','delete'))
-                  { 
-                  ?>
-                    <th><input type="checkbox" name="delete_id" id="select_all"></th>
-                    
-                  <?php } ?>
-									<th>
-                        <input type="text" name="firstname" placeholder="Firstname" class="form-control">         
-
-                    <input type="text" name="lastname" placeholder="Lastname" class="form-control"></th>
-									<th><input type="email" name="email" placeholder="email" class="form-control"></th>
+									<th></th>
+									<th width="25%">
+                   
+                        <input type="text" name="firstname" placeholder="Firstname" class="form-control name" value="<?php echo $this->session->userdata('src_firstname'); ?>">
+                        <input type="text" name="lastname" placeholder="Lastname" class="form-control name"  value="<?php echo $this->session->userdata('src_lastname'); ?>">
+                   
+                  </th>
+									<th><input type="email" name="email" placeholder="email" class="form-control"  value="<?php echo $this->session->userdata('src_email'); ?>"></th>
 									<th>
                     <select class="select" name="role" id="role">
                      <div class="form-group">
@@ -90,8 +85,15 @@
                       foreach ($roles as $key => $role)
                       {
                       	?>
-                               
-                        <option value="<?php echo $role['id']; ?>"><?php echo $role['name'] ?></option>
+                               <?php 
+                               $selected='';
+                               if ($this->session->userdata('src_role')==$role['id'])
+                                {
+                                  $selected = "selected";
+                                }
+
+                                ?>
+                        <option value="<?php echo $role['id']; ?>" <?php echo $selected; ?>><?php echo $role['name'] ?></option>
 
                       <?php
                       }
@@ -107,9 +109,37 @@
                   <th><input type="submit" class="btn btn-primary" name="search" value="Search"></th>
 								</tr>
                 </form>
+                 <tr>
+                  <?php if (has_permissions('users','delete'))
+                  { 
+                  ?>
+                    <th><input type="checkbox" name="delete_id" id="select_all"></th>
+                    
+                  <?php } ?>
+                  <th><a href="<?php echo base_url('admin/users/sort_by/firstname') ?>" class="sort">Firstname</a> <a href="<?php echo base_url('admin/users/sort_by/lastname') ?>" class="sort">Lastname</a></th>
+                  
+                  <th><a href="<?php echo base_url('admin/users/sort_by/email') ?>" class="sort">Email</a></th>
+                  <th><a href="<?php echo base_url('admin/users/sort_by/role') ?>" class="sort">Role</a></th>
+                  <th>Last Login</th>
+                  <th>Status</th>
+                  <?php if (has_permissions('users','edit') || has_permissions('users','delete')): ?>
+                  <th class="text-center">Actions</th>
+                <?php endif ?>
+
+
+                </tr>
 							</thead>
 							<tbody>
-								<?php
+
+ <?php 
+                if ($users == array())
+                 {
+                ?>                 
+                 <tr><td colspan="4" class="text-center">No data Found</td></tr>
+                <?php
+              }
+								
+
                 foreach ($users as $key => $user)
                 {
                 	?>
@@ -220,6 +250,7 @@ if ($user['is_active'] == 1)
 }
 ?>
 
+               
 							</tbody>
 						</table>
 					</div>

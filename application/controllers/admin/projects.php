@@ -27,12 +27,119 @@ class Projects extends MY_Controller
 		}
 		else
 		{
+			$config                = $this->paginate();
+			$config['base_url']    = base_url('admin/projects');
+			$config['uri_segment'] = 3;
+
+			$data['src_project_id'] = '';
+			$data['src_name']       = '';
+
+			$config['total_rows'] = $data['total_rows'] = $this->projects->count_all();
+			$this->pagination->initialize($config);
+			$page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
+			$this->projects->limit($config['per_page'], $page);
+
+			$sort = $this->session->userdata('sort_order');
+
+			if ($sort['controller'] == $this->router->fetch_class())
+			{
+				$order['user'] = $this->projects->order_by($sort['sort_by'], $sort['order']);
+			}
+
+			$data['links']    = $this->pagination->create_links();
+			
 			$data['projects'] = $this->projects->get_all();
 			$data['content']  = $this->load->view('admin/projects/index', $data, TRUE);
 			$this->load->view('admin/index', $data);
 
 			log_activity(_l('view', _l('projects')));
 		}
+	}
+
+/**
+ * [search for searching with pagination]
+ * @return [str] [search data]
+ */
+	public function search()
+	{
+		$config                 = $this->paginate();
+		$config['base_url']     = base_url('admin/projects/search');
+		$config['uri_segment']  = 4;
+		$data['src_project_id'] = '';
+		$data['src_name']       = '';
+		$data['src_email']      = '';
+		$data['src_role']       = '';
+
+		$where = array();
+
+		if ($this->input->post('search'))
+		{
+			if ($this->input->post('project_id'))
+			{
+				$where['project_id LIKE'] = $this->input->post('project_id').'%';
+				$data['src_project_id']   = $this->input->post('project_id');
+				$this->session->set_userdata('src_project_id', $this->input->post('project_id'));
+			}
+			else
+			{
+				$this->session->unset_userdata('src_project_id');
+			}
+
+			if ($this->input->post('name'))
+			{
+				$where['name LIKE'] = $this->input->post('name').'%';
+				$data['src_name']   = $this->input->post('name');
+				$this->session->set_userdata('src_name', $this->input->post('name'));
+			}
+			else
+			{
+				$this->session->unset_userdata('src_name');
+			}
+		}
+		else
+		{
+			if ($this->session->userdata('src_project_id'))
+			{
+				$where['project_id LIKE'] = $this->session->userdata('src_project_id').'%';
+				$data['src_project_id']   = $this->session->userdata('src_project_id');
+			}
+			else
+			{
+				$this->session->unset_userdata('src_project_id');
+			}
+
+			if ($this->session->userdata('src_name'))
+			{
+				$where['name LIKE'] = $this->session->userdata('src_name').'%';
+				$data['src_name']   = $this->session->userdata('src_name');
+			}
+			else
+			{
+				$this->session->unset_userdata('src_name');
+			}
+		}
+
+		$config['total_rows'] = $data['total_rows'] = $this->projects->count_by($where);
+
+		$this->pagination->initialize($config);
+
+		$page = ($this->uri->segment(4)) ? $this->uri->segment(4) : 0;
+
+		$sort = $this->session->userdata('sort_order');
+
+		if ($sort['controller'] == $this->router->fetch_class())
+		{
+			$order['user'] = $this->projects->order_by($sort['sort_by'], $sort['order']);
+		}
+
+		$this->projects->limit($config['per_page'], $page);
+
+		$data['projects'] = $this->projects->get_many_by($where);
+
+		$data['links'] = $this->pagination->create_links();
+
+		$data['content'] = $this->load->view('admin/projects/index', $data, TRUE);
+		$this->load->view('admin/index', $data);
 	}
 
 /**
@@ -101,65 +208,65 @@ class Projects extends MY_Controller
 					$update = $this->projects->update($id, $data);
 					log_activity("Project Updated [ID:$id] ");
 
-						if ($update)
+					if ($update)
 					{
-							$this->session->set_flashdata('success', _l('updated_successfully_msg', _l('project')));
+						$this->session->set_flashdata('success', _l('updated_successfully_msg', _l('project')));
 
-							redirect('admin/projects');
-						}
-					}
-					else
-					{
-						$data['content'] = $this->load->view('admin/projects/edit', $data, TRUE);
-						$this->load->view('admin/index', $data);
+						redirect('admin/projects');
 					}
 				}
-			}
-		}
-
-/**
- * [delete for delete project by id]
- */
-		public function delete()
-		{
-			if (!has_permissions('users', 'delete'))
-			{
-				echo "error";
-			}
-			else
-			{
-				$project_id = $this->input->post('project_id');
-				$delete     = $this->projects->delete($project_id);
-
-				if ($delete)
+				else
 				{
-					log_activity(_l('deleted', _l('project'))." [ID:$project_id]");
-				}
-
-				echo "success";
-			}
-		}
-
-/**
- * [delete_selected for delete multiple projects by their ids]
- */
-		public function delete_selected()
-		{
-			if (!has_permissions('users', 'delete'))
-			{
-				echo "error";
-			}
-			else
-			{
-				$where = $this->input->post('ids');
-				$ids   = implode(",", $where);
-
-				$delete_many = $this->projects->delete_many($where);
-
-				if ($delete_many)
-				{
-					log_activity(_l('deleted', _l('projects'))."[IDS:$ids] ");
+					$data['content'] = $this->load->view('admin/projects/edit', $data, TRUE);
+					$this->load->view('admin/index', $data);
 				}
 			}
 		}
 	}
+
+/**
+ * [delete for delete project by id]
+ */
+	public function delete()
+	{
+		if (!has_permissions('users', 'delete'))
+		{
+			echo "error";
+		}
+		else
+		{
+			$project_id = $this->input->post('project_id');
+			$delete     = $this->projects->delete($project_id);
+
+			if ($delete)
+			{
+				log_activity(_l('deleted', _l('project'))." [ID:$project_id]");
+			}
+
+			echo "success";
+		}
+	}
+
+/**
+ * [delete_selected for delete multiple projects by their ids]
+ */
+	public function delete_selected()
+	{
+		if (!has_permissions('users', 'delete'))
+		{
+			echo "error";
+		}
+		else
+		{
+			$where = $this->input->post('ids');
+			$ids   = implode(",", $where);
+
+			$delete_many = $this->projects->delete_many($where);
+
+			if ($delete_many)
+			{
+				log_activity(_l('deleted', _l('projects'))."[IDS:$ids] ");
+			}
+		}
+	}
+}

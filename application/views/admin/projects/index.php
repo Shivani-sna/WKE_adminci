@@ -1,4 +1,15 @@
+<?php
 
+                  if ($this->uri->segment(3)!=NULL)
+                   {
+                     $sort_redirect_to = $this->uri->segment(1).'/'.$this->uri->segment(2).'/'.$this->uri->segment(3);   
+                  }
+                  else
+                  {
+                    $sort_redirect_to = $this->uri->segment(1).'/'.$this->uri->segment(2);
+                  }
+
+                   $this->session->set_userdata('sort_redirect_to',$sort_redirect_to) ?>
      <!-- page header -->
         <div class="page-header page-header-default">
           <div class="page-header-content">
@@ -45,6 +56,19 @@
 
 						<table class="table">
 							<thead>
+                <form method="POST" action="<?php echo base_url('admin/projects/search'); ?>">
+                <tr>
+                  <th></th>
+                  <th width="15%"><input type="text" name="project_id" placeholder="Project ID" class="form-control" value="<?php echo $this->session->userdata('src_projcet_id'); ?>"></th>
+                  <th width="45%">
+                    <input type="text" value="<?php echo $this->session->userdata('src_name'); ?>" name="name" placeholder="Project Name" class="form-control"></th>
+                  <th></th>
+                  <th width="25%"><input type="submit" class="btn btn-primary" name="search" value="Search"></th>
+                  
+                  
+                  
+                </tr>
+                </form>
 								<tr>
                   <?php if (has_permissions('projects','delete'))
                      {
@@ -54,8 +78,8 @@
                   </th>
                   <?php  }  ?>
 									
-                  <th width="15%">Project ID</th>
-									<th width="45%">Project Name</th>
+                  <th width="15%"><a href="<?php echo base_url('admin/projects/sort_by/project_id'); ?>" class="sort">Project ID</a></th>
+									<th width="45%"><a href="<?php echo base_url('admin/projects/sort_by/name'); ?>" class="sort">Project Name</a></th>
                   <th width="25%">Details</th>
                   
 									<?php if (has_permissions('projects','edit') || has_permissions('projects','delete')): ?>
@@ -65,7 +89,14 @@
 								</tr>
 							</thead>
 							<tbody>
-								<?php foreach ($projects as $key => $project)
+                <?php 
+                if ($projects == array())
+                 {
+                ?>                 
+                 <tr><td colspan="4" class="text-center">No Data Found</td></tr>
+                <?php
+              }
+								 foreach ($projects as $key => $project)
 								{ ?>
 									
 									<tr>
@@ -106,12 +137,13 @@
 							</tbody>
 						</table>
 					</div>
-					<!-- /page length options -->
-					<!-- Footer -->
-					<!-- <div class="footer text-muted">
-						&copy; 2015. <a href="#">Limitless Web App Kit</a> by <a href="http://themeforest.net/project/Kopyov" target="_blank">Eugene Kopyov</a>
-					</div> -->
-					<!-- /footer -->
+			<div class="table-foot">
+  <ul class="pagination pull-right">
+    <li>
+      <?php echo $links; ?>
+    </li>
+  </ul>
+</div>
 
 				</div>
 				<!-- /content area -->

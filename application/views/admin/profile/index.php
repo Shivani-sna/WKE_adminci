@@ -1,30 +1,4 @@
-<?php 
-	$session = $this->session->userdata('user');
-	// print_r($user['password']);
-	$password_user=$user['password'];
- ?>
-<!-- page header -->
-				<!-- <div class="page-header page-header-default">
-					<div class="page-header-content">
-						<div class="page-title">
-							<h4></i> <span class="text-semibold"><?php //echo $session['firstname'].'&nbsp;'.$session['lastname']; ?></span></h4>
-						</div>
-					</div>
-
-					<div class="breadcrumb-line">
-						<ul class="breadcrumb">
-							<?php  ?>
-							<li><a href="<?php// echo base_url('admin/home'); ?>"><i class="icon-home2 position-left"></i> Home</a></li>
-							 <li><a href="<?php //echo base_url('admin/profile'); ?>">Profile</a></li>
-							<li class="active">Edit</li>
-
-						</ul>
-					</div>
-				</div> -->
-				<!-- page header -->
-
-
-				<!-- Content area -->
+<!-- Content area -->
 				<div class="content">
 
 					

@@ -29,12 +29,93 @@ class Roles extends MY_Controller
 		}
 		else
 		{
+			$config                = $this->paginate();
+			$config['base_url']    = base_url().'admin/roles';
+			$config['uri_segment'] = 3;
+			$data['src_rolename']  = '';
+
+			$config['total_rows'] = $data['total_rows'] = $this->roles->count_all();
+			$this->pagination->initialize($config);
+			$page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
+			$this->roles->limit($config['per_page'], $page);
+
+			$sort = $this->session->userdata('sort_order');
+
+			if ($sort['controller'] == $this->router->fetch_class())
+			{
+				$order['user'] = $this->roles->order_by($sort['sort_by'], $sort['order']);
+			}
+
+			$data['links'] = $this->pagination->create_links();
+
 			$data['roles']   = $this->roles->get_all();
 			$data['content'] = $this->load->view('admin/roles/index', $data, TRUE);
 			$this->load->view('admin/index', $data);
 
 			log_activity(_l('view', _l('roles')));
 		}
+	}
+
+	/**
+	 * [search for searching with pagination]
+	 * @return [str] [search data]
+	 */
+	public function search()
+	{
+		$config                      = $this->paginate();
+		$config['base_url']          = base_url('admin/roles/search');
+		$config['uri_segment']       = 4;
+		$data['src_rolename'] = '';
+
+		$where = array();
+
+		if ($this->input->post('search'))
+		{
+			if ($this->input->post('name'))
+			{
+				$where['name LIKE']          = $this->input->post('name').'%';
+				$data['src_rolename'] = $this->input->post('name');
+				$this->session->set_userdata('src_rolename', $this->input->post('name'));
+			}
+			else
+			{
+				$this->session->unset_userdata('src_rolename');
+			}
+		}
+		else
+		{
+			if ($this->session->userdata('src_rolename'))
+			{
+				$where['name LIKE']          = $this->session->userdata('src_rolename').'%';
+				$data['src_rolename'] = $this->session->userdata('src_rolename');
+			}
+			else
+			{
+				$this->session->unset_userdata('src_rolename');
+			}
+		}
+
+		$config['total_rows'] = $data['total_rows'] = $this->roles->count_by($where);
+
+		$this->pagination->initialize($config);
+
+		$page = ($this->uri->segment(4)) ? $this->uri->segment(4) : 0;
+
+		$sort = $this->session->userdata('sort_order');
+
+		if ($sort['controller'] == $this->router->fetch_class())
+		{
+			$order['user'] = $this->roles->order_by($sort['sort_by'], $sort['order']);
+		}
+
+		$this->roles->limit($config['per_page'], $page);
+
+		$data['links'] = $this->pagination->create_links();
+
+		$data['roles'] = $this->roles->get_many_by($where);
+
+		$data['content'] = $this->load->view('admin/roles/index', $data, TRUE);
+		$this->load->view('admin/index', $data);
 	}
 
 /**
@@ -75,7 +156,7 @@ class Roles extends MY_Controller
 		}
 	}
 
-/**	
+/**
  * [edit for update role by role id]
  * @param  [int] $id [role id]
  * @return [array]     [updated role data]
@@ -150,7 +231,7 @@ class Roles extends MY_Controller
 
 /**
  * [delete for role delete]
- * @return [booolan] 
+ * @return [booolan]
  */
 	public function delete()
 	{
@@ -176,6 +257,7 @@ class Roles extends MY_Controller
 			}
 		}
 	}
+
 /**
  * [delete_selected for selected roles delete]
  */

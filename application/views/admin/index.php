@@ -23,8 +23,12 @@
 	{
   	 color:red;
     }
-
-		<style>
+</style>
+		<style type="text/css">
+	.sort
+      {
+        color: black;
+      }
 			<style type="text/css">
 		/* Tooltip container */
 .tooltip {

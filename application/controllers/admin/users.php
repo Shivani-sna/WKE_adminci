@@ -9,7 +9,6 @@ class Users extends MY_Controller
 	public function __construct()
 	{
 		parent::__construct();
-		$this->load->library('pagination');
 		is_user_logged_in();
 
 		$this->load->model('user_model', 'users');
@@ -30,44 +29,165 @@ class Users extends MY_Controller
 		else
 		{
 			$config                = $this->paginate();
-			$config['base_url']    = base_url().'admin/users';
+			$config['base_url']    = base_url('admin/users');
 			$config['uri_segment'] = 3;
 
 			$data['src_firstname'] = '';
 			$data['src_lastname']  = '';
 			$data['src_role']      = '';
-
-			$config['total_rows'] = $data['total_rows'] = $this->users->count_all();
+			$where                 = array('is_deleted' => 0);
+			$config['total_rows']  = $data['total_rows']  = $this->users->count_by($where);
 			$this->pagination->initialize($config);
 
- $page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
-// $config['per_page']        = 4;
-			// if ($this->uri->segment(3))
-			// {
-			// 	$page = $this->uri->segment(3);
-			// 	$page = ($page - 1) * $config['per_page'];
-			// }
-			// else
-			// {
-			// 	$page = 0;
-			// }
-
-			// $config["per_page"] = 3;
-
+			$page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
 			$this->users->limit($config['per_page'], $page);
-			$this->users->order_by('id', 'DESC');
+
+			$sort = $this->session->userdata('sort_order');
+
+			if ($sort['controller'] == $this->router->fetch_class())
+			{
+				$order['user'] = $this->users->order_by($sort['sort_by'], $sort['order']);
+			}
+
 			$data['links'] = $this->pagination->create_links();
-			$data['users'] = $this->users->get_all();
+			$data['users'] = $this->users->get_many_by($where);
 
 			$data['roles'] = $this->roles->get_all();
 
-// echo "<pre>";
-
-// print_r($data);
-			// die();
 			$data['content'] = $this->load->view('admin/users/index', $data, TRUE);
 			$this->load->view('admin/index', $data);
 		}
+	}
+
+	/**
+	 * [search for searching with pagination]
+	 * @return [str] [search data]
+	 */
+	public function search()
+	{
+		$config                = $this->paginate();
+		$config['base_url']    = base_url('admin/users/search');
+		$config['uri_segment'] = 4;
+		$data['src_firstname'] = '';
+		$data['src_lastname']  = '';
+		$data['src_email']     = '';
+		$data['src_role']      = '';
+
+		$where = array();
+
+		if ($this->input->post('search'))
+		{
+			if ($this->input->post('firstname'))
+			{
+				$where['firstname LIKE'] = $this->input->post('firstname').'%';
+				$data['src_firstname']   = $this->input->post('firstname');
+				$this->session->set_userdata('src_firstname', $this->input->post('firstname'));
+			}
+			else
+			{
+				$this->session->unset_userdata('src_firstname');
+			}
+
+			if ($this->input->post('lastname'))
+			{
+				$where['lastname LIKE'] = $this->input->post('lastname').'%';
+				$data['src_lastname']   = $this->input->post('lastname');
+				$this->session->set_userdata('src_lastname', $this->input->post('lastname'));
+			}
+			else
+			{
+				$this->session->unset_userdata('src_lastname');
+			}
+
+			if ($this->input->post('email'))
+			{
+				$where['email']    = $this->input->post('email');
+				$data['src_email'] = $this->input->post('email');
+				$this->session->set_userdata('src_email', $this->input->post('email'));
+			}
+			else
+			{
+				$this->session->unset_userdata('src_email');
+			}
+
+			if ($this->input->post('role'))
+			{
+				$where['role']    = $this->input->post('role');
+				$data['src_role'] = $this->input->post('role');
+				$this->session->set_userdata('src_role', $this->input->post('role'));
+			}
+			else
+			{
+				$this->session->unset_userdata('src_role');
+			}
+		}
+		else
+		{
+			if ($this->session->userdata('src_firstname'))
+			{
+				$where['firstname LIKE'] = $this->session->userdata('src_firstname').'%';
+				$data['src_firstname']   = $this->session->userdata('src_firstname');
+			}
+			else
+			{
+				$this->session->unset_userdata('src_firstname');
+			}
+
+			if ($this->session->userdata('src_lastname'))
+			{
+				$where['lastname LIKE'] = $this->session->userdata('src_lastname').'%';
+				$data['src_lastname']   = $this->session->userdata('src_lastname');
+			}
+			else
+			{
+				$this->session->unset_userdata('src_lastname');
+			}
+
+			if ($this->session->userdata('src_email'))
+			{
+				$where['email']    = $this->session->userdata('src_email');
+				$data['src_email'] = $this->session->userdata('src_email');
+			}
+			else
+			{
+				$this->session->unset_userdata('src_email');
+			}
+
+			if ($this->session->userdata('src_role'))
+			{
+				$where['role']    = $this->session->userdata('src_role');
+				$data['src_role'] = $this->session->userdata('src_role');
+			}
+			else
+			{
+				$this->session->unset_userdata('src_role');
+			}
+		}
+
+		$where['is_deleted'] = 0;
+		// print_r($where);
+		$config['total_rows'] = $data['total_rows'] = $this->users->count_by($where);
+
+		$this->pagination->initialize($config);
+
+		$page = ($this->uri->segment(4)) ? $this->uri->segment(4) : 0;
+
+		$sort = $this->session->userdata('sort_order');
+
+		if ($sort['controller'] == $this->router->fetch_class())
+		{
+			$order['user'] = $this->users->order_by($sort['sort_by'], $sort['order']);
+		}
+
+		$this->users->limit($config['per_page'], $page);
+
+		$data['users'] = $this->users->get_many_by($where);
+		$data['roles'] = $this->roles->get_all();
+
+		$data['links'] = $this->pagination->create_links();
+
+		$data['content'] = $this->load->view('admin/users/index', $data, TRUE);
+		$this->load->view('admin/index', $data);
 	}
 
 /**
@@ -98,7 +218,7 @@ class Users extends MY_Controller
 
 				$insert = $this->users->insert($data);
 
-				log_activity(_l('added', _l('user'))."[ID:$insert] ", get_loggedin_user_id());
+				log_activity(_l('added', _l('user'))."[ID:$insert] ");
 
 				$role_id = $this->input->post('role');
 				$role    = $this->roles->get($role_id);
@@ -302,136 +422,5 @@ class Users extends MY_Controller
 				log_activity(_l('deleted', _l('users'))."[IDS:$ids] ");
 			}
 		}
-	}
-
-	public function search()
-	{
-//  print_r($this->uri->segment(4));
-		// die();
-		$config                = $this->paginate();
-		$config['base_url']    = base_url().'admin/users/search';
-		$config['uri_segment'] = 4;
-
-/*var_dump($config['uri_segment']);
-die();*/
-
-// $config['per_page']    = 2;
-
-// print_r($config['uri_segment']);
-		// die();
-
-		$data['src_firstname'] = '';
-		$data['src_lastname']  = '';
-		$data['src_email']     = '';
-		$data['src_role']      = '';
-
-		$where = array();
-
-		if ($this->input->post('search'))
-		{
-			if ($this->input->post('firstname'))
-			{
-				$where['firstname LIKE'] = $this->input->post('firstname').'%';
-				$data['src_firstname']   = $this->input->post('firstname');
-				$this->session->set_userdata('src_firstname', $this->input->post('firstname'));
-			}
-			else
-			{
-				$this->session->unset_userdata('src_firstname');
-			}
-
-			if ($this->input->post('lastname'))
-			{
-				$where['lastname LIKE'] = $this->input->post('lastname').'%';
-				$data['src_lastname']   = $this->input->post('lastname');
-				$this->session->set_userdata('src_lastname', $this->input->post('lastname'));
-			}
-			else
-			{
-				$this->session->unset_userdata('src_lastname');
-			}
-
-			if ($this->input->post('email'))
-			{
-				$where['email']    = $this->input->post('email');
-				$data['src_email'] = $this->input->post('email');
-				$this->session->set_userdata('src_email', $this->input->post('email'));
-			}
-			else
-			{
-				$this->session->unset_userdata('src_email');
-			}
-
-			if ($this->input->post('role'))
-			{
-				$where['role']    = $this->input->post('role');
-				$data['src_role'] = $this->input->post('role');
-				$this->session->set_userdata('src_role', $this->input->post('role'));
-			}
-			else
-			{
-				$this->session->unset_userdata('src_role');
-			}
-		}
-		else
-		{
-			if ($this->session->userdata('src_firstname'))
-			{
-				$where['firstname LIKE'] = $this->session->userdata('src_firstname').'%';
-				$data['src_firstname']   = $this->session->userdata('src_firstname');
-			}
-			else
-			{
-				$this->session->unset_userdata('src_lastname');
-			}
-
-			if ($this->session->userdata('src_lastname'))
-			{
-				$where['lastname LIKE'] = $this->session->userdata('src_lastname').'%';
-				$data['src_lastname']   = $this->session->userdata('src_lastname');
-			}
-			else
-			{
-				$this->session->unset_userdata('src_lastname');
-			}
-
-			if ($this->session->userdata('src_email'))
-			{
-				$where['email']    = $this->session->userdata('src_email');
-				$data['src_email'] = $this->session->userdata('src_email');
-			}
-			else
-			{
-				$this->session->unset_userdata('src_email');
-			}
-			if ($this->session->userdata('src_role'))
-			{
-				$where['role']    = $this->session->userdata('src_role');
-				$data['src_role'] = $this->session->userdata('src_role');
-			}
-			else
-			{
-				$this->session->unset_userdata('src_role');
-			}
-		}
-
-		$config['total_rows'] = $data['total_rows'] = $this->users->count_by($where);
-
-		$this->pagination->initialize($config);
-
-		$page = ($this->uri->segment(4)) ? $this->uri->segment(4) : 0;
-
-		//list($sort_by, $order) = get_sort_order();
-		// $config["per_page"] = 4;
-		$this->users->limit($config['per_page'], $page);
-		//$this->actors->order_by($sort_by, $order);
-		$data['users'] = $this->users->get_many_by($where);
-		
-
-		//$this->load->view('admin/users/index', $data);
-		$data['roles'] = $this->roles->get_all();
-		$data['links'] = $this->pagination->create_links();
-		$data['content'] = $this->load->view('admin/users/index', $data, TRUE);
-		$this->load->view('admin/index', $data);
 	}
 }

@@ -1,4 +1,24 @@
+<style type="text/css">
 
+      .name
+      {
+        width:20% !important;
+       
+      }
+      
+     </style>
+     <?php
+
+                  if ($this->uri->segment(3)!=NULL)
+                   {
+                     $sort_redirect_to = $this->uri->segment(1).'/'.$this->uri->segment(2).'/'.$this->uri->segment(3);
+                  }
+                  else
+                  {
+                    $sort_redirect_to = $this->uri->segment(1).'/'.$this->uri->segment(2);
+                  }
+
+                   $this->session->set_userdata('sort_redirect_to',$sort_redirect_to) ?>
      <!-- page header -->
         <div class="page-header page-header-default">
           <div class="page-header-content">
@@ -43,6 +63,14 @@
                ?>
 				      <table class="table">
               <thead>
+                 <form method="POST" action="<?php echo base_url("admin/categories/search"); ?>">
+                 <tr>
+                  <th></th>
+                  <th><input type="text" name="name" value="<?php echo $this->session->userdata('src_categories_name') ?>" class="form-control name" placeholder =" Category Name"></th>
+                  <th></th>
+                  <th><input type="submit" class="btn btn-primary" name="search" value="Search"></th>
+                </tr>
+              </form>
                 <tr>
                   <?php 
                   if (has_permissions('categories','delete'))
@@ -52,7 +80,7 @@
                    <?php
                   }
                ?>
-                  <th width="75%">Name</th>
+                  <th width="75%"><a href="<?php echo base_url('admin/categories/sort_by/name'); ?>" class="sort">Name</a></th>
                   <th width="5%">Status</th>
 
                   <?php if (has_permissions('categories','edit') || has_permissions('categories','delete')): ?>
@@ -60,10 +88,19 @@
                 <?php endif ?>
             
                 </tr>
+
               </thead>
               <tbody>
                 
-                <?php foreach ($categories as $key => $category)
+                <?php 
+                if ($categories == array())
+                 {
+                ?>                 
+                 <tr><td colspan="4" class="text-center">No Data Found</td></tr>
+                <?php
+              }
+
+                foreach ($categories as $key => $category)
                 { ?>
                   <tr>
 
@@ -120,12 +157,13 @@
               </tbody>
             </table>
 					</div>
-					<!-- /page length options -->
-					<!-- Footer -->
-					<!-- <div class="footer text-muted">
-						&copy; 2015. <a href="#">Limitless Web App Kit</a> by <a href="http://themeforest.net/project/Kopyov" target="_blank">Eugene Kopyov</a>
-					</div> -->
-					<!-- /footer -->
+				<div class="table-foot">
+  <ul class="pagination pull-right">
+    <li>
+      <?php echo $links; ?>
+    </li>
+  </ul>
+</div>
 
 				</div>
 				<!-- /content area -->

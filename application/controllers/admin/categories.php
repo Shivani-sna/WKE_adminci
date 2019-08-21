@@ -1,3 +1,4 @@
+
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
@@ -12,7 +13,7 @@ class Categories extends MY_Controller
 
 		is_user_logged_in();
 
-		$this->load->model('category_model', 'category');
+		$this->load->model('category_model', 'categories');
 		$this->load->model('user_permission_model', 'user_permissions');
 	}
 
@@ -28,13 +29,96 @@ class Categories extends MY_Controller
 		}
 		else
 		{
-			$data['categories'] = $this->category->get_all();
+			$config                      = $this->paginate();
+			$config['base_url']          = base_url('admin/categories/search');
+			$config['uri_segment']       = 3;
+			$data['src_categories_name'] = '';
+
+			$config['total_rows'] = $data['total_rows'] = $this->categories->count_all();
+			$this->pagination->initialize($config);
+			$page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
+			$this->categories->limit($config['per_page'], $page);
+
+			$sort = $this->session->userdata('sort_order');
+
+			if ($sort['controller'] == $this->router->fetch_class())
+			{
+				$order['user'] = $this->categories->order_by($sort['sort_by'], $sort['order']);
+			}
+
+			$data['links']      = $this->pagination->create_links();
+			$data['categories'] = $this->categories->get_all();
 
 			$data['content'] = $this->load->view('admin/categories/index', $data, TRUE);
 			$this->load->view('admin/index', $data);
 
 			log_activity(_l('view', _l('categories')));
 		}
+	}
+
+/**
+ * [search for searching with pagination]
+ * @return [str] [search data]
+ */
+	public function search()
+	{
+		// print_r($this->input->post());
+		// die();
+		$config                      = $this->paginate();
+		$config['base_url']          = base_url('admin/categories/search');
+		$config['uri_segment']       = 4;
+		$data['src_categories_name'] = '';
+
+		$where = array();
+
+		if ($this->input->post('search'))
+		{
+			if ($this->input->post('name'))
+			{
+				$where['name LIKE']          = $this->input->post('name').'%';
+				$data['src_categories_name'] = $this->input->post('name');
+				$this->session->set_userdata('src_categories_name', $this->input->post('name'));
+			}
+			else
+			{
+				$this->session->unset_userdata('src_categories_name');
+			}
+		}
+		else
+		{
+			if ($this->session->userdata('src_categories_name'))
+			{
+				$where['name LIKE']          = $this->session->userdata('src_categories_name').'%';
+				$data['src_categories_name'] = $this->session->userdata('src_categories_name');
+			}
+			else
+			{
+				$this->session->unset_userdata('src_categories_name');
+			}
+		}
+
+		$config['total_rows'] = $data['total_rows'] = $this->categories->count_by($where);
+
+		$this->pagination->initialize($config);
+
+		$page = ($this->uri->segment(4)) ? $this->uri->segment(4) : 0;
+
+		$sort = $this->session->userdata('sort_order');
+
+		if ($sort['controller'] == $this->router->fetch_class())
+		{
+			$order['user'] = $this->categories->order_by($sort['sort_by'], $sort['order']);
+		}
+
+		$this->categories->limit($config['per_page'], $page);
+
+		$data['links'] = $this->pagination->create_links();
+
+		$data['categories'] = $this->categories->get_many_by($where);
+
+
+		$data['content'] = $this->load->view('admin/categories/index', $data, TRUE);
+		$this->load->view('admin/index', $data);
 	}
 
 /**
@@ -56,7 +140,7 @@ class Categories extends MY_Controller
 					'is_active' => 1,
 					'created'   => current_timestamp()
 				);
-				$insert = $this->category->insert($data);
+				$insert = $this->categories->insert($data);
 
 				log_activity(_l('added', _l('user'))."[ID:$insert] ");
 
@@ -97,7 +181,7 @@ class Categories extends MY_Controller
 						'updated' => current_timestamp()
 					);
 
-					$update = $this->category->update($id, $data);
+					$update = $this->categories->update($id, $data);
 
 					if ($update)
 					{
@@ -110,7 +194,7 @@ class Categories extends MY_Controller
 				}
 				else
 				{
-					$data['category'] = $this->category->get($id);
+					$data['category'] = $this->categories->get($id);
 					$data['content']  = $this->load->view('admin/categories/edit', $data, TRUE);
 					$this->load->view('admin/index', $data);
 				}
