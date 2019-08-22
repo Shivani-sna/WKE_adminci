@@ -30,7 +30,7 @@ class Categories extends MY_Controller
 		else
 		{
 			$config                      = $this->paginate();
-			$config['base_url']          = base_url('admin/categories/search');
+			$config['base_url']          = base_url('admin/categories');
 			$config['uri_segment']       = 3;
 			$data['src_categories_name'] = '';
 
@@ -43,7 +43,7 @@ class Categories extends MY_Controller
 
 			if ($sort['controller'] == $this->router->fetch_class())
 			{
-				$order['user'] = $this->categories->order_by($sort['sort_by'], $sort['order']);
+				$this->categories->order_by($sort['sort_by'], $sort['order']);
 			}
 
 			$data['links']      = $this->pagination->create_links();
@@ -62,7 +62,7 @@ class Categories extends MY_Controller
  */
 	public function search()
 	{
-		// print_r($this->input->post());
+// print_r($this->input->post());
 		// die();
 		$config                      = $this->paginate();
 		$config['base_url']          = base_url('admin/categories/search');
@@ -107,7 +107,7 @@ class Categories extends MY_Controller
 
 		if ($sort['controller'] == $this->router->fetch_class())
 		{
-			$order['user'] = $this->categories->order_by($sort['sort_by'], $sort['order']);
+			$this->categories->order_by($sort['sort_by'], $sort['order']);
 		}
 
 		$this->categories->limit($config['per_page'], $page);
@@ -115,7 +115,6 @@ class Categories extends MY_Controller
 		$data['links'] = $this->pagination->create_links();
 
 		$data['categories'] = $this->categories->get_many_by($where);
-
 
 		$data['content'] = $this->load->view('admin/categories/index', $data, TRUE);
 		$this->load->view('admin/index', $data);

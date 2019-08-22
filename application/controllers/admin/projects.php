@@ -43,11 +43,11 @@ class Projects extends MY_Controller
 
 			if ($sort['controller'] == $this->router->fetch_class())
 			{
-				$order['user'] = $this->projects->order_by($sort['sort_by'], $sort['order']);
+				$this->projects->order_by($sort['sort_by'], $sort['order']);
 			}
 
-			$data['links']    = $this->pagination->create_links();
-			
+			$data['links'] = $this->pagination->create_links();
+
 			$data['projects'] = $this->projects->get_all();
 			$data['content']  = $this->load->view('admin/projects/index', $data, TRUE);
 			$this->load->view('admin/index', $data);
@@ -129,7 +129,7 @@ class Projects extends MY_Controller
 
 		if ($sort['controller'] == $this->router->fetch_class())
 		{
-			$order['user'] = $this->projects->order_by($sort['sort_by'], $sort['order']);
+			$this->projects->order_by($sort['sort_by'], $sort['order']);
 		}
 
 		$this->projects->limit($config['per_page'], $page);

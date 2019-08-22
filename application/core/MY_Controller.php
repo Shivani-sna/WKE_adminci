@@ -61,7 +61,7 @@ class MY_Controller extends CI_Controller
 		);
 	
 		$this->session->set_userdata('sort_order', $sort_order);
-		//print_r($this->session->userdata('sort_order'));
+		//print_r($this->session->userdata('sort_redirect_to'));
 		redirect($this->session->userdata('sort_redirect_to'));
 	}
 }

@@ -43,7 +43,7 @@ class Roles extends MY_Controller
 
 			if ($sort['controller'] == $this->router->fetch_class())
 			{
-				$order['user'] = $this->roles->order_by($sort['sort_by'], $sort['order']);
+				$this->roles->order_by($sort['sort_by'], $sort['order']);
 			}
 
 			$data['links'] = $this->pagination->create_links();
@@ -105,7 +105,7 @@ class Roles extends MY_Controller
 
 		if ($sort['controller'] == $this->router->fetch_class())
 		{
-			$order['user'] = $this->roles->order_by($sort['sort_by'], $sort['order']);
+			$this->roles->order_by($sort['sort_by'], $sort['order']);
 		}
 
 		$this->roles->limit($config['per_page'], $page);

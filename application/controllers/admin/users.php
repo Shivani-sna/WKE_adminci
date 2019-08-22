@@ -34,7 +34,9 @@ class Users extends MY_Controller
 
 			$data['src_firstname'] = '';
 			$data['src_lastname']  = '';
+			$data['src_email']     = '';
 			$data['src_role']      = '';
+			$data['src_is_active'] = '';
 			$where                 = array('is_deleted' => 0);
 			$config['total_rows']  = $data['total_rows']  = $this->users->count_by($where);
 			$this->pagination->initialize($config);
@@ -46,7 +48,7 @@ class Users extends MY_Controller
 
 			if ($sort['controller'] == $this->router->fetch_class())
 			{
-				$order['user'] = $this->users->order_by($sort['sort_by'], $sort['order']);
+				$this->users->order_by($sort['sort_by'], $sort['order']);
 			}
 
 			$data['links'] = $this->pagination->create_links();
@@ -72,6 +74,7 @@ class Users extends MY_Controller
 		$data['src_lastname']  = '';
 		$data['src_email']     = '';
 		$data['src_role']      = '';
+		$data['src_is_active'] = '';
 
 		$where = array();
 
@@ -120,6 +123,17 @@ class Users extends MY_Controller
 			{
 				$this->session->unset_userdata('src_role');
 			}
+
+			if ($this->input->post('is_active') == '0' || $this->input->post('is_active') == '1')
+			{
+				$where['is_active']    = $this->input->post('is_active');
+				$data['src_is_active'] = $this->input->post('is_active');
+				$this->session->set_userdata('src_is_active', $this->input->post('is_active'));
+			}
+			else
+			{
+				$this->session->unset_userdata('src_is_active');
+			}
 		}
 		else
 		{
@@ -162,10 +176,20 @@ class Users extends MY_Controller
 			{
 				$this->session->unset_userdata('src_role');
 			}
+
+			if ($this->session->userdata('src_is_active'))
+			{
+				$where['is_active']    = $this->session->userdata('src_is_active');
+				$data['src_is_active'] = $this->session->userdata('src_is_active');
+			}
+			else
+			{
+				$this->session->unset_userdata('src_is_active');
+			}
 		}
 
 		$where['is_deleted'] = 0;
-		// print_r($where);
+
 		$config['total_rows'] = $data['total_rows'] = $this->users->count_by($where);
 
 		$this->pagination->initialize($config);
@@ -176,7 +200,7 @@ class Users extends MY_Controller
 
 		if ($sort['controller'] == $this->router->fetch_class())
 		{
-			$order['user'] = $this->users->order_by($sort['sort_by'], $sort['order']);
+			$this->users->order_by($sort['sort_by'], $sort['order']);
 		}
 
 		$this->users->limit($config['per_page'], $page);
@@ -367,11 +391,19 @@ class Users extends MY_Controller
 
 		if ($update)
 		{
-			log_activity(_l('status_updated', _l('user'))." [ID:$user_id]");
+
 
 			if ($this->input->post('is_active') == 1)
 			{
-				echo "Active";
+				echo _l('activation_msg',_l('user'));
+
+				log_activity( _l('activation_msg',_l('user'))." [ID:$user_id]" );
+			}
+			else
+			{
+				echo _l('deactivation_msg',_l('user'));
+
+				log_activity( _l('deactivation_msg',_l('user'))." [ID:$user_id]" );
 			}
 		}
 	}

@@ -60,7 +60,10 @@ function is_user_logged_in()
 {
 	$CI = &get_instance();
 
-	if (!$CI->session->userdata('user'))
+	$CI->load->model('user_model', 'users');
+	$user = $CI->users->get_by('id', $CI->session->userdata('user')['user_id']);
+
+	if (!$CI->session->userdata('user') || $user['is_active'] == 0)
 	{
 		$CI->session->set_userdata('redirect_url', current_url());
 		redirect('authentication');
@@ -256,7 +259,7 @@ function time_stamp($session_time)
 	{
 		if ($minutes == 1)
 		{
-			echo "one minute ago";
+			echo "One minute ago";
 		}
 		else
 		{
@@ -271,7 +274,7 @@ function time_stamp($session_time)
 	{
 		if ($hours == 1)
 		{
-			echo "one hour ago";
+			echo "One hour ago";
 		}
 		else
 		{
@@ -286,7 +289,7 @@ function time_stamp($session_time)
 	{
 		if ($days == 1)
 		{
-			echo "one day ago";
+			echo "One day ago";
 		}
 		else
 		{
@@ -301,7 +304,7 @@ function time_stamp($session_time)
 	{
 		if ($weeks == 1)
 		{
-			echo "one week ago";
+			echo "One week ago";
 		}
 		else
 		{
@@ -316,7 +319,7 @@ function time_stamp($session_time)
 	{
 		if ($months == 1)
 		{
-			echo "one month ago";
+			echo "One month ago";
 		}
 		else
 		{
@@ -329,11 +332,27 @@ function time_stamp($session_time)
 	{
 		if ($years == 1)
 		{
-			echo "one year ago";
+			echo "One year ago";
 		}
 		else
 		{
 			echo "$years years ago";
 		}
 	}
+}
+
+function set_sort_redirect_url()
+{
+	$CI = &get_instance();
+
+	if ($CI->uri->segment(3) == "search")
+	{
+		$sort_redirect_to = $CI->uri->segment(1).'/'.$CI->uri->segment(2).'/'.$CI->uri->segment(3);
+	}
+	else
+	{
+		$sort_redirect_to = $CI->uri->segment(1).'/'.$CI->uri->segment(2);
+	}
+
+	$CI->session->set_userdata('sort_redirect_to', $sort_redirect_to);
 }

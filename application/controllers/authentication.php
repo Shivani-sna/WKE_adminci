@@ -216,7 +216,7 @@ send_mail($email, $subject, $htmlContent);
 
 			$data['user'] = $this->users->get_by(array('auth_token' => $key));
 			$id           = $data['user']['id'];
-			$username = $data['user']['firstname'].' '.$data['user']['lastname'];
+			$username     = $data['user']['firstname'].' '.$data['user']['lastname'];
 
 			$update = $this->users->update($id, $password_data);
 
