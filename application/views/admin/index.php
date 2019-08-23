@@ -293,7 +293,17 @@ $(function() {
 										}
 										?>
 								
-								
+								<li <?php 
+									if ($this->uri->segment(2)=='settings') 
+									{
+										echo 'class="active"';
+									}
+								 ?>>
+								 <a href="<?php echo base_url('admin/settings'); ?>">
+								 	<i class="icon-cog3"></i>
+								 	<span>Settings</span>
+								 </a>
+								</li>
 
 															<!-- /main -->
 							</ul>

@@ -127,7 +127,7 @@ class Roles extends MY_Controller
 			access_denied('roles', 'create');
 		}
 
-		$data['permissions'] = get_users_permissions();
+		$data['permissions'] = $this->permissions();
 		$data['array']       = $this->load->view('admin/roles/roles_array', $data, TRUE);
 		$data['content']     = $this->load->view('admin/roles/create', $data, TRUE);
 
@@ -215,14 +215,12 @@ class Roles extends MY_Controller
 			}
 		}
 
-		$this->load->model('user_model', 'users');
-
 		$data['role']        = $this->roles->get($id);
-		$data['permissions'] = get_users_permissions();
+		$data['permissions'] = $this->permissions();
 		//$data['permissions'] = $this->permissions();
-		$data['users']       = $this->users->get_many_by(['role' => $id]);
-		$data['array']       = $this->load->view('admin/roles/roles_array_update', $data, TRUE);
-		$data['content']     = $this->load->view('admin/roles/edit', $data, TRUE);
+		$data['users']   = $this->users->get_many_by(['role' => $id]);
+		$data['array']   = $this->load->view('admin/roles/roles_array_update', $data, TRUE);
+		$data['content'] = $this->load->view('admin/roles/edit', $data, TRUE);
 
 		$this->load->view('admin/index', $data);
 	}
@@ -273,5 +271,48 @@ class Roles extends MY_Controller
 		{
 			log_activity(_l('deleted', _l('roles'))."[IDS:$ids] ");
 		}
+	}
+
+	/**
+	 * [get_users_permissions for user's permissions]
+	 * @param  array  $data [user's permissions]
+	 * @return [array]       [user's permissions]
+	 */
+	public function permissions($data = [])
+	{
+		$all_permissions_array = [
+			'view'   => 'View',
+			'create' => 'Create',
+			'edit'   => 'Edit',
+			'delete' => 'Delete'
+		];
+
+		$permissions = [
+
+			'users'      => [
+				'name'         => 'users',
+				'capabilities' => $all_permissions_array
+
+			],
+
+			'projects'   => [
+				'name'         => 'projects',
+				'capabilities' => $all_permissions_array
+
+			],
+			'categories' => [
+				'name'         => 'categories',
+				'capabilities' => $all_permissions_array
+
+			],
+			'roles'      => [
+				'name'         => 'roles',
+				'capabilities' => $all_permissions_array
+
+			]
+
+		];
+
+		return $permissions;
 	}
 }

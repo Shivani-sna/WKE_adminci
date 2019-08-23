@@ -116,7 +116,6 @@ class Authentication extends MY_Controller
 				else
 				{
 					$this->session->set_flashdata('error', _l('required_field_msg', _l('email')));
-					$ip = $this->input->ip_address();
 					log_activity("Failed Login Attempt Unknown Access");
 				}
 
@@ -174,11 +173,8 @@ send_mail($email, $subject, $htmlContent);
 			}
 			else
 			{
-				$ip = $this->input->ip_address();
 				log_activity("Failed forgot Password request Unknown Access");
-
 				$this->session->set_flashdata('error', 'Please Enter Valid Email.');
-
 				redirect('authentication/forgot_password');
 			}
 		}

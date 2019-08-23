@@ -86,48 +86,7 @@ function get_loggedin_info($info)
 	return $user[$info];
 }
 
-/**
- * [get_users_permissions for user's permissions]
- * @param  array  $data [user's permissions]
- * @return [array]       [user's permissions]
- */
-function get_users_permissions($data = [])
-{
-	$all_permissions_array = [
-		'view'   => 'View',
-		'create' => 'Create',
-		'edit'   => 'Edit',
-		'delete' => 'Delete'
-	];
 
-	$permissions = [
-
-		'users'      => [
-			'name'         => 'users',
-			'capabilities' => $all_permissions_array
-
-		],
-
-		'projects'   => [
-			'name'         => 'projects',
-			'capabilities' => $all_permissions_array
-
-		],
-		'categories' => [
-			'name'         => 'categories',
-			'capabilities' => $all_permissions_array
-
-		],
-		'roles'      => [
-			'name'         => 'roles',
-			'capabilities' => $all_permissions_array
-
-		]
-
-	];
-
-	return $permissions;
-}
 
 /**
  * [send_mail function for sending mail when successfully registration]
