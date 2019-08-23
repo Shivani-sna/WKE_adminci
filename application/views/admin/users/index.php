@@ -63,7 +63,7 @@
             <div class="col-md-2">
               <input type="text" name="lastname" placeholder="Lastname" class="form-control name"  value="<?php echo $src_lastname; ?>">
             </div>
-            <div class="col-md-3">
+            <div class="col-md-2">
               <input type="email" name="email" placeholder="Email" class="form-control"  value="<?php echo $src_email; ?>">
             </div>
             <div class="col-md-2">
@@ -93,11 +93,13 @@
                 <option value="0" <?php if($src_is_active=='0'){ echo "selected";} ?>>Inactive</option>
               </select>
             </div>
+
             <div class="col-md-1">
-              <input type="submit" class="btn btn-primary" name="search" value="Search">
+              <button type="submit" class="btn btn-info" name="search" value="search"> Search <i class="icon-search4"></i></button>
             </div>
           </div>
         </form>
+      </div>
       </div>
       <!-- table-responsive-->
       <div class="table-responsive">
@@ -143,7 +145,7 @@
           </thead>
           <tbody>
 <?php 
-          if ($users == array())
+          if (empty($users))
           {
 ?>                 
             <tr>
@@ -209,20 +211,13 @@
 <?php
       $readonly = '';
 
-      if ($user['id'] == get_loggedin_info('user_id'))
+      if ($user['id'] == get_loggedin_info('user_id') || !has_permissions('users','edit'))
       {
         $readonly = "readonly";
       }
-
-    $not_permissions = '';
-
-    if (!has_permissions('users','edit'))
-    {
-      $not_permissions="readonly";
-    }
 ?>
       <td>
-        <input type="checkbox" class="switch"  id="<?php echo $user['id']; ?>" <?php if ($user['is_active'] == 1) { echo "checked"; } ?> <?php echo $readonly; echo $not_permissions; ?>>
+        <input type="checkbox" class="switch"  id="<?php echo $user['id']; ?>" <?php if ($user['is_active'] == 1) { echo "checked"; } ?> <?php echo $readonly; ?>>
       </td>
 <?php 
       if (has_permissions('users','edit') || has_permissions('users','delete'))
@@ -255,7 +250,7 @@
     </table>
   </div>
 </div>
-</div>
+
 <div class="pagination pull-right">
     <ul class="pagination pull-right">
         <li>

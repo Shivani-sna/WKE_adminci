@@ -48,7 +48,7 @@
 											
 											<div class="form-group" align="right">
 											<!-- 	<a href="" class="btn btn-success">View Profile</a> -->
-												<button type="submit" class="btn btn-primary" name="submit" id="save">Save</button>
+												<button type="submit" class="btn btn-success" name="submit" id="save">Save</button>
 											</div>
 										</div>
 										</div>
@@ -102,7 +102,7 @@
 												</div>
 
 											<div class="form-group" align="right">
-												<button type="submit" class="btn btn-primary" name="submit_password" id="submit_password">Save</button>
+												<button type="submit" class="btn btn-success" name="submit_password" id="submit_password">Save</button>
 										
 											</div>
 										</div>

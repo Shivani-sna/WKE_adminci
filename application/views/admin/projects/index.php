@@ -61,7 +61,7 @@
             <input type="text" value="<?php echo $src_name; ?>" name="name" placeholder="Project Name" class="form-control">
           </div>
           <div class="col-md-1">
-            <input type="submit" class="btn btn-primary" name="search" value="Search">
+            <input type="submit" class="btn btn-info" name="search" value="Search">
           </div>
           </div>
         </form>
@@ -105,7 +105,7 @@
   <tbody>
 
 <?php 
-  if ($projects == array())
+  if (empty($projects))
     {
 
 ?>                 
@@ -137,12 +137,12 @@
    </td>
 	 <td>
 <?php 
-      echo $project['name'];
+      echo ucfirst($project['name']);
 ?>
    </td>
 	 <td>
 <?php 
-      echo $project['details'];
+      echo ucfirst($project['details']);
 ?>
     </td>
 <?php  

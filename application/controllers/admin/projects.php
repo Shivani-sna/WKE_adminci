@@ -25,35 +25,33 @@ class Projects extends MY_Controller
 		{
 			access_denied('projects', 'view');
 		}
-		else
+
+		$config                = $this->paginate();
+		$config['base_url']    = base_url('admin/projects');
+		$config['uri_segment'] = 3;
+
+		$data['src_project_id'] = '';
+		$data['src_name']       = '';
+
+		$config['total_rows'] = $data['total_rows'] = $this->projects->count_all();
+		$this->pagination->initialize($config);
+		$page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
+		$this->projects->limit($config['per_page'], $page);
+
+		$sort = $this->session->userdata('sort_order');
+
+		if ($sort['controller'] == $this->router->fetch_class())
 		{
-			$config                = $this->paginate();
-			$config['base_url']    = base_url('admin/projects');
-			$config['uri_segment'] = 3;
-
-			$data['src_project_id'] = '';
-			$data['src_name']       = '';
-
-			$config['total_rows'] = $data['total_rows'] = $this->projects->count_all();
-			$this->pagination->initialize($config);
-			$page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
-			$this->projects->limit($config['per_page'], $page);
-
-			$sort = $this->session->userdata('sort_order');
-
-			if ($sort['controller'] == $this->router->fetch_class())
-			{
-				$this->projects->order_by($sort['sort_by'], $sort['order']);
-			}
-
-			$data['links'] = $this->pagination->create_links();
-
-			$data['projects'] = $this->projects->get_all();
-			$data['content']  = $this->load->view('admin/projects/index', $data, TRUE);
-			$this->load->view('admin/index', $data);
-
-			log_activity(_l('view', _l('projects')));
+			$this->projects->order_by($sort['sort_by'], $sort['order']);
 		}
+
+		$data['links'] = $this->pagination->create_links();
+
+		$data['projects'] = $this->projects->get_all();
+		$data['content']  = $this->load->view('admin/projects/index', $data, TRUE);
+		$this->load->view('admin/index', $data);
+
+		log_activity(_l('view', _l('projects')));
 	}
 
 /**
@@ -151,32 +149,30 @@ class Projects extends MY_Controller
 		{
 			access_denied('projects', 'create');
 		}
+
+		if ($this->input->post())
+		{
+			$data = array
+				('project_id' => "PROJECT_".rand(10, 100),
+				'name'        => $this->input->post('name'),
+				'details'     => $this->input->post('details'),
+				'created'     => current_timestamp()
+			);
+
+			$insert = $this->projects->insert($data);
+
+			log_activity(_l('added', _l('project'))."[ID:$insert] ");
+
+			if ($insert)
+			{
+				$this->session->set_flashdata('success', _l('added_successfully_msg', _l('project')));
+				redirect('admin/projects');
+			}
+		}
 		else
 		{
-			if ($this->input->post())
-			{
-				$data = array
-					('project_id' => "PROJECT_".rand(10, 100),
-					'name'        => $this->input->post('name'),
-					'details'     => $this->input->post('details'),
-					'created'     => current_timestamp()
-				);
-
-				$insert = $this->projects->insert($data);
-
-				log_activity(_l('added', _l('project'))."[ID:$insert] ");
-
-				if ($insert)
-				{
-					$this->session->set_flashdata('success', _l('added_successfully_msg', _l('project')));
-					redirect('admin/projects');
-				}
-			}
-			else
-			{
-				$data['content'] = $this->load->view('admin/projects/create', '', TRUE);
-				$this->load->view('admin/index', $data);
-			}
+			$data['content'] = $this->load->view('admin/projects/create', '', TRUE);
+			$this->load->view('admin/index', $data);
 		}
 	}
 
@@ -190,36 +186,34 @@ class Projects extends MY_Controller
 		{
 			access_denied('projects', 'edit');
 		}
-		else
+
+		if ($id)
 		{
-			if ($id)
+			$data['project'] = $this->projects->get($id);
+
+			if ($this->input->post())
 			{
-				$data['project'] = $this->projects->get($id);
+				$data = array
+					('project_id' => "PROJECT_".rand(10, 100),
+					'name'        => $this->input->post('name'),
+					'details'     => $this->input->post('details'),
+					'updated'     => current_timestamp()
+				);
 
-				if ($this->input->post())
+				$update = $this->projects->update($id, $data);
+				log_activity("Project Updated [ID:$id] ");
+
+				if ($update)
 				{
-					$data = array
-						('project_id' => "PROJECT_".rand(10, 100),
-						'name'        => $this->input->post('name'),
-						'details'     => $this->input->post('details'),
-						'updated'     => current_timestamp()
-					);
+					$this->session->set_flashdata('success', _l('updated_successfully_msg', _l('project')));
 
-					$update = $this->projects->update($id, $data);
-					log_activity("Project Updated [ID:$id] ");
-
-					if ($update)
-					{
-						$this->session->set_flashdata('success', _l('updated_successfully_msg', _l('project')));
-
-						redirect('admin/projects');
-					}
+					redirect('admin/projects');
 				}
-				else
-				{
-					$data['content'] = $this->load->view('admin/projects/edit', $data, TRUE);
-					$this->load->view('admin/index', $data);
-				}
+			}
+			else
+			{
+				$data['content'] = $this->load->view('admin/projects/edit', $data, TRUE);
+				$this->load->view('admin/index', $data);
 			}
 		}
 	}
@@ -233,18 +227,16 @@ class Projects extends MY_Controller
 		{
 			echo "error";
 		}
-		else
+
+		$project_id = $this->input->post('project_id');
+		$delete     = $this->projects->delete($project_id);
+
+		if ($delete)
 		{
-			$project_id = $this->input->post('project_id');
-			$delete     = $this->projects->delete($project_id);
-
-			if ($delete)
-			{
-				log_activity(_l('deleted', _l('project'))." [ID:$project_id]");
-			}
-
-			echo "success";
+			log_activity(_l('deleted', _l('project'))." [ID:$project_id]");
 		}
+
+		echo "success";
 	}
 
 /**
@@ -256,17 +248,15 @@ class Projects extends MY_Controller
 		{
 			echo "error";
 		}
-		else
+
+		$where = $this->input->post('ids');
+		$ids   = implode(",", $where);
+
+		$delete_many = $this->projects->delete_many($where);
+
+		if ($delete_many)
 		{
-			$where = $this->input->post('ids');
-			$ids   = implode(",", $where);
-
-			$delete_many = $this->projects->delete_many($where);
-
-			if ($delete_many)
-			{
-				log_activity(_l('deleted', _l('projects'))."[IDS:$ids] ");
-			}
+			log_activity(_l('deleted', _l('projects'))."[IDS:$ids] ");
 		}
 	}
 }

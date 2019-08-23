@@ -20,10 +20,7 @@
 
 				<!-- Content area -->
 				<div class="content">
-
-					
-
-					<!-- Centered forms -->
+				<!-- Centered forms -->
 					<div class="row">
 						
 						<div class="col-md-8 col-md-offset-2">
@@ -33,13 +30,6 @@
 										<div class="row">
 											<div class="col-md-10">
 												<h5 class="panel-title"><strong>Category</strong></h5>
-												<!-- <div class="heading-elements">
-													<ul class="icons-list">
-								                		<li><a data-action="collapse"></a></li>
-								                		<li><a data-action="reload"></a></li>
-								                		<li><a data-action="close"></a></li>
-								                	</ul>
-							                	</div> -->
 											</div>
 										</div>
 									</div>
@@ -52,11 +42,7 @@
 													<input type="text" class="form-control" placeholder="Category Name" id="name" name="name">
 													
 												</div>
-
-								
-
-												
-												
+	
 											</div>
 										</div>
 									</div>
@@ -68,8 +54,8 @@
 
 					<!-- /form centered -->
 					<div class="btn-bottom-toolbar text-right btn-toolbar-container-out">
-						<button type="submit" class="btn btn-primary" name="submit">Save</button>
-						 <a class="btn btn-success" onclick="window.history.back();">Back</a>
+						<button type="submit" class="btn btn-success" name="submit">Save</button>
+						 <a class="btn btn-default" onclick="window.history.back();">Back</a>
         				 
       				</div>
 

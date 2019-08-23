@@ -27,33 +27,31 @@ class Categories extends MY_Controller
 		{
 			access_denied('categories', 'view');
 		}
-		else
+
+		$config                      = $this->paginate();
+		$config['base_url']          = base_url('admin/categories');
+		$config['uri_segment']       = 3;
+		$data['src_categories_name'] = '';
+
+		$config['total_rows'] = $data['total_rows'] = $this->categories->count_all();
+		$this->pagination->initialize($config);
+		$page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
+		$this->categories->limit($config['per_page'], $page);
+
+		$sort = $this->session->userdata('sort_order');
+
+		if ($sort['controller'] == $this->router->fetch_class())
 		{
-			$config                      = $this->paginate();
-			$config['base_url']          = base_url('admin/categories');
-			$config['uri_segment']       = 3;
-			$data['src_categories_name'] = '';
-
-			$config['total_rows'] = $data['total_rows'] = $this->categories->count_all();
-			$this->pagination->initialize($config);
-			$page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
-			$this->categories->limit($config['per_page'], $page);
-
-			$sort = $this->session->userdata('sort_order');
-
-			if ($sort['controller'] == $this->router->fetch_class())
-			{
-				$this->categories->order_by($sort['sort_by'], $sort['order']);
-			}
-
-			$data['links']      = $this->pagination->create_links();
-			$data['categories'] = $this->categories->get_all();
-
-			$data['content'] = $this->load->view('admin/categories/index', $data, TRUE);
-			$this->load->view('admin/index', $data);
-
-			log_activity(_l('view', _l('categories')));
+			$this->categories->order_by($sort['sort_by'], $sort['order']);
 		}
+
+		$data['links']      = $this->pagination->create_links();
+		$data['categories'] = $this->categories->get_all();
+
+		$data['content'] = $this->load->view('admin/categories/index', $data, TRUE);
+		$this->load->view('admin/index', $data);
+
+		log_activity(_l('view', _l('categories')));
 	}
 
 /**
@@ -129,31 +127,29 @@ class Categories extends MY_Controller
 		{
 			access_denied('categories', 'create');
 		}
+
+		if ($this->input->post())
+		{
+			$data = array
+				('name'     => $this->input->post('name'),
+				'user_id'   => get_loggedin_info('user_id'),
+				'is_active' => 1,
+				'created'   => current_timestamp()
+			);
+			$insert = $this->categories->insert($data);
+
+			log_activity(_l('added', _l('user'))."[ID:$insert] ");
+
+			if ($insert)
+			{
+				$this->session->set_flashdata('success', _l('added_successfully_msg', _l('category')));
+				redirect('admin/categories');
+			}
+		}
 		else
 		{
-			if ($this->input->post())
-			{
-				$data = array
-					('name'     => $this->input->post('name'),
-					'user_id'   => get_loggedin_info('user_id'),
-					'is_active' => 1,
-					'created'   => current_timestamp()
-				);
-				$insert = $this->categories->insert($data);
-
-				log_activity(_l('added', _l('user'))."[ID:$insert] ");
-
-				if ($insert)
-				{
-					$this->session->set_flashdata('success', _l('added_successfully_msg', _l('category')));
-					redirect('admin/categories');
-				}
-			}
-			else
-			{
-				$data['content'] = $this->load->view('admin/categories/create', '', TRUE);
-				$this->load->view('admin/index', $data);
-			}
+			$data['content'] = $this->load->view('admin/categories/create', '', TRUE);
+			$this->load->view('admin/index', $data);
 		}
 	}
 
@@ -168,35 +164,33 @@ class Categories extends MY_Controller
 		{
 			access_denied('categories', 'edit');
 		}
-		else
+
+		if ($id)
 		{
-			if ($id)
+			if ($this->input->post())
 			{
-				if ($this->input->post())
+				$data = array
+					('name'   => $this->input->post('name'),
+					'user_id' => get_loggedin_info('user_id'),
+					'updated' => current_timestamp()
+				);
+
+				$update = $this->categories->update($id, $data);
+
+				if ($update)
 				{
-					$data = array
-						('name'   => $this->input->post('name'),
-						'user_id' => get_loggedin_info('user_id'),
-						'updated' => current_timestamp()
-					);
+					log_activity(_l('updated', _l('category'))."[ID:$id] ");
 
-					$update = $this->categories->update($id, $data);
+					$this->session->set_flashdata('success', _l('updated_successfully_msg', _l('category')));
 
-					if ($update)
-					{
-						log_activity(_l('updated', _l('category'))."[ID:$id] ");
-
-						$this->session->set_flashdata('success', _l('updated_successfully_msg', _l('category')));
-
-						redirect('admin/categories');
-					}
+					redirect('admin/categories');
 				}
-				else
-				{
-					$data['category'] = $this->categories->get($id);
-					$data['content']  = $this->load->view('admin/categories/edit', $data, TRUE);
-					$this->load->view('admin/index', $data);
-				}
+			}
+			else
+			{
+				$data['category'] = $this->categories->get($id);
+				$data['content']  = $this->load->view('admin/categories/edit', $data, TRUE);
+				$this->load->view('admin/index', $data);
 			}
 		}
 	}

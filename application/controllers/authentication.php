@@ -45,7 +45,8 @@ class Authentication extends MY_Controller
 				delete_cookie('password_cookie');
 			}
 
-			$where = array(
+			$where = array
+				(
 				'email'     => $email,
 				'password'  => md5($password),
 				'is_active' => 1
@@ -59,7 +60,7 @@ class Authentication extends MY_Controller
 				$lastname  = $result['lastname'];
 				$email     = $result['email'];
 
-				log_activity("User Logged In : [$firstname $lastname , $email]", $result['id']);
+				log_activity(_l('logged_in', _l('user'))." : [$firstname $lastname , $email]", $result['id']);
 
 				$data = array
 					(
@@ -93,20 +94,28 @@ class Authentication extends MY_Controller
 			}
 			else
 			{
-				$where = array('email' => $email);
-				$user  = $this->users->get_by($where);
+				$where     = array('email' => $email);
+				$user      = $this->users->get_by($where);
+				$firstname = $user['firstname'];
+				$lastname  = $user['lastname'];
+				$email     = $user['email'];
 
-				if ($user)
+				if ($user['is_active'] == 1)
 				{
-					$this->session->set_flashdata('error', 'Please Enter Valid Password.');
-					$firstname = $user['firstname'];
-					$lastname  = $user['lastname'];
-					$email     = $user['email'];
+					$this->session->set_flashdata('error', _l('required_field_msg', _l('password')));
+
 					log_activity("Failed Login Attempt : [ $firstname $lastname , $email ]", $user['id']);
 				}
 				else
+
+				if ($user['is_active'] == "0")
 				{
-					$this->session->set_flashdata('error', 'Please Enter Valid Email.');
+					$this->session->set_flashdata('error', _l('inactive_login_error_msg'));
+					log_activity(_l('inactive', _l('user')).": [ $firstname $lastname , $email ]", $user['id']);
+				}
+				else
+				{
+					$this->session->set_flashdata('error', _l('required_field_msg', _l('email')));
 					$ip = $this->input->ip_address();
 					log_activity("Failed Login Attempt Unknown Access");
 				}
@@ -250,7 +259,8 @@ send_mail($email, $subject, $htmlContent);
 	{
 		$username = get_loggedin_info('username');
 		$email    = get_loggedin_info('email');
-		log_activity("User Logged Out : [$username,$email]", get_loggedin_info('user_id'));
+
+		log_activity(_l('logged_out', _l('user'))." : [$username , $email]", get_loggedin_info('user_id'));
 		$this->session->sess_destroy();
 		redirect('authentication');
 	}

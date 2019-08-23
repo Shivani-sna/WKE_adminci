@@ -1,153 +1,112 @@
 <!-- page header -->
-				<div class="page-header page-header-default">
-					<div class="page-header-content">
-						<div class="page-title">
-							<h4></i> <span class="text-semibold">Add User</span></h4>
-						</div>
-					</div>
+<div class="page-header page-header-default">
+	<div class="page-header-content">
+		<div class="page-title">
+			<h4></i> <span class="text-semibold">Add User</span></h4>
+		</div>
+	</div>
+	<div class="breadcrumb-line">
+		<ul class="breadcrumb">
+		<li>
+			<a href="<?php echo base_url('admin/dashboard'); ?>"><i class="icon-home2 position-left"></i>Dashboard</a>
+		</li>
+		 <li>
+		 	<a href="<?php echo base_url('admin/users'); ?>">Users</a>
+		 </li>
+		<li class="active">Add</li>
+		</ul>
+	</div>
+</div>
+<!-- page header -->
 
-					<div class="breadcrumb-line">
-						<ul class="breadcrumb">
-							<?php  ?>
-							<li><a href="<?php echo base_url('admin/dashboard'); ?>"><i class="icon-home2 position-left"></i>Dashboard</a></li>
-							 <li><a href="<?php echo base_url('admin/users'); ?>">Users</a></li>
-							<li class="active">Add</li>
+<!-- Content area -->
+<div class="content">
 
-						</ul>
-					</div>
+<!-- Centered forms -->
+<div class="row">
+<div class="col-md-8 col-md-offset-2">
+<form action="<?php echo base_url('admin/users/add'); ?>" id="profileform" method="POST">
+	<div class="panel panel-flat">
+		<div class="panel-heading">
+			<div class="row">
+				<div class="col-md-10">
+					<h5 class="panel-title"><strong>User</strong>
 				</div>
-				<!-- page header -->
+			</div>
+		</div>
+		<div class="panel-body">
+			<div class="row">
+				<div class="col-md-12">
+					<div class="form-group">
+						<small class="req text-danger">* </small>
+						<label>First name:</label>
+						<input type="text" class="form-control" placeholder="Firstname" id="firstname" name="firstname">
+					</div>
+					<div class="form-group">
+						<small class="req text-danger">* </small>
+						<label>Last name:</label>
+						<input type="text" class="form-control" placeholder="Lastname" id="lastname" name="lastname">
+					</div>
 
-				<!-- Content area -->
-				<div class="content">
+					<div class="form-group">
+						<small class="req text-danger">* </small>
+						<label>Email:</label>
+						<input type="text" class="form-control" placeholder="Email" id="email" name="email" class="email">
+					</div>
 
-					
-
-					<!-- Centered forms -->
-					<div class="row">
-						
-						<div class="col-md-8 col-md-offset-2">
-							<form action="<?php echo base_url('admin/users/add'); ?>" id="profileform" method="POST">
-								<div class="panel panel-flat">
-									<div class="panel-heading">
-										<div class="row">
-											<div class="col-md-10">
-												<h5 class="panel-title"><strong>User</strong></h5>
-												<!-- <div class="heading-elements">
-													<ul class="icons-list">
-								                		<li><a data-action="collapse"></a></li>
-								                		<li><a data-action="reload"></a></li>
-								                		<li><a data-action="close"></a></li>
-								                	</ul>
-							                	</div> -->
-											</div>
-										</div>
-									</div>
-									<div class="panel-body">
-										<div class="row">
-											<div class="col-md-12">
-												<div class="form-group">
-													<small class="req text-danger">* </small>
-													<label>First name:</label>
-													<input type="text" class="form-control" placeholder="Firstname" id="firstname" name="firstname">
-												</div>
-												<div class="form-group">
-													<small class="req text-danger">* </small>
-													<label>Last name:</label>
-													<input type="text" class="form-control" placeholder="Lastname" id="lastname" name="lastname">
-												</div>
-
-												<div class="form-group">
-													<small class="req text-danger">* </small>
-													<label>Email:</label>
-													<input type="text" class="form-control" placeholder="Email" id="email" name="email" class="email">
-												</div>
-
-												<div class="form-group">
-													<small class="req text-danger">* </small>
-													<label>Contact No:</label>
-													<input type="text" class="form-control" placeholder="Contact No" id="mobile_no" name="mobile_no">
-												</div>
-												<div class="form-group">
-													<small class="req text-danger">* </small>
-													<label>Password:</label>
-													<!-- <div class="col-md-12"> -->
-													<input type="password" class="form-control" placeholder="Password" id="password" name="password" >
-													
-												</div>
-												<div class="form-group">
-													<small class="req text-danger">* </small>
-													<label>Confirm Password:</label>
-													<input type="password" id="confirm_password" class="form-control" placeholder="Password">
-													<a class="btn toggle">
-														<span>
-														<!-- <label>
-															 -->
-													
-													<i class="icon-eye"></i><!-- 
-														</label> -->
-													<!-- </div> -->
-													</span>
-
-													</a>
-													Show Password
-												</br>
-												<span id="message"></span>
-
-												</div>
-
-												<div class="form-group">
-													<small class="req text-danger">* </small>
-													<label>Select Role</label>
-
-										<select class="select" name="role" id="role">
-											<!-- <option>Select Role</option> -->
-													<?php 
-															foreach ($roles as $key => $role)
-															 {
-															 	?>
-																<div class="form-group">
-										
-											
-												
-											
-												<option value="<?php echo $role['id']; ?>" name="role"><?php echo $role['name'] ?></option>
-												
-														<?php
-
-														}
-
-													 ?>
-
-											
-													 </select>
-
-								
-												</div>
-												<div>
-													<!-- <a href="<?php //echo base_url('admin/roles/insert'); ?>" class="btn-xs btn-primary">Add New Role</a> -->
-												</div>
-												
-												
-											</div>
-										</div>
-									</div>
-									
-								</div>
-							
-						</div>
+					<div class="form-group">
+						<small class="req text-danger">* </small>
+						<label>Contact No:</label>
+						<input type="text" class="form-control" placeholder="Contact No" id="mobile_no" name="mobile_no">
+					</div>
+					<div class="form-group">
+						<small class="req text-danger">* </small>
+						<label>Password:</label>
+						<input type="password" class="form-control" placeholder="Password" id="password" name="password" >
 						
 					</div>
-					<!-- /form centered -->
-					<div class="btn-bottom-toolbar text-right btn-toolbar-container-out">
-						<button type="submit" class="btn btn-primary" name="submit">Save</button>
-						 <a class="btn btn-success" onclick="window.history.back();">Back</a>
-        				 
-      				</div>
-					</form>
-				
-				<!-- /content area -->
+					<div class="form-group">
+						<small class="req text-danger">* </small>
+						<label>Confirm Password:</label>
+						<input type="password" id="confirm_password" class="form-control" placeholder="Password">
+						<a class="btn toggle"><span><i class="icon-eye"></i><</span></a>
+						Show Password
+					</br>
+					<span id="message"></span>
 
+					</div>
+
+					<div class="form-group">
+						<small class="req text-danger">* </small>
+						<label>Select Role</label>
+						<select class="select" name="role" id="role">
+<?php 
+						foreach ($roles as $key => $role)
+						 {
+?>
+						<div class="form-group">
+							<option value="<?php echo $role['id']; ?>" name="role"><?php echo $role['name'] ?></option>
+<?php
+							}
+?>
+						</select>
+					</div>
+					<div>
+					</div>	
+				</div>
+			</div>
+		</div>	
+	</div>
+</div>
+
+</div>
+<!-- /form centered -->
+	<div class="btn-bottom-toolbar text-right btn-toolbar-container-out">
+		<button type="submit" class="btn btn-success" name="submit">Save</button>
+		<a class="btn btn-default" onclick="window.history.back();">Back</a>
+	</div>
+</form>
+<!-- /content area -->
 <script type="text/javascript">
 $(function () {
     $("#profileform").validate({

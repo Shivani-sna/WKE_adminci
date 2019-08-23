@@ -58,7 +58,7 @@
             <input type="text" name="name" value="<?php echo $src_categories_name; ?>" class="form-control name" placeholder =" Category Name">
           </div>
           <div class="col-md-1">
-            <input type="submit" class="btn btn-primary" name="search" value="Search">
+            <input type="submit" class="btn btn-info" name="search" value="Search">
           </div>
           </div>
         </form>
@@ -99,7 +99,7 @@
       </thead>
       <tbody>
 <?php 
-      if ($categories == array())
+      if (empty($categories))
       {
 ?>                 
       <tr>
@@ -124,7 +124,7 @@
       }
 ?>
       <td>
-          <?php echo $category['name']; ?>
+          <?php echo ucfirst($category['name']); ?>
       </td>
 <?php
         $readonly_status = '';

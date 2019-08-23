@@ -54,7 +54,7 @@
            <input type="text" name="name" class="form-control name" placeholder="Role Name" value="<?php echo $src_rolename; ?>">
           </div>
           <div class="col-md-1">
-            <input type="submit" class="btn btn-primary" name="search" value="Search">
+            <input type="submit" class="btn btn-info" name="search" value="Search">
           </div>
           </div>
         </form>
@@ -87,7 +87,7 @@
       </thead>
       <tbody>
       <?php 
-      if ($roles == array())
+      if (empty($roles))
        {
       ?>                 
        <tr>
@@ -110,7 +110,7 @@
       }
 ?>
        <td>
-          <?php echo $role['name']; ?>
+          <?php echo ucfirst($role['name']); ?>
       </td>
 <?php 
       if (has_permissions('roles','edit') || has_permissions('roles','delete'))
@@ -187,11 +187,11 @@ $( document ).ready(function()
             {
               if (data=='error')
                {
-                  toastr.error('you have not delete Role ');
+                  toastr.error('<?php echo _l("role_in_use_delete_msg"); ?>');
                }
                else
                {
-                 toastr.success('Role Deleted');
+                 toastr.success('<?php echo _l("deleted_successfully_msg", _l("role")); ?>');
                  $("#"+id).closest("tr").remove();
                }
             });               

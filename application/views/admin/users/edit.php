@@ -136,9 +136,6 @@
 
 								
 												</div>
-												<!-- <div>
-													<a href="<?php// echo base_url('admin/roles/insert'); ?>" class="btn-xs btn-primary">Add New Role</a>
-												</div> -->
 											</div>
 										</div>
 									</div>
@@ -150,8 +147,8 @@
 					</div>
 					<!-- /form centered -->
 					<div class="btn-bottom-toolbar text-right btn-toolbar-container-out">
-						<button type="submit" class="btn btn-primary" name="submit">Save</button>
-						 <a class="btn btn-success" onclick="window.history.back();">Back</a>
+						<button type="submit" class="btn btn-success" name="submit">Save</button>
+						 <a class="btn btn-default" onclick="window.history.back();">Back</a>
         				 
       				</div>
 					</form>
