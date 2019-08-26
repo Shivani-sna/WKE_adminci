@@ -1,6 +1,5 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-
 class Authentication extends MY_Controller
 {
 	/**
@@ -102,9 +101,9 @@ class Authentication extends MY_Controller
 
 				if ($user['is_active'] == 1)
 				{
-					$this->session->set_flashdata('error', _l('required_field_msg', _l('password')));
+					$this->session->set_flashdata('error', _l('required_field_valid', _l('password')));
 
-					log_activity("Failed Login Attempt : [ $firstname $lastname , $email ]", $user['id']);
+					log_activity(_l('failed_login')." : [ $firstname $lastname , $email ]", $user['id']);
 				}
 				else
 
@@ -115,8 +114,8 @@ class Authentication extends MY_Controller
 				}
 				else
 				{
-					$this->session->set_flashdata('error', _l('required_field_msg', _l('email')));
-					log_activity("Failed Login Attempt Unknown Access");
+					$this->session->set_flashdata('error', _l('required_field_valid', _l('email')));
+					log_activity(_l('failed_login')." [ Unknown Access ]");
 				}
 
 				redirect('authentication');
@@ -149,32 +148,21 @@ class Authentication extends MY_Controller
 
 				if ($update)
 				{
-/*
-//send Mail form here
-
-$email             = $email;
-
-$data['firstname'] = $firstname;
-
-$data['lastname']  = $lastname;
-
-$subject           = "Password Recovery for WKE";
-
-$htmlContent       = $this->load->view('email_password_recovery', $data, TRUE);
-send_mail($email, $subject, $htmlContent);
- */
-
-//$data['key'] = $key;
-
-//print_r($data);
-
-					redirect('authentication/email_view/'.$key['auth_token']);
+					$subject = "WKE Reset Password";
+					$data['user'] = $this->users->get_by($key);
+					$mailContent  = $this->load->view('email_password_recovery', $data, TRUE);
+					
+					$success = 'Please Check your Mail you have recive Reset Password Mail ';
+					$redirect ='authentication';
+					send_mail($email, $key , $subject,$mailContent,$success ,$redirect);
 				}
+				
 			}
 			else
 			{
-				log_activity("Failed forgot Password request Unknown Access");
-				$this->session->set_flashdata('error', 'Please Enter Valid Email.');
+				log_activity(_l('failed_forgot_password')." [ Unknown Access ]");
+				log_activity(" Unknown Access");
+				$this->session->set_flashdata('error', _l('required_field_valid', _l('email')));
 				redirect('authentication/forgot_password');
 			}
 		}
@@ -186,27 +174,23 @@ send_mail($email, $subject, $htmlContent);
 	}
 
 	/**
-	 * [email_view load view for email]
-	 * @return [type] [description]
-	 */
-	public function email_view()
-	{
-		$data['key']  = $this->uri->segment(3);
-		$data['user'] = $this->users->get_by(array('auth_token' => $this->uri->segment(3)));
-
-		$this->load->view('email_password_recovery', $data);
-	}
-
-	/**
 	 * [reset_password for update new password]
 	 * @param  string $key [auth_token from URL]
 	 * @return [boolean]
 	 */
 	public function reset_password($key = '')
 	{
+		$data['user'] = $this->users->get_by(array('auth_token' => $key));
+
 		if ($key == NULL)
 		{
-			$this->session->set_flashdata('error', 'your reset password link expire');
+			$this->session->set_flashdata('error', 'Your reset password link expire.Please Request For New');
+			redirect('authentication');
+		}
+
+		if ($data['user'] == NULL)
+		{
+			$this->session->set_flashdata('error', 'Your reset password link expire.Please Request for New');
 			redirect('authentication');
 		}
 
@@ -228,7 +212,7 @@ send_mail($email, $subject, $htmlContent);
 			if ($update)
 			{
 				log_activity("$username Reset Password", $id);
-				$this->session->set_flashdata('success', 'your Password changed');
+				$this->session->set_flashdata('success', 'Your Password changed Continue Login with New Password');
 
 				redirect('authentication');
 			}

@@ -15,7 +15,7 @@ class Settings extends MY_Controller
 	}
 
 	/**
-	 * [index for load view users]
+	 * [index for load view settings]
 	 * @return [array] [load html content]
 	 */
 	public function index()

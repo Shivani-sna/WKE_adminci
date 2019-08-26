@@ -16,7 +16,7 @@
 		#design
 		{
 			
-			height: 409px;
+			height: 300px;
  			width: 500px;
   			border: 4px solid black;
   			padding: 50px;
@@ -28,8 +28,8 @@
 		a,
 		a:hover
 		{
-			color: #ffc04c;
-			text-decoration: none;
+			color: #0000FF;
+			/*text-decoration: none;*/
 		}
 		.color{
 			color: black;
@@ -54,17 +54,13 @@
 			</br>
 			You've recently asked to reset the password for this WKE account:<?php echo $user['email']; ?>
 		</br></br>
-		To update your password, click the button below:
-
+		To update your password, click the below Link:
+		
   
 		</br></br>
-  		<center><a href="<?php echo base_url("authentication/reset_password/$key"); ?>" class="w3-button w3-blue">Reset Password</a></center>
+  		<a href="<?php echo base_url("authentication/reset_password/").$user['auth_token']; ?>" class="w3-button w3-blue">http://localhost/WKE_adminci/authentication/reset_password/<?php echo $user['auth_token']; ?></a>
 
 		</p>
-			
-			
-			<!-- <p>For Password Recovery</p> -->
-			
 		</div>
 	</center>
 </body>

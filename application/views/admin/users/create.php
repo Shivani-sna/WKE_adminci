@@ -82,12 +82,12 @@
 						<select class="select" name="role" id="role">
 <?php 
 						foreach ($roles as $key => $role)
-						 {
+{
 ?>
 						<div class="form-group">
 							<option value="<?php echo $role['id']; ?>" name="role"><?php echo $role['name'] ?></option>
 <?php
-							}
+}
 ?>
 						</select>
 					</div>
@@ -108,8 +108,10 @@
 </form>
 <!-- /content area -->
 <script type="text/javascript">
-$(function () {
-    $("#profileform").validate({
+$(function ()
+ {
+    $("#profileform").validate
+    ({
         rules: {
         	firstname:
         	{
@@ -119,73 +121,89 @@ $(function () {
         	{
         		 required: true,
         	},
-        	mobile_no: {
-                    required: true,
-                     digit: true
-                },
+        	mobile_no:
+        	 {
+                required: true,
+                digit: true
+            },
 
-            email: {
-                    required: true,
-                    email: true
-                },
-            password: {
+            email:
+            {
+                required: true,
+                email: true
+            },
+            password:
+            {
                 required: true
             },
-             role: {
+             role:
+            {
                 required: true
             }
         },
-        messages: {
-        	firstname: {
-                 required:"<?php echo _l('required_field_msg', _l('firstname')) ?>",
-                    // email:"Please enter a valid email address"
+        messages:
+         {
+        	firstname:
+        	 {
+                required:"<?php echo _l('required_field_msg', _l('firstname')) ?>",
 
             },
-            lastname: {
-                 required:"<?php echo _l('required_field_msg', _l('lastname')) ?>",
-                    // email:"Please enter a valid email address"
+            lastname:
+             {
+                required:"<?php echo _l('required_field_msg', _l('lastname')) ?>",
 
             },
-              mobile_no: {
-                 required:"<?php echo _l('required_field_msg', _l('contact_no')) ?>",
-                   mobile_no:"Please Enter Digits"
+             mobile_no:
+             {
+                required:"<?php echo _l('required_field_msg', _l('contact_no')) ?>",
+                mobile_no:"Please Enter Digits"
 
             },
-            email: {
-                 required:"<?php echo _l('required_field_msg', _l('email')) ?>",
-                    email:"<?php echo _l('required_field_valid', _l('email')) ?>"
+            email:
+             {
+                required:"<?php echo _l('required_field_msg', _l('email')) ?>",
+                email:"<?php echo _l('required_field_valid', _l('email')) ?>"
 
             },
-            password:{
-                 required:"<?php echo _l('required_field_msg', _l('password')) ?>"
+            password:
+            {
+                required:"<?php echo _l('required_field_msg', _l('password')) ?>"
             },
-             role:{
-                 required:"<?php echo _l('select', _l('contact_no')) ?>"
+             role:
+             {
+                required:"<?php echo _l('select', _l('contact_no')) ?>"
             },
 
         }
         
-    });  
+    	}); 
+    	/* End of validate */ 
     });
+/* End of function */
 </script>
 <script type="text/javascript">  
-$(' #confirm_password').on('change', function () {
-  if ($('#password').val() != $('#confirm_password').val()) {
+$(' #confirm_password').on('change', function ()
+ {
+  if ($('#password').val() != $('#confirm_password').val())
+   {
   	$('#message').html('Confirm Passsword Not Match').css({'font-weight': 'bold','color':'red'});
-   return false;
-  } else 
+   	return false;
+   } 
+  else 
   {
   	 $('#message').html('Password match').css({'font-weight': 'bold','color':'green'});
   }
     
 });
 
-$('#password').on('change', function () {
+$('#password').on('change', function ()
+ {
   if ($('#password').val() != $('#confirm_password').val()) 
   {
   	$('#message').html('Confirm Passsword Not Match').css({'font-weight': 'bold','color':'red'});
-   return false;
-  } else 
+   	return false;
+  }
+  else 
   {
   	 $('#message').html('Password match').css({'font-weight': 'bold','color':'green'});
   }
@@ -193,13 +211,14 @@ $('#password').on('change', function () {
 });
 $('.toggle').on('click',function(e){
 e.preventDefault();
-// alert(
-// 	'yes');
 var x = document.getElementById("confirm_password");
-  if (x.type === "password") {
-    x.type = "text";
-  } else {
-    x.type = "password";
+  if (x.type === "password")
+   {
+    	x.type = "text";
+  	} 
+  else
+  {
+    	x.type = "password";
   }
 });
 </script>  

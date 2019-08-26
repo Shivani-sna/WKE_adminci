@@ -86,8 +86,6 @@ function get_loggedin_info($info)
 	return $user[$info];
 }
 
-
-
 /**
  * [send_mail function for sending mail when successfully registration]
  * @param $email [registration Email]
@@ -96,31 +94,39 @@ function get_loggedin_info($info)
  * @return [boolean]
  */
 
-function send_mail($email = '', $subject = '', $htmlContent = '')
+function send_mail($email='', $key='', $subject='',$mailContent='',$success='',$redirect='')
 {
-	// email SMTP config
-	$config['protocol']  = 'smtp';
-	$config['smtp_host'] = 'smtp.1and1.com';
-	$config['smtp_port'] = 587;
-	$config['smtp_user'] = 'arj@narola.email';
-	$config['smtp_pass'] = '3)jt1429P-97krW';
-	$config['mailtype']  = 'html';
-	$config['newline']   = "\r\n";
-	$config['mailtype']  = 'html';
-	$CI                  = &get_instance();
-	$CI->load->library('email', $config);
-	$CI->email->from('test.narolainfotech@gmail.com', 'WKE');
-	$CI->email->to($email);
-	$CI->email->subject($subject);
-	$CI->email->message($htmlContent);
+	$CI = &get_instance();
+	$CI->load->library('phpmailer_lib');
+	$mail = $CI->phpmailer_lib->load();
+	$mail->isSMTP();
+	$mail->Host       = 'ssl://smtp.gmail.com';
+	$mail->SMTPAuth   = true;
+	$mail->Username   = 'test.narolainfotech@gmail.com';
+	$mail->Password   = '#N@rol@12';
+	$mail->SMTPSecure = 'ssl';
+	$mail->Port       = 465;
 
-	if ($CI->email->send())
+	$mail->setFrom('test.narolainfotech@gmail.com', 'WKE Admin');
+	$mail->addReplyTo($email);
+
+	$mail->addAddress($email);
+	$mail->Subject = $subject;
+
+	$mail->isHTML(true);
+	
+	
+	$mail->Body   = $mailContent;
+
+	if ($mail->send())
 	{
-		return TRUE;
+		$CI->session->set_flashdata('success', $success);
+		redirect($redirect);
 	}
 	else
 	{
-		return false;
+		$CI->session->set_flashdata('error', 'Your Mail Not Send');
+		redirect($redirect);
 	}
 }
 

@@ -63,7 +63,7 @@
             <div class="col-md-2">
               <input type="text" name="lastname" placeholder="Lastname" class="form-control name"  value="<?php echo $src_lastname; ?>">
             </div>
-            <div class="col-md-2">
+            <div class="col-md-3">
               <input type="email" name="email" placeholder="Email" class="form-control"  value="<?php echo $src_email; ?>">
             </div>
             <div class="col-md-2">
@@ -95,7 +95,7 @@
             </div>
 
             <div class="col-md-1">
-              <button type="submit" class="btn btn-info" name="search" value="search"> Search <i class="icon-search4"></i></button>
+              <button type="submit" class="btn btn-info" name="search" value="search"> Search<!--  <i class="icon-search4"></i> --></button>
             </div>
           </div>
         </form>

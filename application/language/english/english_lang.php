@@ -21,11 +21,10 @@ $lang['updated_successfully_msg'] = '%s updated successfully.';
 $lang['deleted_successfully_msg'] = '%s deleted successfully.';
 
 /*Status Update */
-$lang['activation_msg']        = '%s activated';
-$lang['deactivation_msg']      = '%s deactivated';
-$lang['edit_role_warning_msg'] = 'Changing role permissions will affect current users permissions that are using this role.';
-$lang['role_in_use_delete_msg']      = 'The role you are trying to delete is currently assigned to one or more users.';
-
+$lang['activation_msg']         = '%s activated';
+$lang['deactivation_msg']       = '%s deactivated';
+$lang['edit_role_warning_msg']  = 'Changing role permissions will affect current users permissions that are using this role.';
+$lang['role_in_use_delete_msg'] = 'The role you are trying to delete is currently assigned to one or more users.';
 
 /*Delete Message*/
 $lang['deletion_msg']             = 'Are you want to delete this %s ?';
@@ -71,6 +70,8 @@ $lang['error']        = 'Error in Profile ';
 $lang['permission']   = 'Permission';
 
 /* Authentication */
-$lang['logged_in']  = '%s Logged In';
-$lang['logged_out'] = '%s Logged Out';
-$lang['inactive']   = 'Inactive %s Attempt';
+$lang['logged_in']    = '%s Logged In';
+$lang['logged_out']   = '%s Logged Out';
+$lang['inactive']     = 'Inactive %s Attempt';
+$lang['failed_login'] = 'Failed Login Attempt';
+$lang['failed_forgot_password'] = 'Failed forgot Password request';
