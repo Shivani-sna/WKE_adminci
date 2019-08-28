@@ -6,6 +6,11 @@ function current_timestamp()
 
 	return time();
 }
+// function get_timezone()
+// {
+// 	return date_default_timezone_set(get_setting_value('time_zone'));
+
+// }
 
 /**
  * @param  [type]
@@ -85,6 +90,33 @@ function get_loggedin_info($info)
 
 	return $user[$info];
 }
+/**
+ * @return mixed
+ */
+function get_setting_value($name)
+{
+	$CI = &get_instance();
+	$CI->load->model('setting_model', 'settings');
+	$settings=$CI->settings->get_all();
+	foreach ($settings as $key => $setting)
+	 {
+		if ($setting['name']=="$name")
+		 {
+			return $setting['value'];
+		}
+	}
+}
+
+/**
+ * @return mixed
+ */
+function get_settings()
+{
+	$CI = &get_instance();
+	$CI->load->model('setting_model', 'settings');
+
+	return $CI->settings->get_all();
+}
 
 /**
  * [send_mail function for sending mail when successfully registration]
@@ -94,7 +126,7 @@ function get_loggedin_info($info)
  * @return [boolean]
  */
 
-function send_mail($email='', $key='', $subject='',$mailContent='',$success='',$redirect='')
+function send_mail($email = '', $key = '', $subject = '', $mailContent = '', $success = '', $redirect = '')
 {
 	$CI = &get_instance();
 	$CI->load->library('phpmailer_lib');
@@ -114,9 +146,8 @@ function send_mail($email='', $key='', $subject='',$mailContent='',$success='',$
 	$mail->Subject = $subject;
 
 	$mail->isHTML(true);
-	
-	
-	$mail->Body   = $mailContent;
+
+	$mail->Body = $mailContent;
 
 	if ($mail->send())
 	{
@@ -305,6 +336,8 @@ function time_stamp($session_time)
 		}
 	}
 }
+
+
 
 function set_sort_redirect_url()
 {

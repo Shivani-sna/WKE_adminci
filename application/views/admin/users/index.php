@@ -1,5 +1,6 @@
 <?php
     set_sort_redirect_url();
+    
 ?>
 <!-- page header -->
 <div class="page-header page-header-default">
@@ -95,7 +96,7 @@
             </div>
 
             <div class="col-md-1">
-              <button type="submit" class="btn btn-info" name="search" value="search"> Search<!--  <i class="icon-search4"></i> --></button>
+              <button type="submit" class="btn btn-info" name="search" value="search"> Search</button>
             </div>
           </div>
         </form>
@@ -193,7 +194,8 @@
 ?>
             </td>
 <?php
-        $login_datetime = $user['last_login'] != 'Never' ? date("d M Y, H:i:s", $user['last_login']) : "Never";
+
+  $login_datetime = $user['last_login'] != 'Never' ? date(get_setting_value('date_format'), $user['last_login']) : "Never";
 ?>
 <!-- data-popup="tooltip" -->
           <td  title="<?php echo $login_datetime; ?>">

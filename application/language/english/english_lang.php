@@ -14,6 +14,7 @@ $lang['users']      = 'Users';
 $lang['projects']   = 'Projects';
 $lang['categories'] = 'Categories';
 $lang['roles']      = 'Roles';
+$lang['settings']   = 'Settings';
 
 /* flash messages */
 $lang['added_successfully_msg']   = '%s added successfully.';
@@ -70,8 +71,8 @@ $lang['error']        = 'Error in Profile ';
 $lang['permission']   = 'Permission';
 
 /* Authentication */
-$lang['logged_in']    = '%s Logged In';
-$lang['logged_out']   = '%s Logged Out';
-$lang['inactive']     = 'Inactive %s Attempt';
-$lang['failed_login'] = 'Failed Login Attempt';
+$lang['logged_in']              = '%s Logged In';
+$lang['logged_out']             = '%s Logged Out';
+$lang['inactive']               = 'Inactive %s Attempt';
+$lang['failed_login']           = 'Failed Login Attempt';
 $lang['failed_forgot_password'] = 'Failed forgot Password request';

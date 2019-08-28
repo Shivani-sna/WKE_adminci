@@ -17,8 +17,14 @@ class Authentication extends MY_Controller
 	 */
 	public function index()
 	{
+
+		if (get_loggedin_info('user_logged_in'))
+		{
+			redirect($this->session->userdata('redirect_url'));
+		}
 		$data['content'] = $this->load->view('authentication', '', TRUE);
-		$this->load->view('index', $data);
+			$this->load->view('index', $data);
+		
 	}
 
 	/**
@@ -53,7 +59,7 @@ class Authentication extends MY_Controller
 
 			$result = $this->users->get_by($where);
 
-			if ($result)
+			if (!empty($result))
 			{
 				$firstname = $result['firstname'];
 				$lastname  = $result['lastname'];
@@ -68,6 +74,7 @@ class Authentication extends MY_Controller
 				);
 
 				$update = $this->users->update($result['id'], $data);
+				echo "string";
 
 				if ($update)
 				{
@@ -80,9 +87,14 @@ class Authentication extends MY_Controller
 					);
 
 					$this->session->set_userdata('user', $data);
+					print_r($this->session->userdata('redirect_url'));
 
-					if ($redirect_url = $this->session->userdata('redirect_url'))
+					$redirect_url = $this->session->userdata('redirect_url');
+
+					if ($redirect_url)
 					{
+						print_r($redirect_url);
+
 						redirect($redirect_url);
 					}
 					else
@@ -148,15 +160,14 @@ class Authentication extends MY_Controller
 
 				if ($update)
 				{
-					$subject = "WKE Reset Password";
+					$subject      = "WKE Reset Password";
 					$data['user'] = $this->users->get_by($key);
 					$mailContent  = $this->load->view('email_password_recovery', $data, TRUE);
-					
-					$success = 'Please Check your Mail you have recive Reset Password Mail ';
-					$redirect ='authentication';
-					send_mail($email, $key , $subject,$mailContent,$success ,$redirect);
+
+					$success  = 'Please Check your Mail you have recive Reset Password Mail ';
+					$redirect = 'authentication';
+					send_mail($email, $key, $subject, $mailContent, $success, $redirect);
 				}
-				
 			}
 			else
 			{

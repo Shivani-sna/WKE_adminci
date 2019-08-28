@@ -84,11 +84,14 @@
      <th width="15%">
         <a href="<?php echo base_url('admin/projects/sort_by/project_id'); ?>" class="sort">Project ID</a>
       </th>
-     <th width="45%">
+     <th width="15%">
       <a href="<?php echo base_url('admin/projects/sort_by/name'); ?>" class="sort">Project Name</a>
     </th>
     <th width="25%">
       Details
+    </th>
+    <th width="15%">
+      Created
     </th>
 <?php
    if (has_permissions('projects','edit') || has_permissions('projects','delete'))
@@ -144,6 +147,9 @@
 <?php 
       echo ucfirst($project['details']);
 ?>
+    </td>
+    <td>
+      <?php echo date(get_setting_value('date_format').'  '.get_setting_value('time_format'),$project['created']); ?>
     </td>
 <?php  
   if (has_permissions('projects','edit') || has_permissions('projects','delete'))

@@ -18,6 +18,7 @@ class Dashboard extends MY_Controller
  */
 	public function index()
 	{
+		
 		log_activity(_l('view', _l('dashboard')));
 		$data['content'] = $this->load->view('admin/dashboard', '', TRUE);
 		$this->load->view('admin/index', $data);
