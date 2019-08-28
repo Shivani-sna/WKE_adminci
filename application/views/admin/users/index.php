@@ -195,7 +195,7 @@
             </td>
 <?php
 
-  $login_datetime = $user['last_login'] != 'Never' ? date(get_setting_value('date_format'), $user['last_login']) : "Never";
+  $login_datetime = $user['last_login'] != 'Never' ? display_date_time($user['last_login']) : "Never";
 ?>
 <!-- data-popup="tooltip" -->
           <td  title="<?php echo $login_datetime; ?>">

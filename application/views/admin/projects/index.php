@@ -134,7 +134,7 @@
   <td><?php echo $project['project_id'];?></td>
 	<td><?php echo ucfirst($project['name']);?></td>
 	<td><?php echo ucfirst($project['details']);?></td>
-  <td><?php echo date(get_setting_value('date_format').'  '.get_setting_value('time_format'),$project['created']); ?></td>
+  <td><?php echo display_date_time($project['created']); ?></td>
 <?php  
   if (has_permissions('projects','edit') || has_permissions('projects','delete'))
     {

@@ -6,8 +6,11 @@ function current_timestamp()
 
 	return time();
 }
+
 // function get_timezone()
+
 // {
+
 // 	return date_default_timezone_set(get_setting_value('time_zone'));
 
 // }
@@ -90,33 +93,75 @@ function get_loggedin_info($info)
 
 	return $user[$info];
 }
+
 /**
  * @return mixed
  */
-function get_setting_value($name)
+function get_settings($name = '')
 {
 	$CI = &get_instance();
 	$CI->load->model('setting_model', 'settings');
-	$settings=$CI->settings->get_all();
-	foreach ($settings as $key => $setting)
-	 {
-		if ($setting['name']=="$name")
-		 {
-			return $setting['value'];
+
+	if ($name == '')
+	{
+		$settings = $CI->settings->get_all();
+
+		return $settings;
+	}
+	else
+	{
+		$result = $CI->settings->get_by(['name' => $name]);
+		if ($result) 
+		{
+			return $result['value'];
 		}
+		else
+		{
+			return null;
+		}
+
+		
+	}
+}
+
+/**
+ * @param $timestamp
+ */
+function display_date_time($timestamp)
+{
+	if (get_settings('date_format') != '' && get_settings('time_format') != '')
+	{
+		return date(get_settings('date_format').'  '.get_settings('time_format'), $timestamp);
+	}
+	else if (get_settings('date_format') != '' && get_settings('time_format') == '')
+	{
+		return date(get_settings('date_format').'  h:i A', $timestamp);
+	}
+	else if (get_settings('date_format') == '' && get_settings('time_format') != '')
+	{
+		return date('d-m-Y  '.get_settings('time_format'), $timestamp);
+	}
+	else
+	{
+		return date('d-m-Y  h:i A', $timestamp);
 	}
 }
 
 /**
  * @return mixed
  */
-function get_settings()
-{
-	$CI = &get_instance();
-	$CI->load->model('setting_model', 'settings');
 
-	return $CI->settings->get_all();
-}
+// function get_settings()
+
+// {
+
+// 	$CI = &get_instance();
+
+// 	$CI->load->model('setting_model', 'settings');
+
+// 	return $CI->settings->get_all();
+
+// }
 
 /**
  * [send_mail function for sending mail when successfully registration]
@@ -336,8 +381,6 @@ function time_stamp($session_time)
 		}
 	}
 }
-
-
 
 function set_sort_redirect_url()
 {
