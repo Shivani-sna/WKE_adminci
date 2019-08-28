@@ -10,8 +10,6 @@ class Settings extends MY_Controller
 	{
 		parent::__construct();
 		is_user_logged_in();
-
-		
 	}
 
 	/**
@@ -21,7 +19,7 @@ class Settings extends MY_Controller
 	public function index()
 	{
 		$data['settings'] = get_settings();
-		$data['content'] = $this->load->view('admin/settings/index',$data, TRUE);
+		$data['content']  = $this->load->view('admin/settings/index', $data, TRUE);
 		$this->load->view('admin/index', $data);
 	}
 
@@ -32,11 +30,13 @@ class Settings extends MY_Controller
 			foreach ($this->input->post() as $key => $value)
 			{
 				$settings = $this->settings->get_by(array('name' => $key));
-				
+
 				if ($settings)
 				{
 					$this->settings->update($settings['id'], array('value' => $value));
 					$this->session->set_flashdata('success', _l('updated_successfully_msg', _l('settings')));
+					log_activity(_l('updated', _l('settings'))."[Name : $key Value :$value] ");
+
 				}
 				else
 				{
@@ -49,15 +49,16 @@ class Settings extends MY_Controller
 						);
 						$this->settings->insert($data);
 						$this->session->set_flashdata('success', _l('added_successfully_msg', _l('settings')));
+						log_activity(_l('added', _l('settings'))."[ID:$insert Name : $key Value :$value] ");
 					}
 				}
 			}
+
 			redirect('admin/settings');
 		}
 		else
 		{
 			redirect('admin/settings');
 		}
-
 	}
 }

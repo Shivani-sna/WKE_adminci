@@ -201,7 +201,7 @@ class Projects extends MY_Controller
 				);
 
 				$update = $this->projects->update($id, $data);
-				log_activity("Project Updated [ID:$id] ");
+				log_activity(_l('updated', _l('project'))."[ID:$id] ");
 
 				if ($update)
 				{
