@@ -69,7 +69,7 @@
 						<small class="req text-danger">* </small>
 						<label>Confirm Password:</label>
 						<input type="password" id="confirm_password" class="form-control" placeholder="Password">
-						<a class="btn toggle"><span><i class="icon-eye"></i><</span></a>
+						<a class="btn toggle"><span><i class="icon-eye"></i></span></a>
 						Show Password
 					</br>
 					<span id="message"></span>

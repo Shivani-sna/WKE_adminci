@@ -19,7 +19,6 @@
 </div>
 <!-- Content area -->
 <div class="content">
-
 	<div class="row">
 	<div class="col-md-6">
 	<form method="POST" action="<?php echo base_url('admin/roles/edit/').$role['id']; ?>" id="roleform">
@@ -28,52 +27,47 @@
 				<div class="row">
 					<div class="col-md-12">
 						<h5 class="pull-left"><strong>Edit Role <?php echo $role['name']; ?></strong></h5>
-	
-					
-											<?php 
+<?php 
         if (has_permissions('roles','create'))
         {
 ?>
-        
-         	 <a href="<?php echo base_url('admin/roles/add'); ?>" class="btn btn-primary pull-right">New Role</a>
-
+ 		<a href="<?php echo base_url('admin/roles/add'); ?>" class="btn btn-primary pull-right">New Role</a>
          </div>
          <div class="row">
 				<div class="col-md-12">
 					<div class="alert alert-warning no-border">
-										<button type="button" class="close" data-dismiss="alert"><span>×</span><span class="sr-only">Close</span></button>
-										<span class="text-semibold">
-										<?php echo _l('edit_role_warning_msg'); ?>
-									</span>
-								    </div>
+						<button type="button" class="close" data-dismiss="alert"><span>×</span><span class="sr-only">Close</span></button>
+						<span class="text-semibold">
+						<?php echo _l('edit_role_warning_msg'); ?>
+					</span>
+					</div>
 				</div>
 		</div>
 <?php
         }
         ?>
+		</div>
+	</div>
+	<div class="panel-body">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="form-group">
+					<small class="req text-danger">*</small>
+					<label>Role Name:</label>
+					<input type="text" class="form-control" placeholder="Role Name" id="name" name="name" value="<?php echo $role['name']; ?>">
 				</div>
-			</div>
-		<div class="panel-body">
-			<div class="row">
-				<div class="col-md-12">
-					<div class="form-group">
-						<small class="req text-danger">*</small>
-						<label>Role Name:</label>
-						<input type="text" class="form-control" placeholder="Role Name" id="name" name="name" value="<?php echo $role['name']; ?>">
-					</div>
-				<div>
+			<div>
 <?php 
-				echo $array; 
+			echo $array; 
 ?>
-				</div>
-					<div class="validate_permission"></div>
-				</div>
+			</div>
+				<div class="validate_permission"></div>
 			</div>
 		</div>
+	</div>
 		</div>
 	</div>
 	<div class="col-md-6">
-	<!-- Basic datatable -->
 	<div class="panel panel-flat">
 		<div class="panel-heading">
 			<h5 class="panel-title"><strong>Users which are currently using the role: <?php echo $role['name']; ?></strong></h5>
@@ -113,16 +107,6 @@
 <!-- /content area -->
 <script type="text/javascript">
 		$(document).ready(function() {
-	/* ------------------------------------------------------------------------------
-*
-*  # Basic datatables
-*
-*  Specific JS code additions for datatable_basic.html page
-*
-*  Version: 1.0
-*  Latest update: Aug 1, 2015
-*
-* ---------------------------------------------------------------------------- */
 
 $(function() {
 
@@ -195,11 +179,8 @@ $(function() {
     
 });
 
-
     $('#example').DataTable();
-//     $('#example').dataTable( {
-//   "autoWidth": false
-// } );
+
 } );
 </script>
 <script type="text/javascript">

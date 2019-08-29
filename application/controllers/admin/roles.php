@@ -217,10 +217,9 @@ class Roles extends MY_Controller
 
 		$data['role']        = $this->roles->get($id);
 		$data['permissions'] = $this->permissions();
-		//$data['permissions'] = $this->permissions();
-		$data['users']   = $this->users->get_many_by(['role' => $id]);
-		$data['array']   = $this->load->view('admin/roles/roles_array_update', $data, TRUE);
-		$data['content'] = $this->load->view('admin/roles/edit', $data, TRUE);
+		$data['users']       = $this->users->get_many_by(['role' => $id]);
+		$data['array']       = $this->load->view('admin/roles/roles_array_update', $data, TRUE);
+		$data['content']     = $this->load->view('admin/roles/edit', $data, TRUE);
 
 		$this->load->view('admin/index', $data);
 	}

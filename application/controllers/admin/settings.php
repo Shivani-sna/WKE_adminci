@@ -29,26 +29,43 @@ class Settings extends MY_Controller
 		{
 			foreach ($this->input->post() as $key => $value)
 			{
-				$settings = $this->settings->get_by(['name' => $key]);
-
-				if ($settings)
+				if ($value == '' && $key != 'submit')
 				{
-					$this->settings->update($settings['id'], array('value' => $value));
-					$this->session->set_flashdata('success', _l('updated_successfully_msg', _l('settings')));
-					log_activity(_l('updated', _l('settings'))."[Name : $key Value :$value] ");
+					$delete = $this->settings->delete_by(['name' => $key]);
+
+					if ($delete)
+					{
+						$this->session->set_flashdata('success', _l('deleted_successfully_msg', $key));
+					}
 				}
 				else
 				{
-					if ($key != "submit")
+					if ($key == "allowed_file_types")
 					{
-						$data = [
-							'name'  => $key,
-							'value' => $value
-						];
+						$value = serialize($value);
+					}
 
-						$this->settings->insert($data);
-						$this->session->set_flashdata('success', _l('added_successfully_msg', _l('settings')));
-						log_activity(_l('added', _l('settings'))."[ID:$insert Name : $key Value :$value] ");
+					$settings = $this->settings->get_by(['name' => $key]);
+
+					if ($settings)
+					{
+						$this->settings->update($settings['id'], array('value' => $value));
+						$this->session->set_flashdata('success', _l('updated_successfully_msg', _l('settings')));
+						log_activity(_l('updated', _l('settings'))."[Name : $key Value :$value] ");
+					}
+					else
+					{
+						if ($key != "submit")
+						{
+							$data = [
+								'name'  => $key,
+								'value' => $value
+							];
+
+							$this->settings->insert($data);
+							$this->session->set_flashdata('success', _l('added_successfully_msg', _l('settings')));
+							log_activity(_l('added', _l('settings'))."[ Name : $key Value :$value] ");
+						}
 					}
 				}
 			}

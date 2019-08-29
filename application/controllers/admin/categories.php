@@ -60,8 +60,6 @@ class Categories extends MY_Controller
  */
 	public function search()
 	{
-// print_r($this->input->post());
-		// die();
 		$config                      = $this->paginate();
 		$config['base_url']          = base_url('admin/categories/search');
 		$config['uri_segment']       = 4;
@@ -201,7 +199,7 @@ class Categories extends MY_Controller
 	public function update_status()
 	{
 		$category_id = $this->input->post('category_id');
-		$data        = array('is_active' => $this->input->post('is_active'));
+		$data        = ['is_active' => $this->input->post('is_active')];
 
 		$update = $this->category->update($category_id, $data);
 

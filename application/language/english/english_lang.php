@@ -48,13 +48,13 @@ $lang['access_denied']     = "Sorry, you do not enough permissions to access thi
 
 /* validation messages */
 
-$lang['firstname']       = 'Firstname';
-$lang['lastname']        = "Lastname";
-$lang['email']           = "Email";
-$lang['contact_no']      = "Contact No";
-$lang['password']        = "Password";
-$lang['repeat_password'] = "Repeat Password";
-
+$lang['firstname']                = 'Firstname';
+$lang['lastname']                 = "Lastname";
+$lang['email']                    = "Email";
+$lang['contact_no']               = "Contact No";
+$lang['password']                 = "Password";
+$lang['repeat_password']          = "Repeat Password";
+$lang['company_name']             = 'Company Name';
 $lang['category_name']            = 'Category Name';
 $lang['role_name']                = 'Role Name';
 $lang['project_name']             = 'Project Name';

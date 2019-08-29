@@ -17,14 +17,13 @@ class Authentication extends MY_Controller
 	 */
 	public function index()
 	{
-
 		if (get_loggedin_info('user_logged_in'))
 		{
 			redirect($this->session->userdata('redirect_url'));
 		}
+
 		$data['content'] = $this->load->view('authentication', '', TRUE);
-			$this->load->view('index', $data);
-		
+		$this->load->view('index', $data);
 	}
 
 	/**
@@ -135,6 +134,25 @@ class Authentication extends MY_Controller
 		}
 	}
 
+/**
+ * [auth_token generate random string]
+ * @return [string] [random stringfor auth_token]
+ */
+	public function auth_token()
+	{
+		$n            = 15;
+		$characters   = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+		$randomString = '';
+
+		for ($i = 0; $i < $n; $i++)
+		{
+			$index = rand(0, strlen($characters) - 1);
+			$randomString .= $characters[$index];
+		}
+
+		return $randomString;
+	}
+
 	/**
 	 * [forgot_password for verify user by their email]
 	 * @return [string] [generate auth_token and send URL user's Registered Email]
@@ -152,7 +170,7 @@ class Authentication extends MY_Controller
 				$firstname = $result['firstname'];
 				$lastname  = $result['lastname'];
 				$email     = $result['email'];
-				$key       = array('auth_token' => auth_token());
+				$key       = array('auth_token' => $this->auth_token());
 
 				log_activity("$firstname $lastname request for forgot Password", $result['id']);
 
@@ -243,7 +261,7 @@ class Authentication extends MY_Controller
 	}
 
 /**
- * [logout dfor destroy session]
+ * [logout for destroy session]
  * @return [boolean]
  */
 	public function logout()

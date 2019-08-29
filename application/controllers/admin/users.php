@@ -30,7 +30,6 @@ class Users extends MY_Controller
 		$config                = $this->paginate();
 		$config['base_url']    = base_url('admin/users');
 		$config['uri_segment'] = 3;
-
 		$data['src_firstname'] = '';
 		$data['src_lastname']  = '';
 		$data['src_email']     = '';

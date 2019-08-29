@@ -26,78 +26,78 @@
 <!-- Centered forms -->
 <div class="row">
 <div class="col-md-8 col-md-offset-2">
-		<form action="<?php echo base_url('admin/users/edit/').$user['id']; ?>" id="profileform" method="POST">
-			<div class="panel panel-flat">
-				<div class="panel-heading">
-					<div class="row">
-						<div class="col-md-10">
-							<h5 class="panel-title"><strong>User</strong></h5>
-						</div>
-					</div>
-				</div>
-				<div class="panel-body">
-					<div class="row">
-						<div class="col-md-12">
-							<div class="form-group">
-								<small class="req text-danger">* </small>
-								<label>First name:</label>
-								<input type="text" class="form-control" placeholder="Firstname" id="firstname" name="firstname" value="<?php echo $user['firstname']; ?>">
-							</div>
-							<div class="form-group">
-								<small class="req text-danger">* </small>
-								<label>Last name:</label>
-								<input type="text" class="form-control" placeholder="Lastname" id="lastname" name="lastname" value="<?php echo $user['lastname']; ?>">
-							</div>
-
-							<div class="form-group">
-								<small class="req text-danger">* </small>
-								<label>Email:</label>
-								<input type="text" class="form-control" placeholder="Email" id="email" name="email" class="email"value="<?php echo $user['email']; ?>">
-							</div>
-							<div class="form-group">
-								<small class="req text-danger">* </small>
-								<label>Contact No:</label>
-								<input type="text" class="form-control" placeholder="Contact No" id="mobile_no" name="mobile_no" value="<?php echo $user['mobile_no']; ?>">
-							</div>
-							<div class="form-group">
-								<small class="req text-danger">* </small>
-								<label>Change Password:</label>
-								<input type="password" class="form-control" placeholder="New Password" id="password" name="newpassword" value="" >
-								<a class="btn toggle"><span><i class="icon-eye"></i></span></a>
-								Show Password
-							</div>
-							<div class="form-group">
-								<label>Status:</label>
-<?php 
-								$readonly = '';
-								if ($user['id']==get_loggedin_info('user_id')	)
-								 {
-									 $readonly="readonly";
-								 } 
-?> 
-							<input type="checkbox" class="switch" 
-							id="<?php echo $user['id']; ?>" <?php if($user['is_active']==1) { echo "checked";} ?>  <?php  echo $readonly; ?>>
-							</div>
-								<div class="form-group">
-								<small class="req text-danger">* </small>
-								<label>Select Role</label>
-								<select class="select" name="role" id="role">
-<?php 
-								foreach ($roles as $key => $role)
-								{
-?>
-								<div class="form-group">
-								<option value="<?php echo $role['id']; ?>" name="role" <?php if($user['role']==$role['id']){ echo  "selected";}?>><?php echo $role['name'] ?>
-								</option>
-<?php
-								}
-?>
-							</select>
-						</div>
-						</div>
+	<form action="<?php echo base_url('admin/users/edit/').$user['id']; ?>" id="profileform" method="POST">
+		<div class="panel panel-flat">
+			<div class="panel-heading">
+				<div class="row">
+					<div class="col-md-10">
+						<h5 class="panel-title"><strong>User</strong></h5>
 					</div>
 				</div>
 			</div>
+			<div class="panel-body">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="form-group">
+							<small class="req text-danger">* </small>
+							<label>First name:</label>
+							<input type="text" class="form-control" placeholder="Firstname" id="firstname" name="firstname" value="<?php echo $user['firstname']; ?>">
+						</div>
+						<div class="form-group">
+							<small class="req text-danger">* </small>
+							<label>Last name:</label>
+							<input type="text" class="form-control" placeholder="Lastname" id="lastname" name="lastname" value="<?php echo $user['lastname']; ?>">
+						</div>
+
+						<div class="form-group">
+							<small class="req text-danger">* </small>
+							<label>Email:</label>
+							<input type="text" class="form-control" placeholder="Email" id="email" name="email" class="email"value="<?php echo $user['email']; ?>">
+						</div>
+						<div class="form-group">
+							<small class="req text-danger">* </small>
+							<label>Contact No:</label>
+							<input type="text" class="form-control" placeholder="Contact No" id="mobile_no" name="mobile_no" value="<?php echo $user['mobile_no']; ?>">
+						</div>
+						<div class="form-group">
+							<small class="req text-danger">* </small>
+							<label>Change Password:</label>
+							<input type="password" class="form-control" placeholder="New Password" id="password" name="newpassword" value="" >
+							<a class="btn toggle"><span><i class="icon-eye"></i></span></a>
+							Show Password
+						</div>
+						<div class="form-group">
+							<label>Status:</label>
+<?php 
+							$readonly = '';
+							if ($user['id']==get_loggedin_info('user_id')	)
+							 {
+								 $readonly="readonly";
+							 } 
+?> 
+						<input type="checkbox" class="switch" 
+						id="<?php echo $user['id']; ?>" <?php if($user['is_active']==1) { echo "checked";} ?>  <?php  echo $readonly; ?>>
+						</div>
+							<div class="form-group">
+							<small class="req text-danger">* </small>
+							<label>Select Role</label>
+							<select class="select" name="role" id="role">
+<?php 
+							foreach ($roles as $key => $role)
+							{
+?>
+							<div class="form-group">
+							<option value="<?php echo $role['id']; ?>" name="role" <?php if($user['role']==$role['id']){ echo  "selected";}?>><?php echo $role['name'] ?>
+							</option>
+<?php
+							}
+?>
+						</select>
+					</div>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
 </div>
 <!-- /form centered -->
